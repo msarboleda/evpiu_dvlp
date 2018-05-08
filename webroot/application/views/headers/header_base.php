@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="EV Development">
   <!-- Favicon icon -->
-  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="<?php echo $this->config->item('assets_path').'themes/elaadmin/images/favicon.png'; ?>">
   <title><?php echo $this->config->item('site_title'); ?></title>
   <!-- Bootstrap Core CSS -->
   <link href="<?php echo $this->config->item('assets_path').'themes/elaadmin/css/lib/bootstrap/bootstrap.min.css'; ?>" rel="stylesheet">

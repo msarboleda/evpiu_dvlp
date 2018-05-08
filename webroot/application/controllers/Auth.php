@@ -36,6 +36,9 @@ class Auth extends CI_Controller
 		}
 		else
 		{
+			// Nombre de módulo que se muestra en la barra de navegación
+			$header_data['module_name'] = lang('index_heading');
+
 			// set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
@@ -46,7 +49,7 @@ class Auth extends CI_Controller
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
 
-			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard');
+			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
 			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'index', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}

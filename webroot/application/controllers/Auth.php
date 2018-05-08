@@ -12,7 +12,8 @@ class Auth extends CI_Controller
 		parent::__construct();
 		$this->load->helper('language');
 
-		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
+		// Inicio y final del contenido de los errores de form_validation.
+		$this->form_validation->set_error_delimiters('', '<br>');
 
 		$this->lang->load('auth');
 	}
@@ -97,7 +98,9 @@ class Auth extends CI_Controller
 				'type' => 'password',
 			);
 
+			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_base');
 			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'login', $this->data);
+			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_base');
 		}
 	}
 

@@ -39,7 +39,7 @@ $config['site_title'] = 'EV-PIU';
 |--------------------------------------------------------------------------
 |
 */
-$config['assets_path'] = 'http://evpiudvlp.local/assets';
+$config['assets_path'] = 'http://evpiudvlp.local/assets/';
 
 /*
 |--------------------------------------------------------------------------

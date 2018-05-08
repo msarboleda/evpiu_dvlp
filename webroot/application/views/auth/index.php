@@ -30,12 +30,12 @@
               <?php endforeach?>
 						</td>
             <?php if ($user->active === 1) { ?>
-            	<td><a href="<?php echo 'auth/deactivate/'.$user->id; ?>"><span class="badge badge-success"><?php echo lang('index_active_link'); ?></span></a></td>
+            	<td><a href="<?php echo site_url('auth/deactivate/').$user->id; ?>"><span class="badge badge-success"><?php echo lang('index_active_link'); ?></span></a></td>
           	<?php } else { ?>
-            	<td><a href="<?php echo 'auth/activate/'.$user->id; ?>"><span class="badge badge-danger"><?php echo lang('index_inactive_link'); ?></span></a></td>
+            	<td><a href="<?php echo site_url('auth/activate/').$user->id; ?>"><span class="badge badge-danger"><?php echo lang('index_inactive_link'); ?></span></a></td>
             <?php } ?>
             <td>
-            	<a href="<?php echo 'auth/edit_user/'.$user->id; ?>" class="btn btn-sm btn-primary m-b-10" role="button">Editar</button>
+            	<a href="<?php echo site_url('auth/edit_user/').$user->id; ?>" class="btn btn-sm btn-primary m-b-10" role="button">Editar</button>
           </tr>
           <?php endforeach;?>
         </tbody>

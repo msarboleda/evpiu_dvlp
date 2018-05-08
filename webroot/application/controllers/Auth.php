@@ -587,6 +587,8 @@ class Auth extends CI_Controller
 	 */
 	public function edit_user($id)
 	{
+		$header_data['module_name'] = lang('edit_user_heading');
+
 		$this->data['title'] = $this->lang->line('edit_user_heading');
 
 		if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->ion_auth->user()->row()->id == $id)))
@@ -603,6 +605,7 @@ class Auth extends CI_Controller
 		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'trim|required');
 		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'trim|required');
 		$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'trim|required');
+		$this->form_validation->set_rules('username', 'Username:', 'trim|required');
 
 		if (isset($_POST) && !empty($_POST))
 		{
@@ -622,6 +625,7 @@ class Auth extends CI_Controller
 			if ($this->form_validation->run() === TRUE)
 			{
 				$data = array(
+					'username' => $this->input->post('username'),
 					'first_name' => $this->input->post('first_name'),
 					'last_name' => $this->input->post('last_name'),
 					'company' => $this->input->post('company'),
@@ -701,6 +705,12 @@ class Auth extends CI_Controller
 			'type'  => 'text',
 			'value' => $this->form_validation->set_value('company', $user->company),
 		);
+		$this->data['username'] = array(
+			'name'  => 'username',
+			'id'    => 'username',
+			'type'  => 'text',
+			'value' => $this->form_validation->set_value('username', $user->username),
+		);
 		$this->data['phone'] = array(
 			'name'  => 'phone',
 			'id'    => 'phone',
@@ -718,7 +728,9 @@ class Auth extends CI_Controller
 			'type' => 'password'
 		);
 
+		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
 		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'edit_user', $this->data);
+		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
 
 	/**

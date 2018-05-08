@@ -1,7 +1,7 @@
+<div id="infoMessage" <?php echo (!isset($message)) ? '' : 'class="alert alert-primary" role="alert"'; ?>>
+  <?php echo $message;?>
+</div>
 <div class="card">
-	<div id="infoMessage" <?php echo (!isset($message)) ? '' : 'class="alert alert-primary" role="alert"'; ?>>
-    <?php echo $message;?>
-  </div>
   <div class="card-title">
 		<p><?php echo lang('index_subheading');?></p>
   </div>

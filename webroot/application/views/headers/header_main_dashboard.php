@@ -221,7 +221,7 @@
                   <li><a href="#"><i class="ti-wallet"></i> Balance</a></li>
                   <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
                   <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
-                  <li><a href="auth/logout"><i class="fa fa-power-off"></i> Logout</a></li>
+                  <li><a href="<?php echo site_url('auth/logout'); ?>"><i class="fa fa-power-off"></i> Cerrar sesión</a></li>
                 </ul>
               </div>
             </li>

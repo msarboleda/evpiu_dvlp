@@ -142,6 +142,9 @@ class Auth extends CI_Controller
 
 		if ($this->form_validation->run() === FALSE)
 		{
+			// Nombre de módulo que se muestra en la barra de navegación
+			$header_data['module_name'] = lang('change_password_heading');
+
 			// display the form
 			// set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
@@ -172,7 +175,9 @@ class Auth extends CI_Controller
 			);
 
 			// render
+			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
 			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'change_password', $this->data);
+			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 		else
 		{

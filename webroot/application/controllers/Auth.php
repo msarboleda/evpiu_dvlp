@@ -422,11 +422,15 @@ class Auth extends CI_Controller
 
 		if ($this->form_validation->run() === FALSE)
 		{
+			$header_data['module_name'] = lang('deactivate_heading');
+
 			// insert csrf check
 			$this->data['csrf'] = $this->_get_csrf_nonce();
 			$this->data['user'] = $this->ion_auth->user($id)->row();
 
+			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
 			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'deactivate_user', $this->data);
+			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 		else
 		{

@@ -793,6 +793,8 @@ class Auth extends CI_Controller
 	 */
 	public function edit_group($id)
 	{
+		$header_data['module_name'] = lang('edit_group_heading');
+
 		// bail if no group id given
 		if (!$id || empty($id))
 		{
@@ -851,7 +853,9 @@ class Auth extends CI_Controller
 			'value' => $this->form_validation->set_value('group_description', $group->description),
 		);
 
+		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
 		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'edit_group', $this->data);
+		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
 
 	/**

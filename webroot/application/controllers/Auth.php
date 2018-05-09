@@ -858,19 +858,19 @@ class Auth extends CI_Controller
 		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
 
-	/**
-	 * @return array Categorias de aplicaciones permitidas a un usuario
+  /**
+	 * @return array Módulos filtrados por Categoría permitidos a grupos
 	 *	or
-	 * @return false En caso de que el parámetro sea nulo
+	 * @return false En caso de que el parámetro sea nulo o no sea un array
 	 */
-  public function consultarCategorias_x_Usuario($usuario){
-  	if (!isset($usuario)) {
+  public function consultarCantModulos_x_Categorias_x_Grupos($grupos){
+  	if (!isset($grupos) || !is_array($grupos)) {
   		return false;
   	} 
 
-    $this->load->model('EVPIU/CategoriasxUsuarios_model', 'CategoriasxUsuarios');
-    $Categorias = $this->CategoriasxUsuarios->consultarCategorias_x_Usuario($usuario);
-    return $Categorias;
+    $this->load->model('EVPIU/ModulosxCategoriasxGrupos_model', 'ModulosxCategoriasxGrupos');
+    $ModulosxCategorias = $this->ModulosxCategoriasxGrupos->consultarCantModulos_x_Categorias_x_Grupos($grupos);
+    return $ModulosxCategorias;
   }  
 
 	/**

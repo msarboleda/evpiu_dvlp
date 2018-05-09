@@ -76,6 +76,7 @@ $lang['create_user_validation_password_confirm_label'] = 'Password Confirmation'
 // Edit User
 $lang['edit_user_heading']                           = 'Edit User';
 $lang['edit_user_subheading']                        = 'Please enter the user\'s information below.';
+$lang['edit_user_name_label']						 = 'Username:';
 $lang['edit_user_fname_label']                       = 'First Name:';
 $lang['edit_user_lname_label']                       = 'Last Name:';
 $lang['edit_user_company_label']                     = 'Company Name:';

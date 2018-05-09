@@ -21,7 +21,7 @@
           <?php echo form_input($company, '', 'class="form-control"');?>
         </div>
         <div class="form-group">
-          <label for="username">Username:</label>
+          <?php echo lang('edit_user_name_label', 'username'); ?><br />
           <?php echo form_input($username, '', 'class="form-control"');?>
         </div>
         <div class="form-group">

@@ -873,6 +873,13 @@ class Auth extends CI_Controller
     return $ModulosxCategorias;
   }  
   }
+
+  /**
+	 * @return array Módulos de cada Categoría permitidos a grupos
+	 *	or
+	 * @return false En caso de que el parámetro sea nulo o no sea un array
+	 */
+	public function consultarModulosxCategorias_x_Grupos($grupos) {
 		if (!isset($grupos) || !is_array($grupos)) {
   		return false;
   	} 

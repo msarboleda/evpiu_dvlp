@@ -859,6 +859,21 @@ class Auth extends CI_Controller
 	}
 
 	/**
+	 * @return array Categorias de aplicaciones permitidas a un usuario
+	 *	or
+	 * @return false En caso de que el parámetro sea nulo
+	 */
+  public function consultarCategorias_x_Usuario($usuario){
+  	if (!isset($usuario)) {
+  		return false;
+  	} 
+
+    $this->load->model('EVPIU/CategoriasxUsuarios_model', 'CategoriasxUsuarios');
+    $Categorias = $this->CategoriasxUsuarios->consultarCategorias_x_Usuario($usuario);
+    return $Categorias;
+  }  
+
+	/**
 	 * @return array A CSRF key-value pair
 	 */
 	public function _get_csrf_nonce()

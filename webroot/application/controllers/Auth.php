@@ -49,6 +49,28 @@ class Auth extends CI_Controller
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
 
+			// Usuario actual
+			$usuario_actual = $this->ion_auth->user()->row();
+
+			// Grupos a los que pertenece el usuario
+			$grupos_usuario = $this->ion_auth->get_users_groups($usuario_actual->id)->result();
+
+			// Asignación de id's de grupos hacia un arreglo
+			foreach ($grupos_usuario as $key => $grupo_usuario) {
+				$grupos_usuarios_ids[$key] = $grupo_usuario->id;
+			}
+
+			// Consulta de Categorías y Cantidad de módulos para grupos específicos
+			$categorias_modulos = $this->consultarCantModulos_x_Categorias_x_Grupos($grupos_usuarios_ids);
+
+			// Envío de información para el sidebar del header
+			if (isset($categorias_modulos) && is_array($categorias_modulos)) {
+				$modulos_usuario = $this->consultarModulosxCategorias_x_Grupos($grupos_usuarios_ids);
+
+				$header_data['Categorias'] = $categorias_modulos;
+				$header_data['Modulos'] = $modulos_usuario;
+			} 
+			
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
 			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'dashboard', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
@@ -871,7 +893,6 @@ class Auth extends CI_Controller
     $this->load->model('EVPIU/ModulosxCategoriasxGrupos_model', 'ModulosxCategoriasxGrupos');
     $ModulosxCategorias = $this->ModulosxCategoriasxGrupos->consultarCantModulos_x_Categorias_x_Grupos($grupos);
     return $ModulosxCategorias;
-  }  
   }
 
   /**

@@ -241,9 +241,17 @@
               <li class="nav-label">INICIO</li>
               <li> <a href="<?php echo site_url('auth/index'); ?>" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard</span></a>
               </li>
+              <li class="nav-label">Módulos</li>
+              <?php foreach ($Categorias as $Categoria): ?>
+              <li> <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="<?php echo $Categoria->Icono; ?>"></i><span class="hide-menu"><?php echo $Categoria->NomCategoria; ?> <span class="label label-rounded label-primary pull-right"><?php echo $Categoria->Modulos; ?></span></span></a>
                 <ul aria-expanded="false" class="collapse">
+                  <?php foreach ($Modulos as $Modulo): ?>
+                  <?php if ($Categoria->CodCategoria === $Modulo->CodCategoria) { ?> 
+                  <li><a href="<?php echo site_url($Modulo->Ruta); ?>"><i class="<?php echo $Modulo->Icono; ?>"></i> <?php echo $Modulo->NomModulo; ?></a></li>
+                  <?php } endforeach; ?>
                 </ul>
               </li>
+              <?php endforeach; ?>    
             </ul>
           </nav>
           <!-- End Sidebar navigation -->

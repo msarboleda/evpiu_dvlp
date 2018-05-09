@@ -872,6 +872,16 @@ class Auth extends CI_Controller
     $ModulosxCategorias = $this->ModulosxCategoriasxGrupos->consultarCantModulos_x_Categorias_x_Grupos($grupos);
     return $ModulosxCategorias;
   }  
+  }
+		if (!isset($grupos) || !is_array($grupos)) {
+  		return false;
+  	} 
+
+		$this->load->model('EVPIU/ModulosxCategoriasxGrupos_model', 'ModulosxCategoriasxGrupos');
+		$Modulos = $this->ModulosxCategoriasxGrupos->consultarModulosxCategorias_x_Grupos($grupos);
+
+		return $Modulos;
+	}  
 
 	/**
 	 * @return array A CSRF key-value pair

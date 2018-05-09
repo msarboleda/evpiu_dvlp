@@ -36,4 +36,22 @@ class ModulosxCategoriasxGrupos_model extends CI_Model {
 
     return false;
 	}
+
+	/**
+	 * @return array Módulos permitidos a grupos.
+	 *	or
+	 * @return false En caso de que el Query no tenga ningún resultado
+	 */
+	public function consultarModulosxCategorias_x_Grupos($grupos) {
+		$this->db_evpiu->select();
+		$this->db_evpiu->from($this->_table);
+		$this->db_evpiu->where_in('Grupo', $grupos);
+		$query = $this->db_evpiu->get();
+
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		}
+
+		return false;
+	}
 }

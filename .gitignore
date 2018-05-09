@@ -27,14 +27,15 @@ nbactions.xml
 !*/cache/index.html
 !*/cache/.htaccess
 
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
+webroot/user_guide/build/*
+webroot/user_guide/cilexer/build/*
+webroot/user_guide/cilexer/dist/*
+webroot/user_guide/cilexer/pycilexer.egg-info/*
 
 #codeigniter 3
-application/logs/*
-!application/logs/index.html
-!application/logs/.htaccess
+webroot/application/config/database.php
+webroot/application/logs/*
+!webroot/application/logs/index.html
+!webroot/application/logs/.htaccess
 /vendor/
 webroot/webroot

@@ -761,6 +761,8 @@ class Auth extends CI_Controller
 		}
 		else
 		{
+			$header_data['module_name'] = lang('create_group_heading');
+
 			// display the create group form
 			// set the flash data error message if there is one
 			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
@@ -778,7 +780,9 @@ class Auth extends CI_Controller
 				'value' => $this->form_validation->set_value('description'),
 			);
 
+			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
 			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'create_group', $this->data);
+			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 	}
 

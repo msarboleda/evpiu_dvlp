@@ -19,35 +19,20 @@ class Auth extends CI_Controller
 	}
 
 	/**
-	 * Redirect if needed, otherwise display the user list
+	 * Dashboard de la Plataforma
 	 */
-	public function index()
-	{
-
-		if (!$this->ion_auth->logged_in())
-		{
+	public function index() {
+		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
-		{
-			// redirect them to the home page because they must be an administrator to view this
-			return show_error('You must be an administrator to view this page.');
-		}
-		else
-		{
+		} else if (!$this->ion_auth->in_group('members')){
+			return show_error('Debes ser un miembro de la plataforma para ver esta página');
+		} else {
 			// Nombre de módulo que se muestra en la barra de navegación
 			$header_data['module_name'] = 'Dashboard';
 
-			// set the flash data error message if there is one
+			// Establecer un mensaje si hay un error de datos flash
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-
-			//list the users
-			$this->data['users'] = $this->ion_auth->users()->result();
-			foreach ($this->data['users'] as $k => $user)
-			{
-				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
-			}
 
 			// Usuario actual
 			$usuario_actual = $this->ion_auth->user()->row();

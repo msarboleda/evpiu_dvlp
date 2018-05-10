@@ -937,6 +937,35 @@ class Auth extends CI_Controller
 	}
 
 	/**
+	 * Lista de grupos de la plataforma
+	 */
+	public function groups() {
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+			redirect('auth', 'refresh');
+		}
+
+		$header_data['module_name'] = lang('groups_heading');
+		// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+		// Módulos que se permiten a los grupos del usuario actual
+		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+		}
+
+		// Establecer un mensaje si hay un error de datos flash
+		$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+
+		// Listar los grupos
+		$this->data['groups'] = $this->ion_auth->groups()->result();
+
+		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
+		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'groups', $this->data);
+		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
+	}
+
+	/**
 	 * @return array A CSRF key-value pair
 	 */
 	public function _get_csrf_nonce()

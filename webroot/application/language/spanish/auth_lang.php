@@ -46,6 +46,14 @@ $lang['index_inactive_link']     = 'Inactivo';
 $lang['index_create_user_link']  = 'Crear nuevo usuario';
 $lang['index_create_group_link'] = 'Crear nuevo grupo';
 
+// Groups
+$lang['groups_heading']			 = 'Grupos';
+$lang['groups_subheading']		 = 'Debajo está la lista de grupos.';
+$lang['groups_id_th']		 	 = 'Id.';
+$lang['groups_name_th']		 	 = 'Nombre';
+$lang['groups_description_th']	 = 'Descripción';
+$lang['groups_action_th']	 	 = 'Acción';
+
 // Deactivate User
 $lang['deactivate_heading']                  = 'Desactivar usuario';
 $lang['deactivate_subheading']               = '¿Estás seguro que quieres desactivar el usuario \'%s\'';

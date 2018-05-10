@@ -44,11 +44,11 @@ class Header {
 		}
 
 		// Consulta de Categorías y Cantidad de módulos para grupos específicos
-		$categorias = $this->CI->consultarCantModulos_x_Categorias_x_Grupos($grupos_usuarios_ids);
+		$categorias = $this->consultarCantModulos_x_Categorias_x_Grupos($grupos_usuarios_ids);
 
 		// Envío de información para el sidebar del header
 		if (isset($categorias) && is_array($categorias)) {
-			$modulos = $this->CI->consultarModulosxCategorias_x_Grupos($grupos_usuarios_ids);
+			$modulos = $this->consultarModulosxCategorias_x_Grupos($grupos_usuarios_ids);
 
 			if (isset($modulos) && is_array($modulos)) {
 				$data['Categorias'] = $categorias;

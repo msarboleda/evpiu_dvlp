@@ -12,6 +12,8 @@ class Auth extends CI_Controller
 		parent::__construct();
 		$this->load->helper('language');
 
+		// Libreria para identificar roles del usuario actual
+		$this->load->library('verification_roles');
 		// Inicio y final del contenido de los errores de form_validation.
 		$this->form_validation->set_error_delimiters('', '<br>');
 
@@ -25,7 +27,7 @@ class Auth extends CI_Controller
 		if (!$this->ion_auth->logged_in()) {
 			// redirect them to the login page
 			redirect('auth/login', 'refresh');
-		} else if (!$this->ion_auth->in_group('members')){
+		} else if (!$this->verification_roles->is_member()){
 			return show_error('Debes ser un miembro de la plataforma para ver esta página');
 		} else {
 			// Nombre de módulo que se muestra en la barra de navegación

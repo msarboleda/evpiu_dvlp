@@ -141,6 +141,14 @@ class Auth extends CI_Controller
 		{
 			// Nombre de módulo que se muestra en la barra de navegación
 			$header_data['module_name'] = lang('change_password_heading');
+			// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+			$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+			// Módulos que se permiten a los grupos del usuario actual
+			$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+			if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+				return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+			}
 
 			// display the form
 			// set the flash data error message if there is one
@@ -408,7 +416,7 @@ class Auth extends CI_Controller
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
 			// redirect them to the home page because they must be an administrator to view this
-			return show_error('You must be an administrator to view this page.');
+			return show_error('Debe ser un administrador para ver esta página.');
 		}
 
 		$id = (int)$id;
@@ -420,6 +428,14 @@ class Auth extends CI_Controller
 		if ($this->form_validation->run() === FALSE)
 		{
 			$header_data['module_name'] = lang('deactivate_heading');
+			// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+			$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+			// Módulos que se permiten a los grupos del usuario actual
+			$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+			if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+				return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+			}
 
 			// insert csrf check
 			$this->data['csrf'] = $this->_get_csrf_nonce();
@@ -508,6 +524,14 @@ class Auth extends CI_Controller
 		else
 		{
 			$header_data['module_name'] = lang('create_user_heading');
+			// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+			$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+			// Módulos que se permiten a los grupos del usuario actual
+			$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+			if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+				return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+			}
 
 			// display the create user form
 			// set the flash data error message if there is one
@@ -585,6 +609,14 @@ class Auth extends CI_Controller
 	public function edit_user($id)
 	{
 		$header_data['module_name'] = lang('edit_user_heading');
+		// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+		// Módulos que se permiten a los grupos del usuario actual
+		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+		}
 
 		$this->data['title'] = $this->lang->line('edit_user_heading');
 
@@ -739,6 +771,14 @@ class Auth extends CI_Controller
 		}
 
 		$header_data['module_name'] = 'Usuarios';
+		// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+		// Módulos que se permiten a los grupos del usuario actual
+		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+		}
 
 		// Establecer un mensaje si hay un error de datos flash
 		$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
@@ -784,6 +824,14 @@ class Auth extends CI_Controller
 		else
 		{
 			$header_data['module_name'] = lang('create_group_heading');
+			// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+			$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+			// Módulos que se permiten a los grupos del usuario actual
+			$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+			if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+				return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+			}
 
 			// display the create group form
 			// set the flash data error message if there is one
@@ -816,6 +864,14 @@ class Auth extends CI_Controller
 	public function edit_group($id)
 	{
 		$header_data['module_name'] = lang('edit_group_heading');
+		// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+		// Módulos que se permiten a los grupos del usuario actual
+		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+		}
 
 		// bail if no group id given
 		if (!$id || empty($id))

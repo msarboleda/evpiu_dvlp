@@ -743,6 +743,31 @@ class Auth extends CI_Controller
 	}
 
 	/**
+	 * Lista de usuarios de la plataforma
+	 */
+	public function users() {
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+			redirect('auth', 'refresh');
+		}
+
+		$header_data['module_name'] = 'Usuarios';
+
+		// Establecer un mensaje si hay un error de datos flash
+		$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+
+		// Listar los usuarios
+		$this->data['users'] = $this->ion_auth->users()->result();
+
+		foreach ($this->data['users'] as $k => $user) {
+			$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
+		}
+
+		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
+		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'index', $this->data);
+		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
+	}
+
+	/**
 	 * Create a new group
 	 */
 	public function create_group()

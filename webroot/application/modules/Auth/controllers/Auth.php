@@ -49,7 +49,7 @@ class Auth extends MX_Controller
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 			
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-			$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'dashboard', $this->data);
+			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'dashboard', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 	}
@@ -103,7 +103,7 @@ class Auth extends MX_Controller
 			);
 
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_base');
-			$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'login', $this->data);
+			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'login', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_base');
 		}
 	}
@@ -183,7 +183,7 @@ class Auth extends MX_Controller
 
 			// render
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-			$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'change_password', $this->data);
+			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'change_password', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 		else
@@ -242,7 +242,7 @@ class Auth extends MX_Controller
 			// set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_base');
-			$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'forgot_password', $this->data);
+			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'forgot_password', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_base');
 		}
 		else
@@ -334,7 +334,7 @@ class Auth extends MX_Controller
 				$this->data['code'] = $code;
 
 				// render
-				$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'reset_password', $this->data);
+				$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'reset_password', $this->data);
 			}
 			else
 			{
@@ -444,7 +444,7 @@ class Auth extends MX_Controller
 			$this->data['user'] = $this->ion_auth->user($id)->row();
 
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-			$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'deactivate_user', $this->data);
+			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'deactivate_user', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 		else
@@ -589,7 +589,7 @@ class Auth extends MX_Controller
 			);
 
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-			$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'create_user', $this->data);
+			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'create_user', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 	}
@@ -793,7 +793,7 @@ class Auth extends MX_Controller
 		}
 
 		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-		$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'index', $this->data);
+		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'index', $this->data);
 		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
 
@@ -853,7 +853,7 @@ class Auth extends MX_Controller
 			);
 
 			$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-			$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'create_group', $this->data);
+			$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'create_group', $this->data);
 			$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 		}
 	}
@@ -934,7 +934,7 @@ class Auth extends MX_Controller
 		);
 
 		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-		$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'edit_group', $this->data);
+		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'edit_group', $this->data);
 		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
 
@@ -963,7 +963,7 @@ class Auth extends MX_Controller
 		$this->data['groups'] = $this->ion_auth->groups()->result();
 
 		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-		$this->load->view('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'groups', $this->data);
+		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'groups', $this->data);
 		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
 

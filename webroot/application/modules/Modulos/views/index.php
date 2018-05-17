@@ -29,7 +29,7 @@
             <td><?php echo $modulo->Icono; ?></td>
             <td><?php echo $modulo->FechaActualizacion; ?></td>
             <td>
-            	<a href="<?php echo site_url('auth/edit_modulo/').$modulo->id; ?>" class="btn btn-sm btn-primary m-b-10" role="button">Editar</a>
+            	<a href="<?php echo site_url('modulos/edit_module/').$modulo->id; ?>" class="btn btn-sm btn-primary m-b-10" role="button">Editar</a>
             </td>
           </tr>
           <?php endforeach;?>

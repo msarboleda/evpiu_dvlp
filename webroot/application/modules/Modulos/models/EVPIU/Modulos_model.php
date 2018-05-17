@@ -29,4 +29,51 @@ class Modulos_model extends CI_Model {
 
     return false;
 	}
+
+	/**
+	 * Obtiene información de un módulo específico
+	 *
+	 * @param int $module_id
+	 *
+	 * @return array|bool
+	 */
+	public function get_Modulo($module_id = NULL) {
+		if (isset($module_id)) {
+			$module = $this->db_evpiu->get_where($this->_table, array('id' => $module_id));
+
+			if ($module->num_rows() > 0) {
+				return $module->row();
+			}
+
+			return FALSE;
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Actualiza un módulo
+	 *
+	 * @param int $module_id
+	 * @param array $data
+	 *
+	 * @return bool
+	 */
+	public function update_Modulo($module_id = FALSE, $data = array()) {
+		if (empty($module_id)) {
+			$this->ion_auth_model->set_error('edit_module_id_empty');
+			return FALSE;
+		}
+
+		if (empty($data) || !is_array($data)) {	
+			$this->ion_auth_model->set_error('edit_module_data_empty');
+			return FALSE;
+		}
+
+		$this->db_evpiu->update($this->_table, $data, array('id' => $module_id));
+
+		$this->ion_auth_model->set_message('module_update_successful');
+
+		return TRUE;
+	}
 }

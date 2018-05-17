@@ -11,7 +11,7 @@ class Modulos_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 
-		$this->_table = 'Modulos M';
+		$this->_table = 'Modulos';
 		$this->db_evpiu = $this->load->database('EVPIU', true);
 	}
 

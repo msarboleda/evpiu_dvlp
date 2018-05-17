@@ -13,9 +13,13 @@
 // Mensajes de error
 $lang['edit_module_id_empty']		 = 'El identificador del módulo es nulo.';
 $lang['edit_module_data_empty']	 = 'Los datos enviados no tienen una estructura correcta o están vacíos.';
+$lang['create_module_code_empty'] = 'El código del módulo es nulo';
+$lang['create_module_data_empty'] = 'Los datos enviados no tienen una estructura correcta o están vacíos';
+$lang['create_module_duplicated_code'] = 'El módulo que intenta crear ya existe.';
 
 // Mensajes de éxito
 $lang['module_update_successful'] = 'Módulo actualizado correctamente.';
+$lang['module_create_successful'] = 'Módulo creado correctamente.';
 
 // Index
 $lang['index_heading']				= 'Módulos';
@@ -42,4 +46,23 @@ $lang['edit_module_submit_btn']				= 'Guardar Módulo';
 $lang['edit_module_validation_name_label']	= 'Nombre';
 $lang['edit_module_validation_route_label'] = 'Ruta';
 $lang['edit_module_validation_icon_label']	= 'Icono';
-$lang['edit_module_validation_updt_date_label']	= 'Fecha de actualización';
+$lang['edit_module_validation_updt_date_label'] = 'Fecha de actualización';
+
+// Create Module
+$lang['create_module_heading'] = 'Crear módulo';
+$lang['create_module_subheading'] = 'Por favor, registra la información del módulo.';
+$lang['create_module_code_label'] = 'Código';
+$lang['create_module_name_label'] = 'Nombre';
+$lang['create_module_description_label'] = 'Descripción';
+$lang['create_module_route_label'] = 'Ruta';
+$lang['create_module_icon_label'] = 'Icono';
+$lang['create_module_updt_date_label'] = 'Fecha de actualización';
+$lang['create_module_category_label'] = 'Categoría';
+$lang['create_module_submit_btn'] = 'Crear Módulo';
+$lang['create_module_validation_code_label'] = 'Código';
+$lang['create_module_validation_name_label'] = 'Nombre';
+$lang['create_module_validation_description_label'] = 'Descripción';
+$lang['create_module_validation_route_label'] = 'Ruta';
+$lang['create_module_validation_icon_label'] = 'Icono';
+$lang['create_module_validation_updt_date_label'] = 'Fecha de actualización';
+$lang['create_module_validation_category_label'] = 'Categoría';

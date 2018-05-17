@@ -153,4 +153,98 @@ class Modulos extends MX_Controller {
 		$this->load->view('modulos' . DIRECTORY_SEPARATOR . 'edit_module', $view_data);
 		$this->load->view('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
+
+	/**
+	 * Crear un módulo
+	 *
+	 */
+	public function create_module() {
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+			redirect('auth', 'refresh');
+		}
+
+		// Nombre de módulo que se muestra en la barra de navegación
+		$header_data['module_name'] = lang('create_module_heading');
+		// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+		// Módulos que se permiten a los grupos del usuario actual
+		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+		}
+
+		// Reglas de validación para los controles del formulario
+		$this->form_validation->set_rules('CodModulo', $this->lang->line('create_module_validation_code_label'), 'trim|required|max_length[10]');
+		$this->form_validation->set_rules('NomModulo', $this->lang->line('create_module_validation_name_label'), 'trim|required');
+		$this->form_validation->set_rules('Descripcion', $this->lang->line('create_module_validation_description_label'), 'trim');
+		$this->form_validation->set_rules('Ruta', $this->lang->line('create_module_validation_route_label'), 'trim|required');
+		$this->form_validation->set_rules('Icono', $this->lang->line('create_module_validation_icon_label'), 'trim|required');
+		$this->form_validation->set_rules('FechaActualizacion', $this->lang->line('create_module_validation_updt_date_label'), 'trim|required');
+
+		if ($this->form_validation->run() === TRUE) {
+			$CodModulo = $this->input->post('CodModulo');
+
+			$data = array(
+				'NomModulo' => $this->input->post('NomModulo'),
+				'Descripcion' => $this->input->post('Descripcion'),
+				'Ruta' => $this->input->post('Ruta'),
+				'Icono'	=> $this->input->post('Icono'),
+				'FechaActualizacion' => $this->input->post('FechaActualizacion')
+			);
+
+			$create_module = $this->Modulos_mdl->create_Modulo($CodModulo, $data);
+		
+			// Se verifica la actualización del módulo
+			if ($create_module) {
+				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				redirect('modulos', 'refresh');
+			} else {
+				$this->session->set_flashdata('message', $this->ion_auth->errors());			
+			}
+		}
+
+		// Establecer un mensaje si hay un error de datos o mensajes flash
+		$view_data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+
+		$view_data['CodModulo'] = array(
+			'name'  => 'CodModulo',
+			'id'    => 'CodModulo',
+			'type'  => 'text',
+		);
+
+		$view_data['NomModulo'] = array(
+			'name'  => 'NomModulo',
+			'id'    => 'NomModulo',
+			'type'  => 'text',
+		);
+
+		$view_data['Descripcion'] = array(
+			'name'  => 'Descripcion',
+			'id'    => 'Descripcion',
+			'rows'	=> '3',
+		);
+
+		$view_data['Ruta'] = array(
+			'name'  => 'Ruta',
+			'id'    => 'Ruta',
+			'type'  => 'text',
+		);
+
+		$view_data['Icono'] = array(
+			'name'  => 'Icono',
+			'id'    => 'Icono',
+			'type'  => 'text',
+		);
+
+		$view_data['FechaActualizacion'] = array(
+			'name'  => 'FechaActualizacion',
+			'id'    => 'FechaActualizacion',
+			'type'  => 'text',
+		);
+
+		$this->load->view('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
+		$this->load->view('modulos' . DIRECTORY_SEPARATOR . 'create_module', $view_data);
+		$this->load->view('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
+	}
 }

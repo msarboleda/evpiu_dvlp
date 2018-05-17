@@ -76,4 +76,56 @@ class Modulos_model extends CI_Model {
 
 		return TRUE;
 	}
+
+	/**
+	 * Crear un módulo
+	 *
+	 * @param string $module_code
+	 * @param array $data
+	 *
+	 * @return bool
+	 */
+	public function create_Modulo($module_code, $data = array()) {
+		if (empty($module_code)) {
+			$this->ion_auth_model->set_error('create_module_code_empty');
+			return FALSE;
+		}
+
+		if (empty($data) || !is_array($data)) {
+			$this->ion_auth_model->set_error('create_module_data_empty');
+			return FALSE;
+		}
+
+		if ($this->duplicate_check($module_code)) {
+			$this->ion_auth_model->set_error('create_module_duplicated_code');
+			return FALSE;
+		}
+
+		$additional_data['CodModulo'] = $module_code;
+
+		$module_data = array_merge($additional_data, $data);
+
+		$this->db_evpiu->insert($this->_table, $module_data);
+
+		$this->ion_auth_model->set_message('module_create_successful');
+
+		return TRUE;
+	}
+
+	/**
+	 * Verificación de duplicación de módulo
+	 *
+	 * @param string $module_code
+	 *
+	 * @return bool
+	 */
+	public function duplicate_check($module_code = '') {
+		if (empty($module_code)) {
+			return FALSE;
+		}
+
+		return $this->db_evpiu->where('CodModulo', $module_code)
+						->limit(1)
+						->count_all_results($this->_table) > 0;
+	}
 }

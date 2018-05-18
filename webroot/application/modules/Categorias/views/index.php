@@ -25,7 +25,7 @@
             <td><?php echo $category->Icono; ?></td>
             <td><?php echo htmlspecialchars($category->Comentarios,ENT_QUOTES,'UTF-8'); ?></td>
             <td>
-              <a href="<?php echo site_url('categorias/edit_category').$category->id; ?>" class="btn btn-sm btn-primary m-b-10" role="button">Editar</a>
+              <a href="<?php echo site_url('categorias/edit_category/').$category->id; ?>" class="btn btn-sm btn-primary m-b-10" role="button">Editar</a>
             </td>
           </tr>
           <?php endforeach;?>

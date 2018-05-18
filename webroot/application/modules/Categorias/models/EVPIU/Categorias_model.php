@@ -31,6 +31,27 @@ class Categorias_model extends CI_Model {
 	}
 
 	/**
+	 * Obtiene información de una categoría específica
+	 *
+	 * @param int $category_id
+	 *
+	 * @return array|bool
+	 */
+	public function get_Categoria($category_id = NULL) {
+		if (!isset($category_id)) {
+			return FALSE;
+		}
+
+		$category = $this->db_evpiu->get_where($this->_table, array('id' => $category_id));
+
+		if ($category->num_rows() > 0) {
+			return $category->row();
+		}
+
+		return FALSE;
+	}
+
+	/**
 	 * Obtiene el identificador de la última categoría existente.
 	 *
 	 * @return bool|int
@@ -94,6 +115,32 @@ class Categorias_model extends CI_Model {
 		$this->db_evpiu->insert($this->_table, $category_data);
 
 		$this->ion_auth_model->set_message('category_create_successful');
+
+		return TRUE;
+	}
+
+	/**
+	 * Actualiza una categoría
+	 *
+	 * @param int $category_id
+	 * @param array $data
+	 *
+	 * @return bool
+	 */
+	public function update_Categoria($category_id = FALSE, $data = array()) {
+		if (empty($category_id)) {
+			$this->ion_auth_model->set_error('edit_category_id_empty');
+			return FALSE;
+		}
+
+		if (empty($data) || !is_array($data)) {	
+			$this->ion_auth_model->set_error('edit_category_data_empty');
+			return FALSE;
+		}
+
+		$this->db_evpiu->update($this->_table, $data, array('id' => $category_id));
+
+		$this->ion_auth_model->set_message('category_update_successful');
 
 		return TRUE;
 	}

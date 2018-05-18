@@ -760,7 +760,7 @@ class Auth extends MX_Controller
 		);
 
 		$this->_render_page('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
-		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'edit_user', $this->data);
+		$this->_render_page('auth' . DIRECTORY_SEPARATOR . 'auth' . DIRECTORY_SEPARATOR . 'edit_user', $this->data);
 		$this->_render_page('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
 

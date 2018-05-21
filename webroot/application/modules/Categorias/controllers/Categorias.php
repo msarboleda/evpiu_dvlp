@@ -210,4 +210,80 @@ class Categorias extends MX_Controller {
 		$this->load->view('categorias' . DIRECTORY_SEPARATOR . 'edit_category', $view_data);
 		$this->load->view('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
 	}
+
+	/**
+	 * Habilitar categoría a un módulo
+	 *
+	 */
+	public function enable_category_to_module() {
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+			redirect('auth', 'refresh');
+		}
+
+		$this->lang->load('modulosxcategoria');
+
+		// Nombre de módulo que se muestra en la barra de navegación
+		$header_data['module_name'] = lang('enable_category_heading');
+		// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
+		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+		// Módulos que se permiten a los grupos del usuario actual
+		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+		}
+
+		// Esta variable contiene los datos necesarios para construir un control 'Select' de Categorías
+		$categories_select = $this->Categorias_mdl->fill_Categorias_select();
+
+		// Se carga el modelo de los Módulos, para construir otro control 'Select' de Módulos
+		$this->load->model('Modulos/EVPIU/Modulos_model', 'Modulos_mdl');
+		$modules_select = $this->Modulos_mdl->fill_Modulos_select();
+
+		// Reglas de validación para los controles del formulario
+		$this->form_validation->set_rules('Categoria', $this->lang->line('enable_category_validation_category_label'), 'required');
+		$this->form_validation->set_rules('Modulo', $this->lang->line('enable_category_validation_module_label'), 'required');
+
+		// Sí los dos controles 'Select' no están llenos, se redirecciona a Categorias de nuevo
+		if (isset($categories_select) && isset($modules_select)) {
+			$view_data['categories_select'] = $categories_select;
+			$view_data['modules_select'] = $modules_select;
+		} else {
+			redirect('categorias', 'refresh');
+		}
+
+		if ($this->form_validation->run() === TRUE) {
+			$this->load->model('Modulos/EVPIU/ModulosxCategoria_model', 'ModulosxCategoria_mdl');
+
+			$category_code = $this->input->post('Categoria');
+			$module_code = $this->input->post('Modulo');
+
+			$assignment = $this->ModulosxCategoria_mdl->assign_Category_to_Module($module_code, $category_code);
+
+			// Se verifica la asignación de la categoría al módulo
+			if ($assignment) {
+				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				redirect('categorias', 'refresh');
+			} else {
+				$this->session->set_flashdata('message', $this->ion_auth->errors());			
+			}
+		}
+
+		// Establecer un mensaje si hay un error de datos o mensajes flash
+		$view_data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+
+		$view_data['Categoria'] = array(
+			'name'  => 'Categoria',
+			'id'    => 'Categoria',
+		);
+
+		$view_data['Modulo'] = array(
+			'name'  => 'Modulo',
+			'id'    => 'Modulo',
+		);
+
+		$this->load->view('headers' . DIRECTORY_SEPARATOR . 'header_main_dashboard', $header_data);
+		$this->load->view('categorias' . DIRECTORY_SEPARATOR . 'enable_category_to_module', $view_data);
+		$this->load->view('footers' . DIRECTORY_SEPARATOR . 'footer_main_dashboard');
+	}
 }

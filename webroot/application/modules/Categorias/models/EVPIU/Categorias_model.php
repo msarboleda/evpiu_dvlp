@@ -162,4 +162,32 @@ class Categorias_model extends CI_Model {
 						->limit(1)
 						->count_all_results($this->_table) > 0;
 	}
+
+	/**
+	 * Organiza las categorías existentes perfectamente 
+	 * para que se muestren en un control 'Select'
+	 *
+	 * @return array|bool
+	 */
+	public function fill_Categorias_select() {
+		$this->db_evpiu->select('CodCategoria, NomCategoria');
+		$this->db_evpiu->order_by('NomCategoria', 'asc');
+
+		$query = $this->db_evpiu->get($this->_table); 
+
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+			$categorias = array();
+
+			$categorias[''] = 'Seleccione una Categoría...';
+
+			foreach ($result as $row) {
+				$categorias[$row['CodCategoria']] = $row['NomCategoria'];
+			}
+
+			return $categorias;
+		}
+
+    return false;
+	}
 }

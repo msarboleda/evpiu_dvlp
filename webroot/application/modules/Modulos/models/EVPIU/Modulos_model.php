@@ -150,4 +150,32 @@ class Modulos_model extends CI_Model {
 						->limit(1)
 						->count_all_results($this->_table) > 0;
 	}
+
+	/**
+	 * Organiza los módulos existentes perfectamente 
+	 * para que se muestren en un control 'Select'
+	 *
+	 * @return array|bool
+	 */
+	public function fill_Modulos_select() {
+		$this->db_evpiu->select('CodModulo, NomModulo');
+		$this->db_evpiu->order_by('NomModulo', 'asc');
+
+		$query = $this->db_evpiu->get($this->_table); 
+
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+			$modulos = array();
+
+			$modulos[''] = 'Seleccione un Módulo...';
+
+			foreach ($result as $row) {
+				$modulos[$row['CodModulo']] = $row['NomModulo'];
+			}
+
+			return $modulos;
+		}
+
+    return false;
+	}
 }

@@ -21,6 +21,7 @@
   <script src="<?php echo $this->config->item('assets_path').'themes/elaadmin/js/lib/sticky-kit-master/dist/sticky-kit.min.js'; ?>"></script>
   <!--Custom JavaScript -->
   <script src="<?php echo $this->config->item('assets_path').'themes/elaadmin/js/custom.min.js'; ?>"></script>
+  <?php print_r(print_additional_js()); ?>
 </body>
 
 </html>

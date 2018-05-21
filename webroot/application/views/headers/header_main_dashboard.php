@@ -15,6 +15,7 @@
   <!-- Custom CSS -->
   <link href="<?php echo $this->config->item('assets_path').'themes/elaadmin/css/helper.css'; ?>" rel="stylesheet">
   <link href="<?php echo $this->config->item('assets_path').'themes/elaadmin/css/style.css'; ?>" rel="stylesheet">
+  <?php print_r(print_additional_css()); ?>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:** -->
   <!--[if lt IE 9]>

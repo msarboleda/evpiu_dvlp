@@ -52,6 +52,28 @@ class Modulos_model extends CI_Model {
 	}
 
 	/**
+	 * Obtiene información de un módulo específico
+	 * por medio de su código.
+	 *
+	 * @param string $module_code
+	 *
+	 * @return array|bool
+	 */
+	public function get_Modulo_by_code($module_code = NULL) {
+		if (isset($module_code)) {
+			$module = $this->db_evpiu->get_where($this->_table, array('CodModulo' => $module_code));
+
+			if ($module->num_rows() > 0) {
+				return $module->row();
+			}
+
+			return FALSE;
+		}
+
+		return FALSE;
+	}
+
+	/**
 	 * Actualiza un módulo
 	 *
 	 * @param int $module_id

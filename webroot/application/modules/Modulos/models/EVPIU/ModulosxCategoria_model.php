@@ -23,7 +23,6 @@ class ModulosxCategoria_model extends CI_Model {
 	 *
 	 * @param string $module_code
 	 * @param string $category_code
-	 * @param array $data
 	 *
 	 * @return bool
 	 */

@@ -39,4 +39,37 @@ class Verification_Roles {
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
+
+	/**
+	 * @param int|string $id
+	 *
+	 * @return bool Si el usuario pertenece al grupo de 'ventas_members'
+	 */
+	public function is_ventas_member($id = FALSE) {
+		$member_group = 'ventas_members';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+	}
+
+	/**
+	 * @param int|string $id
+	 *
+	 * @return bool Si el usuario pertenece al grupo de 'disgrafico_members'
+	 */
+	public function is_disgrafico_member($id = FALSE) {
+		$member_group = 'disgrafico_members';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+	}
+
+	/**
+	 * @param int|string $id
+	 *
+	 * @return bool Si el usuario pertenece al grupo de 'disgrafico_coord'
+	 */
+	public function is_disgrafico_coord($id = FALSE) {
+		$member_group = 'disgrafico_coord';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+	}
 }

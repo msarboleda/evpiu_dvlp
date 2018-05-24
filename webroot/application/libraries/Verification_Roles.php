@@ -43,10 +43,10 @@ class Verification_Roles {
 	/**
 	 * @param int|string $id
 	 *
-	 * @return bool Si el usuario pertenece al grupo de 'ventas_members'
+	 * @return bool Es un vendedor
 	 */
-	public function is_ventas_member($id = FALSE) {
-		$member_group = 'ventas_members';
+	public function is_vendor($id = FALSE) {
+		$member_group = 'vendors';
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
@@ -54,10 +54,10 @@ class Verification_Roles {
 	/**
 	 * @param int|string $id
 	 *
-	 * @return bool Si el usuario pertenece al grupo de 'disgrafico_members'
+	 * @return bool Es un diseñador
 	 */
-	public function is_disgrafico_member($id = FALSE) {
-		$member_group = 'disgrafico_members';
+	public function is_designer($id = FALSE) {
+		$member_group = 'designers';
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
@@ -65,10 +65,10 @@ class Verification_Roles {
 	/**
 	 * @param int|string $id
 	 *
-	 * @return bool Si el usuario pertenece al grupo de 'disgrafico_coord'
+	 * @return bool Es un coordinador de diseño
 	 */
-	public function is_disgrafico_coord($id = FALSE) {
-		$member_group = 'disgrafico_coord';
+	public function is_design_coord($id = FALSE) {
+		$member_group = 'design_coord';
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}

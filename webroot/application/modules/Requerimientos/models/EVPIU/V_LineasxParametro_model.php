@@ -19,6 +19,7 @@ class V_LineasxParametro_model extends CI_Model {
 	 * Organiza las líneas dependiendo del parámetro perfectamente 
 	 * para que se muestren en el plugin 'Select2'
 	 *
+	 * @param string $param
 	 * @param string $order
 	 *
 	 * @return array|bool

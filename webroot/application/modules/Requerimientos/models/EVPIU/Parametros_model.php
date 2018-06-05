@@ -24,7 +24,7 @@ class Parametros_model extends CI_Model {
 	 * @return array|bool
 	 */
 	public function fill_Parametros_select($order = 'asc') {
-		$this->db_evpiu->select('idParametro, NomParametro');
+		$this->db_evpiu->select('CodParametro, NomParametro');
 		$this->db_evpiu->order_by('NomParametro', $order);
 
 		$query = $this->db_evpiu->get($this->_table); 
@@ -36,7 +36,7 @@ class Parametros_model extends CI_Model {
 			$parametros[''] = 'Selecciona un Parámetro';
 
 			foreach ($result as $row) {
-				$parametros[$row['idParametro']] = $row['NomParametro'];
+				$parametros[$row['CodParametro']] = $row['NomParametro'];
 			}
 
 			return $parametros;

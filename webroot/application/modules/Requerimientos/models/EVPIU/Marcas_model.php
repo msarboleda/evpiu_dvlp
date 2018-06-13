@@ -29,7 +29,7 @@ class Marcas_model extends CI_Model {
 			return FALSE;
 		}
 
-		$this->db_evpiu->select('idMarca, NomMarca');
+		$this->db_evpiu->select('CodMarca, NomMarca');
 		$this->db_evpiu->like('NomMarca', $term);
 		$this->db_evpiu->order_by('NomMarca', $order);
 
@@ -40,7 +40,7 @@ class Marcas_model extends CI_Model {
 			$marcas = array();
 
 			foreach ($result as $row) {
-				$marcas[] = array('id' => $row['idMarca'], 'text' => $row['NomMarca']);    
+				$marcas[] = array('id' => $row['CodMarca'], 'text' => $row['NomMarca']);    
 			}
 		} else {
    		$marcas[] = array('id' => '0', 'text' => 'Esta marca no se encuentra disponible.');

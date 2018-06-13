@@ -16,8 +16,41 @@ class Caracteristicas_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 
-		$this->_table = 'req_Caracteristicas';
+		$this->_table = 'Caracteristicas';
 		$this->db_evpiu = $this->load->database('EVPIU', true);
+	}
+
+	/**
+	 * Devuelve toda la información de una característica.
+	 *
+	 * @param string $line_code Código de línea del producto.
+	 * @param string $subline_code Código de sublínea del producto.
+	 * @param string $feature_code Código de característica del producto.
+	 * @param string $order Orden ascendente o descendente para mostrar los resultados.
+	 *
+	 * @return array En caso de que la consulta arroje resultados.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function find_Feature($line_code = NULL, $subline_code = NULL, $feature_code = NULL, $order = 'asc') {
+		if (!isset($line_code) || !isset($subline_code) || !isset($feature_code)) {
+			return FALSE;
+		}
+
+		$this->db_evpiu->select();
+		$this->db_evpiu->where('CodLinea', $line_code);
+		$this->db_evpiu->where('CodSublinea', $subline_code);
+		$this->db_evpiu->where('CodCaracteristica', $feature_code);
+		$this->db_evpiu->order_by('NomLinea', $order);
+
+		$query = $this->db_evpiu->get($this->_table); 
+
+		if ($query->num_rows() > 0) {
+			$row = $query->row();
+
+			return $row;
+		}
+
+    return FALSE;
 	}
 
 	/**

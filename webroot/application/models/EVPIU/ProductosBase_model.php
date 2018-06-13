@@ -16,7 +16,7 @@ class ProductosBase_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 
-		$this->_table = 'req_ProductosBase';
+		$this->_table = 'ProductosBase';
 		$this->db_evpiu = $this->load->database('EVPIU', true);
 	}
 

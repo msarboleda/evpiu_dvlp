@@ -21,6 +21,35 @@ class Marcas_model extends CI_Model {
 	}
 
 	/**
+	 * Devuelve toda la información de una marca.
+	 *
+	 * @param string $mark_code Código de la marca.
+	 * @param string $order Orden ascendente o descendente para mostrar los resultados.
+	 *
+	 * @return array En caso de que la consulta arroje resultados.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function find_Mark($mark_code = NULL, $order = 'asc') {
+		if (!isset($mark_code)) {
+			return FALSE;
+		}
+
+		$this->db_evpiu->select();
+		$this->db_evpiu->where('CodMarca', $mark_code);
+		$this->db_evpiu->order_by('NomMarca', $order);
+
+		$query = $this->db_evpiu->get($this->_table); 
+
+		if ($query->num_rows() > 0) {
+			$row = $query->row();
+
+			return $row;
+		}
+
+    return FALSE;
+	}
+
+	/**
 	 * Organiza las marcas en un formato para llenar controles Select
 	 * con el plugin 'Select2'.
    *

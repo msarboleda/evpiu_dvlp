@@ -21,6 +21,28 @@ class ProductosBase_model extends CI_Model {
 	}
 
 	/**
+	 * Verifica que un producto base es o no existente.
+	 *
+	 * Este método se encarga de realizar una verificación en los
+	 * productos base existentes, para evitar que los nuevos
+	 * productos base no se repitan.
+	 *
+	 * @param string $base_product_code Código del producto base.
+	 *
+	 * @return array En caso de que la consulta arroje resultados.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function duplicated_Base_Product($base_product_code = NULL) {
+		if (empty($base_product_code)) {
+			return FALSE;
+		}
+
+		return $this->db_evpiu->where('CodPrimario', $base_product_code)
+						->limit(1)
+						->count_all_results($this->_table) > 0;
+	}
+
+	/**
 	 * Organiza los productos base en un formato para llenar controles Select
 	 * con el plugin 'Select2'.
 	 *

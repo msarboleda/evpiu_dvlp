@@ -40,7 +40,7 @@ class Caracteristicas_model extends CI_Model {
 		$this->db_evpiu->where('CodLinea', $line_code);
 		$this->db_evpiu->where('CodSublinea', $subline_code);
 		$this->db_evpiu->where('CodCaracteristica', $feature_code);
-		$this->db_evpiu->order_by('NomLinea', $order);
+		$this->db_evpiu->order_by('NomCaracteristica', $order);
 
 		$query = $this->db_evpiu->get($this->_table); 
 

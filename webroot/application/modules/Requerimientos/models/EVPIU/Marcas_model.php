@@ -1,12 +1,17 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Model Marcas
+ * Modelo de Marcas
  * 
- * Este modelo se relaciona con la tabla de Marcas.
- * Tiene la funcionalidad de retornar todo tipo de dato relacionado con
- * esta tabla.
+ * Este modelo se relaciona con la tabla de Marcas;
+ * Tiene funciones dedicadas exclusivamente a la tabla definida
+ * dentro del constructor, principalmente se busca retornar todo
+ * tipo de dato relacionado con esta tabla.
+ *
+ * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
+ * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
+
 class Marcas_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();

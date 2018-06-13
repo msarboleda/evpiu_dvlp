@@ -16,13 +16,18 @@ class Marcas_model extends CI_Model {
 	}
 
 	/**
-	 * Organiza las marcas de productos existentes perfectamente 
-	 * para que se muestren en el plugin 'Select2'
+	 * Organiza las marcas en un formato para llenar controles Select
+	 * con el plugin 'Select2'.
+   *
+	 * Este método se encarga de listar las marcas existentes, 
+	 * y luego organizar la información en un formato utilizado para
+	 * mostrarse en un plugin con nombre 'Select2'.
 	 *
-	 * @param string $term
-	 * @param string $order
+	 * @param string $term Término de la búsqueda en el control <select>.
+	 * @param string $order Orden ascendente o descendente para mostrar los resultados.
 	 *
-	 * @return array|bool
+	 * @return array En caso de que la consulta arroje resultados.
+	 *		boolean En caso de que la consulta no arroje resultados.
 	 */
 	public function fill_remote_Marcas_select($term = NULL, $order = 'asc') {
 		if (!isset($term)) {

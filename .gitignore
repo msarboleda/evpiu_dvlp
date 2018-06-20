@@ -39,3 +39,6 @@ webroot/application/logs/*
 !webroot/application/logs/.htaccess
 /vendor/
 webroot/webroot
+
+# Vulnerable application files
+webroot/application/config/email.php

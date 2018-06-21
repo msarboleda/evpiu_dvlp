@@ -121,11 +121,8 @@ sudo a2dismod mpm_event >/dev/null 2>&1
 sudo a2enmod mpm_prefork >/dev/null 2>&1
 sudo a2enmod php7.0 >/dev/null 2>&1
 sudo echo "extension=/usr/lib/php/20151012/sqlsrv.so" >> /etc/php/7.0/apache2/php.ini
-sudo echo "extension=/usr/lib/php/20151012/pdo_sqlsrv.so" >> /etc/php/7.0/apache2/php.ini
 sudo echo "extension=/usr/lib/php/20151012/sqlsrv.so" >> /etc/php/7.0/fpm/php.ini
-sudo echo "extension=/usr/lib/php/20151012/pdo_sqlsrv.so" >> /etc/php/7.0/fpm/php.ini
 sudo echo "extension=/usr/lib/php/20151012/sqlsrv.so" >> /etc/php/7.0/cli/php.ini
-sudo echo "extension=/usr/lib/php/20151012/pdo_sqlsrv.so" >> /etc/php/7.0/cli/php.ini
 
 echo "Restaurando permisos..."
 sudo chmod 0644 /etc/php/7.0/apache2/php.ini

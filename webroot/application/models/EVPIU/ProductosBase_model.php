@@ -61,9 +61,9 @@ class ProductosBase_model extends CI_Model {
 			return FALSE;
 		}
 
-		$this->db_evpiu->select('CodPrimario, DescripcionPrimaria');
-		$this->db_evpiu->like('DescripcionPrimaria', $term);
-		$this->db_evpiu->order_by('DescripcionPrimaria', $order);
+		$this->db_evpiu->select('CodPrimario, DescPrimaria');
+		$this->db_evpiu->like('DescPrimaria', $term);
+		$this->db_evpiu->order_by('DescPrimaria', $order);
 
 		$query = $this->db_evpiu->get($this->_table); 
 
@@ -72,7 +72,7 @@ class ProductosBase_model extends CI_Model {
 			$prods_base = array();
 
 			foreach ($result as $row) {
-				$prods_base[] = array('id' => $row['CodPrimario'], 'text' => $row['DescripcionPrimaria']);    
+				$prods_base[] = array('id' => $row['CodPrimario'], 'text' => $row['DescPrimaria']);    
 			}
 		} else {
 			$prods_base[] = array('id' => NULL, 'text' => 'Este producto base no se encuentra disponible.');

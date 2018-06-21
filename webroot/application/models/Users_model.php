@@ -15,6 +15,33 @@ class Users_model extends CI_Model {
 	}
 
 	/**
+	 * Devuelve toda la información de un vendedor.
+	 *
+	 * @param string $vendor_code Código de vendedor.
+	 *
+	 * @return array En caso de que la consulta arroje resultados.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function find_Vendor($vendor_code = NULL) {
+		if (!isset($vendor_code)) {
+			return FALSE;
+		}
+
+		$this->db->select();
+		$this->db->where('Vendedor', $vendor_code);
+
+		$query = $this->db->get($this->_table); 
+
+		if ($query->num_rows() > 0) {
+			$row = $query->row();
+
+			return $row;
+		}
+
+    return FALSE;
+	}
+
+	/**
 	 * Organiza los asesores comerciales activos perfectamente 
 	 * para que se muestren en el plugin 'Select2'
 	 *

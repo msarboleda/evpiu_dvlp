@@ -41,7 +41,7 @@ class Customer_Master_model extends CI_Model {
 			$clientes_vendedor[''] = 'Selecciona un Cliente';
 
 			foreach ($result as $row) {
-				$clientes_vendedor[$row['CUSTID_23']] = $row['NAME_23'];
+				$clientes_vendedor[trim($row['CUSTID_23'])] = trim($row['NAME_23']);
 			}
 
 			return $clientes_vendedor;

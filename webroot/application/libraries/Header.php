@@ -63,8 +63,8 @@ class Header {
 	 *							 módulos asignados.
 	 */
 	public function show_Categories_and_Modules() {
-		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
-		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+		$header_data['Categorias'] = $this->cargarCategorias_Modulos()['Categorias'];
+		$header_data['Modulos'] = $this->cargarCategorias_Modulos()['Modulos'];
 
 		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
 			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');

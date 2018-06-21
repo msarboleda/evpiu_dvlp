@@ -55,6 +55,25 @@ class Header {
 	}
 
 	/**
+	 * Devuelve todas las categorías y módulos asignados a un usuario 
+	 * de la plataforma en la base de datos.
+	 *
+	 * @return array Categorías y módulos asignados.
+	 *		error_view En caso de que el usuario no posea categorías o
+	 *							 módulos asignados.
+	 */
+	public function show_Categories_and_Modules() {
+		$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
+		$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
+
+		if (!$header_data['Categorias'] || !$header_data['Modulos']) {
+			return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
+		}
+
+		return $header_data;
+	}
+
+	/**
 	 * @return array Módulos filtrados por Categoría permitidos a grupos
 	 *	or
 	 * @return false En caso de que el parámetro sea nulo o no sea un array

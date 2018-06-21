@@ -1,23 +1,14 @@
-<?php
-/**
- * Nombre:    Header
- *
- * Creado:  10.05.2018
- *
- * Descripción:  Esta librería permite cargar e intercambiar datos en el Header del Dashboard.
- *
- * Dependencias:
- * 
- * @package    CodeIgniter-Ion-Auth
- * @author     Ben Edmunds
- * @link       http://github.com/benedmunds/CodeIgniter-Ion-Auth
- * @filesource
- */ 
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Class Header
+ * Librería Header
+ *
+ * Esta librería permite cargar e intercambiar datos en el Header del Dashboard.
+ * 
+ * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
+ * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
+
 class Header {
 	protected $CI;
 

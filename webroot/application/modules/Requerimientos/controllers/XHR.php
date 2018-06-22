@@ -14,7 +14,10 @@ class XHR extends MX_Controller {
 	public function __construct() {
 		parent::__construct();
 
+		$this->load->model('Requerimientos/EVPIU/Requerimientos_model', 'Reqs_mdl');
 		$this->load->model('Requerimientos/MAXEstrada/Customer_Master_model', 'Clientes_mdl');
+		$this->load->library('Object_Utilities');
+		$this->load->library('Date_Utilities');
 	}
 
 	/**
@@ -306,6 +309,83 @@ class XHR extends MX_Controller {
 					echo json_encode($base_products);
 				}
 			}
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Obtiene los requerimientos que posee el vendedor actual en la plataforma.
+	 *
+	 * @return json Requerimientos como tipos de datos JSON.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_get_Requerimientos_by_current_vendor() {
+		$vendor_id = $this->ion_auth->user()->row()->Vendedor;
+		
+		if (isset($vendor_id) && !empty($vendor_id)) {
+			$reqs = $this->Reqs_mdl->get_Requerimientos_by_vendor($vendor_id, 'desc');
+
+			if (!empty($reqs)) {
+				foreach ($reqs as $req) {
+					// Se formatea cada fecha de creación a un formato en Español / Colombia.
+					$req->FechaCreacion = ucfirst($this->date_utilities->format_date('%B %d, %Y', $req->FechaCreacion));
+					$req = $this->object_utilities->trim_object_data($req);
+				}
+
+				echo json_encode($reqs);
+			}
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Obtiene los requerimientos que posee el diseñador actual en la plataforma.
+	 *
+	 * @return json Requerimientos como tipos de datos JSON.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_get_Requerimientos_by_current_designer() {
+		$designer_id = $this->ion_auth->user()->row()->id;
+
+		if (isset($designer_id) && !empty($designer_id)) {
+			$reqs = $this->Reqs_mdl->get_Requerimientos_by_designer($designer_id, 'desc');
+
+			if (!empty($reqs)) {
+				foreach ($reqs as $req) {
+					// Se formatea cada fecha de creación a un formato en Español / Colombia.
+					$req->FechaCreacion = ucfirst($this->date_utilities->format_date('%B %d, %Y', $req->FechaCreacion));
+					$req = $this->object_utilities->trim_object_data($req);
+				}
+
+				echo json_encode($reqs);
+			}
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Obtiene todos los requerimientos de la plataforma.
+	 *
+	 * @return json Requerimientos como tipos de datos JSON.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_get_all_Requerimientos() {
+		// Es una consulta bastante amplia, por lo cual se aumenta el buffer para el driver sqlsrv
+		ini_set('sqlsrv.ClientBufferMaxKBSize', '50240');
+
+		$reqs = $this->Reqs_mdl->get_Requerimientos('desc');
+
+		if (!empty($reqs)) {
+			foreach ($reqs as $req) {
+				// Se formatea cada fecha de creación a un formato en Español / Colombia.
+				$req->FechaCreacion = ucfirst($this->date_utilities->format_date('%B %d, %Y', $req->FechaCreacion));
+				$req = $this->object_utilities->trim_object_data($req);
+			}
+
+			echo json_encode($reqs);
 		}
 
 		return FALSE;

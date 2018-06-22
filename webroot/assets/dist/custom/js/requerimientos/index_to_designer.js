@@ -28,7 +28,7 @@ $(document).ready(function() {
   
   Requerimientos = $reqsTable.DataTable({
 	  ajax: {
-	    url: base_url+'requerimientos/ajax_get_Requerimientos_by_designer',
+	    url: base_url+'requerimientos/xhr/xhr_get_Requerimientos_by_current_designer',
 	    method: 'POST',
 	    dataSrc: function(response) {        
 	      return response;
@@ -43,7 +43,7 @@ $(document).ready(function() {
       },
       { data: 'NomCliente' },
       { data: 'NomMarca' },
-      { data: 'DescripcionPrimaria' },
+      { data: 'DescPrimaria' },
       { data: 'NomEstado' },
       { data: 'FechaCreacion' },
       { data: 'NomVendedor' }

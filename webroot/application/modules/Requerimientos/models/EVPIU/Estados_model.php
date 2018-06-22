@@ -7,22 +7,27 @@
  * Tiene la funcionalidad de retornar todo tipo de dato relacionado con
  * esta tabla.
  */
-class EstadosRequerimientos_model extends CI_Model {
+class Estados_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 
-		$this->_table = 'EstadosRequerimientos';
+		$this->_table = 'req_Estados';
 		$this->db_evpiu = $this->load->database('EVPIU', true);
 	}
 
 	/**
-	 * Organiza los estados de requerimiento existentes perfectamente 
-	 * para que se muestren en un control 'Select'
+	 * Organiza los estados de requerimiento en un formato 
+	 * para llenar controles Select con el plugin 'Select2'.
 	 *
-	 * @return array|bool
+	 * Este método se encarga de filtrar los estados de requerimientos existentes 
+	 * y luego organizar la información en un formato utilizado para mostrarse 
+	 * en un plugin con nombre 'Select2'.
+	 *
+	 * @return array En caso de que la consulta arroje resultados.
+	 *		boolean En caso de que la consulta no arroje resultados.
 	 */
 	public function fill_EstadosRequerimientos_select() {
-		$this->db_evpiu->select('id, NomEstado');
+		$this->db_evpiu->select('CodEstado, NomEstado');
 		$this->db_evpiu->order_by('NomEstado', 'asc');
 
 		$query = $this->db_evpiu->get($this->_table); 

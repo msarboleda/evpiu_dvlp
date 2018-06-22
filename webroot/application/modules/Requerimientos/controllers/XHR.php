@@ -14,7 +14,6 @@ class XHR extends MX_Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$this->load->helper('language', 'load');
 		$this->load->model('Requerimientos/MAXEstrada/Customer_Master_model', 'Clientes_mdl');
 	}
 

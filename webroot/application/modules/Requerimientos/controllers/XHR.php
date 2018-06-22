@@ -203,4 +203,31 @@ class XHR extends MX_Controller {
 
 		return FALSE; 
 	}
+
+	/**
+	 * Genera a los espesores de productos, adaptados para que se muestren
+	 * en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar los espesores de productos y 
+	 * organizarlos en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return string Múltiples espesores de productos en etiquetas <option>.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Thicknesses_select() {
+		if (isset($_POST['Material']) && !empty($_POST['Material'])) {
+			$this->load->model('Requerimientos/EVPIU/Espesores_model', 'Espesores');
+			$Material = $this->input->post('Material');
+
+			$espesores_select_data = $this->Espesores->fill_Espesores_select($Material);
+
+			if (!empty($espesores_select_data)) {
+				foreach ($espesores_select_data as $key => $value) {
+					echo '<option value="'.$key.'">'.$value.'</option>';
+				}
+			}
+		}
+
+		return FALSE;
+	}
 }

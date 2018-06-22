@@ -11,6 +11,7 @@ class Requerimientos extends MX_Controller {
 		$this->load->model('Auth/EVPIU/ModulosxCategoriasxGrupos_model');
 		$this->load->model('Requerimientos/EVPIU/Requerimientos_model', 'Reqs_mdl');
 		// Libreria para cargar datos en el Header
+		$this->load->model('Requerimientos/EVPIU/Estados_model', 'Estados_mdl');
 		$this->load->library('header');
 		// Libreria para identificar roles del usuario actual
 		$this->load->library('verification_roles');
@@ -41,8 +42,7 @@ class Requerimientos extends MX_Controller {
 				return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
 			}
 
-			$this->load->model('Requerimientos/EVPIU/EstadosRequerimientos_model', 'EstadosReq');
-			$view_data['status_reqs_select'] = $this->EstadosReq->fill_EstadosRequerimientos_select();
+			$view_data['status_reqs_select'] = $this->Estados_mdl->fill_EstadosRequerimientos_select();
 
 			add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');
 			add_js('themes/elaadmin/js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js');

@@ -65,4 +65,31 @@ class XHR extends MX_Controller {
 
 		return FALSE;
 	}
+
+	/**
+	 * Genera a las líneas de productos, adaptadas para que se muestren
+	 * en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar las líneas de productos y 
+	 * organizarlas en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return string Múltiples líneas de productos en etiquetas <option>.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Lines_select() {
+		if (isset($_POST['Parametro']) && !empty($_POST['Parametro'])) {
+			$this->load->model('Requerimientos/EVPIU/V_LineasxParametro_model', 'LineasxParam_mdl');
+			$Parametro = $this->input->post('Parametro');
+
+			$lines_select_data = $this->LineasxParam_mdl->fill_Lineas_x_Parametro_select($Parametro);
+
+			if (!empty($lines_select_data)) {
+				foreach ($lines_select_data as $key => $value) {
+					echo '<option value="'.$key.'">'.$value.'</option>';
+				}
+			}
+		}
+
+		return FALSE; 	
+	}
 }

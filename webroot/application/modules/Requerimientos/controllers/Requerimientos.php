@@ -29,16 +29,8 @@ class Requerimientos extends MX_Controller {
 	 */
 	public function index() {
 		if ($this->verification_roles->is_vendor() || $this->verification_roles->is_designer() || $this->verification_roles->is_design_coord()) {
-			// Nombre de módulo que se muestra en la barra de navegación
+			$header_data = $this->header->show_Categories_and_Modules();
 			$header_data['module_name'] = lang('index_heading');
-			// Categorías con su respectiva cantidad de módulos que se permiten a los grupos del usuario actual
-			$header_data['Categorias'] = $this->header->cargarCategorias_Modulos()['Categorias'];
-			// Módulos que se permiten a los grupos del usuario actual
-			$header_data['Modulos'] = $this->header->cargarCategorias_Modulos()['Modulos'];
-
-			if (!$header_data['Categorias'] || !$header_data['Modulos']) {
-				return show_error('Ocurrió un error en la carga de sus aplicaciones asignadas.');
-			}
 
 			$view_data['status_reqs_select'] = $this->Estados_mdl->fill_EstadosRequerimientos_select();
 

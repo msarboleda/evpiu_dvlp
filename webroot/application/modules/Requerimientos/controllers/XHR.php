@@ -15,30 +15,6 @@ class XHR extends MX_Controller {
 		parent::__construct();
 
 		$this->load->model('Requerimientos/MAXEstrada/Customer_Master_model', 'Clientes_mdl');
-
-	/**
-	 * Genera a los clientes de un vendedor, adaptados para que se muestren
-	 * en un Select con el plugin 'Select2'.
-	 *
-	 * Este método se encarga de consultar los clientes de un vendedor y 
-	 * organizarlos en un formato adaptado para el plugin 'Select2'.
-	 *
-	 * @return string Múltiples clientes en etiquetas <option>.
-	 *		boolean En caso de que la consulta no arroje resultados.
-	 */
-	public function xhr_Customers_from_Vendor_select() {
-		if (isset($_POST['Vendedor']) && !empty($_POST['Vendedor'])) {
-			$Vendedor = $this->input->post('Vendedor');
-
-			$customers_select_data = $this->Clientes_mdl->fill_Clientes_from_Vendor_select($Vendedor);
-			
-			if (!empty($customers_select_data)) {
-				foreach ($customers_select_data as $key => $value) {
-					echo '<option value="'.$key.'">'.$value.'</option>';
-				}
-			}
-		}
-		return FALSE;
 	}
 
 	/**

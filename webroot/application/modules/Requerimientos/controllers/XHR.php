@@ -92,4 +92,30 @@ class XHR extends MX_Controller {
 
 		return FALSE; 	
 	}
+
+	/**
+	 * Genera a las sublíneas de productos, adaptadas para que se muestren
+	 * en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar las sublíneas de productos y 
+	 * organizarlas en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return string Múltiples sublíneas de productos en etiquetas <option>.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Sublines_select() {
+		if (isset($_POST['Linea']) && !empty($_POST['Linea'])) {
+			$Linea = $this->input->post('Linea');
+
+			$sublineas_select_data = $this->Sublineas_mdl->fill_Sublineas_select($Linea);
+
+			if (!empty($sublineas_select_data)) {
+				foreach ($sublineas_select_data as $key => $value) {
+					echo '<option value="'.$key.'">'.$value.'</option>';
+				}
+			}
+		}
+
+		return FALSE;	
+	}
 }

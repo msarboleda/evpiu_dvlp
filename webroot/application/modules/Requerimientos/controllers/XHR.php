@@ -145,4 +145,32 @@ class XHR extends MX_Controller {
 
 		return FALSE;
 	}
+
+	/**
+	 * Genera a los materiales de productos, adaptados para que se muestren
+	 * en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar los materiales de productos y 
+	 * organizarlos en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return string Múltiples materiales de productos en etiquetas <option>.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Materials_select() {
+		if (isset($_POST['Linea']) && isset($_POST['Sublinea']) && !empty($_POST['Linea']) && !empty($_POST['Sublinea'])) {
+			$this->load->model('Requerimientos/EVPIU/V_MaterialesxSublinea_model', 'vMaterialesxSublinea_mdl');
+			$Linea = $this->input->post('Linea');
+			$Sublinea = $this->input->post('Sublinea');
+
+			$materiales_select_data = $this->vMaterialesxSublinea_mdl->fill_Materiales_x_Sublinea_select($Linea, $Sublinea);
+
+			if (!empty($materiales_select_data)) {
+				foreach ($materiales_select_data as $key => $value) {
+					echo '<option value="'.$key.'">'.$value.'</option>';
+				}
+			}
+		}
+
+		return FALSE;	
+	}
 }

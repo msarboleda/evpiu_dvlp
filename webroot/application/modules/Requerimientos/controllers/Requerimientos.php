@@ -19,8 +19,6 @@ class Requerimientos extends MX_Controller {
 		$this->form_validation->set_error_delimiters('', '<br>');
 
 		$this->lang->load('requerimientos');
-		setlocale(LC_TIME, 'es_CO.utf8');
-		date_default_timezone_set('America/Bogota');	
 	}
 
 	/**

@@ -230,4 +230,32 @@ class XHR extends MX_Controller {
 
 		return FALSE;
 	}
+
+	/**
+	 * Genera a los relieves de productos, adaptados para que se muestren
+	 * en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar los relieves de productos y 
+	 * organizarlos en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return string Múltiples relieves de productos en etiquetas <option>.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Reliefs_select() {
+		if (isset($_POST['Linea']) && isset($_POST['Sublinea']) && !empty($_POST['Linea']) && !empty($_POST['Sublinea'])) {
+			$this->load->model('Requerimientos/EVPIU/V_Relieves_model', 'Relieves');
+			$Linea = $this->input->post('Linea');
+			$Sublinea = $this->input->post('Sublinea');
+
+			$relieves_select_data = $this->Relieves->fill_Relieves_select($Linea, $Sublinea);
+
+			if (!empty($relieves_select_data)) {
+				foreach ($relieves_select_data as $key => $value) {
+					echo '<option value="'.$key.'">'.$value.'</option>';
+				}
+			}	
+		}
+
+		return FALSE;
+	}
 }

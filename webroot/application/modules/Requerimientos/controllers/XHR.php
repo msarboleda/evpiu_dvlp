@@ -258,4 +258,30 @@ class XHR extends MX_Controller {
 
 		return FALSE;
 	}
+
+	/**
+	 * Genera remotamente a las marcas de productos, adaptadas para 
+	 * que se muestren en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar remotamente las marcas 
+	 * de productos y organizarlas en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return json Marcas en formato JSON que lleva 'id' y 'text'.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Marks_remote_select() {
+		if (isset($_GET['q']) && strlen($_GET['q']) > 0) {
+			$term = $_GET['q'];
+
+			if (isset($term) && !empty($term)) {
+				$marks = $this->Marcas_mdl->fill_remote_Marcas_select($term);
+
+				if (!empty($marks)) {
+					echo json_encode($marks);
+				}
+			}
+		}
+
+		return FALSE;
+	}
 }

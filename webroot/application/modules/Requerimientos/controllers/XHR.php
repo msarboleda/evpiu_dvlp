@@ -173,4 +173,34 @@ class XHR extends MX_Controller {
 
 		return FALSE;	
 	}
+
+	/**
+	 * Genera a los tamaños de productos, adaptados para que se muestren
+	 * en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar los tamaños de productos y 
+	 * organizarlos en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return string Múltiples tamaños de productos en etiquetas <option>.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Sizes_select() {
+		if (isset($_POST['Linea']) && isset($_POST['Sublinea']) && isset($_POST['Material']) 
+			&& !empty($_POST['Linea']) && !empty($_POST['Sublinea']) && !empty($_POST['Material'])) {
+			$this->load->model('Requerimientos/EVPIU/V_Tamanos_model', 'vTamanos');
+			$Linea = $this->input->post('Linea');
+			$Sublinea = $this->input->post('Sublinea');
+			$Material = $this->input->post('Material');
+
+			$tams_select_data = $this->vTamanos->fill_Tamanos_select($Linea, $Sublinea, $Material);
+
+			if (!empty($tams_select_data)) {
+				foreach ($tams_select_data as $key => $value) {
+					echo '<option value="'.$key.'">'.$value.'</option>';
+				}
+			}
+		}
+
+		return FALSE; 
+	}
 }

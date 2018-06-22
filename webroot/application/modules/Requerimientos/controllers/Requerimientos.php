@@ -19,8 +19,8 @@ class Requerimientos extends MX_Controller {
 		$this->form_validation->set_error_delimiters('', '<br>');
 
 		$this->lang->load('requerimientos');
-		// Se configura la localización del tiempo para Colombia
-		setlocale(LC_TIME, 'es_CO.utf8');	
+		setlocale(LC_TIME, 'es_CO.utf8');
+		date_default_timezone_set('America/Bogota');	
 	}
 
 	/**

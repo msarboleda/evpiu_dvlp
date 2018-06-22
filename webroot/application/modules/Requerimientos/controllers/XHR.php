@@ -284,4 +284,30 @@ class XHR extends MX_Controller {
 
 		return FALSE;
 	}
+
+	/**
+	 * Genera remotamente a los productos base, adaptados para 
+	 * que se muestren en un Select con el plugin 'Select2'.
+	 *
+	 * Este método se encarga de consultar remotamente los productos base 
+	 * y organizarlos en un formato adaptado para el plugin 'Select2'.
+	 *
+	 * @return json Productos base en formato JSON que lleva 'id' y 'text'.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function xhr_Base_Products_remote_select() {
+		if (isset($_GET['q']) && strlen($_GET['q']) > 0) {
+			$term = $_GET['q'];
+
+			if (isset($term) && !empty($term)) {
+				$base_products = $this->ProductosBase_mdl->fill_remote_Productos_Base_select($term);
+
+				if (!empty($base_products)) {
+					echo json_encode($base_products);
+				}
+			}
+		}
+
+		return FALSE;
+	}
 }

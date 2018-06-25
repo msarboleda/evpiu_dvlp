@@ -138,6 +138,7 @@ class XHR extends MX_Controller {
 			$Linea = $this->input->post('Linea');
 			$Sublinea = $this->input->post('Sublinea');
 
+			$this->load->model('EVPIU/Caracteristicas_model', 'Caracteristicas_mdl');
 			$caracteristicas_select_data = $this->Caracteristicas_mdl->fill_Caracteristicas_select($Linea, $Sublinea);
 
 			if (!empty($caracteristicas_select_data)) {

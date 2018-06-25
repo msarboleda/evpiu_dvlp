@@ -43,6 +43,24 @@ class ProductosBase_model extends CI_Model {
 	}
 
 	/**
+	 * Agrega un producto base a la tabla de la base de datos.
+	 *
+	 * Este método se encarga de almacenar un producto base en
+	 * en la respectiva tabla de este modelo en la base de datos.
+	 *
+	 * @param string $data Datos que se van a agregar a la tabla.
+	 *
+	 * @return int En caso de que la inserción sea exitosa.
+	 *		boolean En caso de que la inserción no sea correcta.
+	 */
+	public function add_Base_Product($data) {
+		$this->db_evpiu->insert($this->_table, $data);
+		$id = $this->db_evpiu->insert_id();
+
+		return (isset($id)) ? $id : FALSE;
+	}
+
+	/**
 	 * Organiza los productos base en un formato para llenar controles Select
 	 * con el plugin 'Select2'.
 	 *

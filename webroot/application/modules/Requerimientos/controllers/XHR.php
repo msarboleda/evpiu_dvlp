@@ -279,6 +279,8 @@ class XHR extends MX_Controller {
 			$term = $_GET['q'];
 
 			if (isset($term) && !empty($term)) {
+				$this->load->model('EVPIU/Marcas_model', 'Marcas_mdl');
+
 				$marks = $this->Marcas_mdl->fill_remote_Marcas_select($term);
 
 				if (!empty($marks)) {

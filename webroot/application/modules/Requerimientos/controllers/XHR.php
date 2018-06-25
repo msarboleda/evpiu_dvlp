@@ -14,7 +14,7 @@ class XHR extends MX_Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$this->load->model('Requerimientos/EVPIU/Requerimientos_model', 'Reqs_mdl');
+		$this->load->model('Requerimientos/EVPIU/V_Requerimientos_model', 'V_Reqs_mdl');
 		$this->load->model('Requerimientos/MAXEstrada/Customer_Master_model', 'Clientes_mdl');
 		$this->load->library('Object_Utilities');
 		$this->load->library('Date_Utilities');
@@ -330,7 +330,7 @@ class XHR extends MX_Controller {
 		$vendor_id = $this->ion_auth->user()->row()->Vendedor;
 		
 		if (isset($vendor_id) && !empty($vendor_id)) {
-			$reqs = $this->Reqs_mdl->get_Requerimientos_by_vendor($vendor_id, 'desc');
+			$reqs = $this->V_Reqs_mdl->get_Requerimientos_by_vendor($vendor_id, 'desc');
 
 			if (!empty($reqs)) {
 				foreach ($reqs as $req) {
@@ -356,7 +356,7 @@ class XHR extends MX_Controller {
 		$designer_id = $this->ion_auth->user()->row()->id;
 
 		if (isset($designer_id) && !empty($designer_id)) {
-			$reqs = $this->Reqs_mdl->get_Requerimientos_by_designer($designer_id, 'desc');
+			$reqs = $this->V_Reqs_mdl->get_Requerimientos_by_designer($designer_id, 'desc');
 
 			if (!empty($reqs)) {
 				foreach ($reqs as $req) {
@@ -382,7 +382,7 @@ class XHR extends MX_Controller {
 		// Es una consulta bastante amplia, por lo cual se aumenta el buffer para el driver sqlsrv
 		ini_set('sqlsrv.ClientBufferMaxKBSize', '50240');
 
-		$reqs = $this->Reqs_mdl->get_Requerimientos('desc');
+		$reqs = $this->V_Reqs_mdl->get_Requerimientos('desc');
 
 		if (!empty($reqs)) {
 			foreach ($reqs as $req) {

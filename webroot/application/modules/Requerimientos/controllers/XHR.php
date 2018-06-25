@@ -110,6 +110,7 @@ class XHR extends MX_Controller {
 		if (isset($_POST['Linea']) && !empty($_POST['Linea'])) {
 			$Linea = $this->input->post('Linea');
 
+			$this->load->model('EVPIU/Sublineas_model', 'Sublineas_mdl');
 			$sublineas_select_data = $this->Sublineas_mdl->fill_Sublineas_select($Linea);
 
 			if (!empty($sublineas_select_data)) {

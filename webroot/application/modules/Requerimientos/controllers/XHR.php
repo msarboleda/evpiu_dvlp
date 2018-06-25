@@ -307,6 +307,8 @@ class XHR extends MX_Controller {
 			$term = $_GET['q'];
 
 			if (isset($term) && !empty($term)) {
+				$this->load->model('EVPIU/ProductosBase_model', 'ProductosBase_mdl');
+
 				$base_products = $this->ProductosBase_mdl->fill_remote_Productos_Base_select($term);
 
 				if (!empty($base_products)) {

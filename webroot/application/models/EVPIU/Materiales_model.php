@@ -48,4 +48,33 @@ class Materiales_model extends CI_Model {
 
     return FALSE;
 	}
+
+	/**
+	 * Consulta los materiales de productos que necesitan o no plano
+	 * para continuar con la elaboración de los Requerimientos.
+	 *
+	 * @param boolean $required Consultar materiales que necesitan plano (TRUE)
+	 * 					o consultar materiales que no necesitan plano (FALSE).
+	 * @param string $order Orden ascendente o descendente de la consulta.
+	 *
+	 * @return array En caso de que la consulta arroje resultados.
+	 *		boolean En caso de que la consulta no arroje resultados.
+	 */
+	public function get_Materials_with_Flat_Requirement($required, $order = 'asc') {
+		if (!isset($required)) {
+			return FALSE;
+		}
+
+		$this->db_evpiu->select('CodMaterial');
+		$this->db_evpiu->where('RequierePlano', $required);
+		$this->db_evpiu->order_by('CodMaterial', $order);
+
+		$query = $this->db_evpiu->get($this->_table);
+
+		if ($query->num_rows() > 0) {
+			return $query->result_array();
+		}
+
+		return FALSE;
+	}
 }

@@ -46,4 +46,24 @@ class Requerimientos_model extends CI_Model {
 
 		return FALSE;	
 	}
+
+	/**
+	 * Obtiene el último número de requerimiento almacenado en la base de datos.
+	 *
+	 * @return string Último número de requerimiento almacenado en la base de datos.
+	 *    boolean FALSE En caso de que la consulta no arroje resultados.
+	 */
+	public function get_Last_Request_number() {
+		$this->db_evpiu->select('NroRequerimiento');
+		$this->db_evpiu->from($this->_table);
+		$this->db_evpiu->order_by('NroRequerimiento', 'desc');
+		$this->db_evpiu->limit(1);
+		$query = $this->db_evpiu->get();
+  
+		if ($query->num_rows() > 1) {
+			return $query->row('NroRequerimiento');  
+		}
+
+		return FALSE;
+	}
 }

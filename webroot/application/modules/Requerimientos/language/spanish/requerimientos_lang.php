@@ -11,6 +11,6 @@
 */
 
 // Index
-$lang['index_heading'] = 'Requerimientos';
-$lang['index_subheading']	= 'Debajo está la lista de Requerimientos.';
-$lang['index_status_filter_label']	= 'Filtrar por Estado:';
+$lang['index_heading']                        = 'Requerimientos';
+$lang['index_subheading']                     = 'Debajo está la lista de Requerimientos.';
+$lang['index_status_filter_label']            = 'Filtrar por Estado:';

@@ -153,8 +153,4 @@ class Requerimientos extends MX_Controller {
 
 		return $result;
 	}
-		}
-
-		echo json_encode($reqs);
-	}
 }

@@ -30,7 +30,7 @@ class Array_Utilities {
 	 * @return bool TRUE or FALSE
 	 */
 	public function is_fully_loaded_array($array) {
-		if (is_array($array)) {
+		if (is_array($array) && !empty($array)) {
 			foreach($array as $value) {
 				if (empty($value)) {
 					return FALSE;

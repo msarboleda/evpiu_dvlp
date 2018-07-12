@@ -88,7 +88,7 @@ class Requerimientos extends MX_Controller {
 				$this->load->view('footers'. DS . 'footer_main_dashboard');
 			}
 		}	else {
-			redirect('auth', 'refresh');
+			redirect('auth');
 		}
 	}
 

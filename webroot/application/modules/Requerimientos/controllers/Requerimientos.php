@@ -176,4 +176,75 @@ class Requerimientos extends MX_Controller {
 
 		return $result;
 	}
+
+	/**
+	 * Almacena los soportes de un requerimiento al servidor en una carpeta específica
+	 * de cada requerimiento y con sus nombres de archivos encriptados.
+	 *
+	 * @param $request_id int Número del requerimiento que se vincula a los soportes.
+	 * @param $request_supports $_FILES Soportes de requerimiento para almacenar.
+	 *
+	 * @return bool TRUE or FALSE En caso de un error.
+	 */
+	public function upload_Request_Supports($request_id, $request_supports = array()) {
+		$assets_path = $this->config->item('physical_assets_path');
+		$request_supports_path = $assets_path.'uploads/Requerimientos/Soportes/'.$request_id;
+
+		if (!file_exists($request_supports_path)) {
+			mkdir($request_supports_path, 0755);
+		}
+
+		$config['upload_path']        = $request_supports_path;
+		$config['allowed_types']      = 'jpg|jpeg|png|pdf';
+		$config['file_ext_tolower']   = TRUE;
+		$config['max_size']           = '5120';
+		$config['multi']              = 'ignore'; // Ignora los archivos que obtengan error y sigue subiendo
+		$config['encrypt_name']       = TRUE;
+
+		$this->load->library('upload', $config);
+
+		$do_upload = $this->upload->do_upload('supports');
+
+	 	if ($do_upload) {
+			$uploaded_supports = $this->upload->data();
+			$db_stored_request_supports = $this->save_Stored_Request_Supports($request_id, $uploaded_supports);
+
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
+	/**
+	 * Método para reportar en la base de datos todos los soportes de requerimiento
+	 * que se almacenaron en el servidor y se vincularon a un requerimiento.
+	 *
+	 * @param $request_id int Número del requerimiento que se vincula a los soportes.
+	 * @param $uploaded_supports array Datos de los soportes subidos del requerimiento.
+	 */
+	public function save_Stored_Request_Supports($request_id, $uploaded_supports) {
+		$this->load->model('Requerimientos/EVPIU/Archivos_model', 'ArchivosReq_mdl');
+		$this->load->library('array_utilities');
+
+		// En caso de que solo un soporte haya sido subido, el arreglo de los soportes
+		// subidos se debe convertir a multidimensional para que el 'foreach' de 
+		// abajo pueda tomar su nombre de archivo.
+		if (!$this->array_utilities->is_multidimensional_array($uploaded_supports)) {
+			$old_uploaded_supports = $uploaded_supports;
+			$uploaded_supports = array();
+			$uploaded_supports[] = $old_uploaded_supports;
+		}
+
+		foreach ($uploaded_supports as $uploaded_support) {
+			$uploaded_support_data = array(
+				'idTipoArchivo' => $this->file_type_request_support,
+				'NomArchivo' => $uploaded_support['file_name'],
+				'NroRequerimiento' => $request_id,
+				'Usuario' => $this->ion_auth->user()->row()->username,
+				'FechaCreacion' => date('Y-m-d H:i:s'),
+			); 
+	    
+			$this->ArchivosReq_mdl->add_File($this->file_type_request_support, $uploaded_support_data);
+		}
+	}
 }

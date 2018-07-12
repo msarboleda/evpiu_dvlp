@@ -54,6 +54,7 @@ class Requerimientos extends MX_Controller {
 			$header_data = $this->header->show_Categories_and_Modules();
 			$header_data['module_name'] = lang('index_heading');
 
+			$this->load->model('Requerimientos/EVPIU/Estados_model', 'Estados_mdl');
 			$view_data['status_reqs_select'] = $this->Estados_mdl->fill_EstadosRequerimientos_select();
 
 			add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');

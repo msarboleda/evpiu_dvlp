@@ -557,8 +557,8 @@
             				<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageBlock" style="min-width:100%;">
 			    						<tbody class="mcnImageBlockOuter">
 			    							<tr>
-			                   	<td id="logoWrap" align="bottom" style="text-align: center!important;background-image: url('<?php echo $this->config->item('assets_path').'dist/custom/images/emails/separator.jpg'; ?>');background-repeat: no-repeat;background-size: 600px 50px;background-position: center center;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background: url(<?php echo $this->config->item('assets_path').'dist/custom/images/emails/separator.jpg'; ?>) center center / 600px 50px no-repeat!important;">
-			                     <a href="<?php echo site_url(); ?>" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;"><img id="logo" src="<?php echo $this->config->item('assets_path').'dist/custom/images/emails/estrada_email_logo.png'; ?>" width="172" height="50" style="margin: 10px auto 20px;-ms-interpolation-mode: bicubic;height: auto;line-height: 100%;outline: none;text-decoration: none;max-width: 100%;border: 0!important;"></a>
+			                   	<td id="logoWrap" align="bottom" style="text-align: center!important;background-image: url('https://gallery.mailchimp.com/f5c15284b26fcde7f06fb6724/images/bfbf560f-5a62-4df2-9169-aa4364271aa5.jpg');background-repeat: no-repeat;background-size: 600px 50px;background-position: center center;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background: url(https://gallery.mailchimp.com/f5c15284b26fcde7f06fb6724/images/bfbf560f-5a62-4df2-9169-aa4364271aa5.jpg) center center / 600px 50px no-repeat!important;">
+			                     <a href="<?php echo site_url(); ?>" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;"><img id="logo" src="https://gallery.mailchimp.com/f5c15284b26fcde7f06fb6724/images/c8dfe34c-a2b1-4bee-b109-a9a60f308dcd.png" width="172" height="50" style="margin: 10px auto 20px;-ms-interpolation-mode: bicubic;height: auto;line-height: 100%;outline: none;text-decoration: none;max-width: 100%;border: 0!important;"></a>
 			                   	</td>
 			                  </tr>
 			    						</tbody>
@@ -643,7 +643,7 @@
                 										<tbody>
                 											<tr>
                     										<td class="mcnCaptionRightImageContent" align="center" valign="top">
-                        									<img alt="" src="<?php echo $this->config->item('assets_path').'dist/custom/images/emails/requerimientos/planos/sketch.png'; ?>" width="264" style="max-width:512px;" class="mcnImage">  
+                        									<img alt="" src="https://gallery.mailchimp.com/f5c15284b26fcde7f06fb6724/images/ec1f0962-5296-4d4f-b2d6-2353f6508beb.png" width="264" style="max-width:512px;" class="mcnImage">  
                     										</td>
                 											</tr>
 												            </tbody>

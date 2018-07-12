@@ -119,6 +119,9 @@ class Requerimientos extends MX_Controller {
 		foreach ($reqs as $req) {
 			// Se formatea cada fecha de creación a un formato en Español / Colombia.
 			$req->FechaCreacion = ucfirst(strftime('%B %d, %Y', strtotime($req->FechaCreacion)));
+
+		return $result;
+	}
 		}
 
 		echo json_encode($reqs);

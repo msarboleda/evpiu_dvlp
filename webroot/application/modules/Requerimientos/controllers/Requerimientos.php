@@ -34,18 +34,13 @@ class Requerimientos extends MX_Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$this->load->helper('language', 'load');
 		$this->load->model('Auth/EVPIU/ModulosxCategoriasxGrupos_model');
-		$this->load->model('Requerimientos/EVPIU/Requerimientos_model', 'Reqs_mdl');
-		// Libreria para cargar datos en el Header
-		$this->load->model('Requerimientos/EVPIU/Estados_model', 'Estados_mdl');
-		$this->load->library('header');
-		// Libreria para identificar roles del usuario actual
-		$this->load->library('verification_roles');
-		// Inicio y final del contenido de los errores de form_validation.
-		$this->form_validation->set_error_delimiters('', '<br>');
-
+		$this->load->model('Users_model', 'Users_mdl');
+		$this->load->library(array('header', 'verification_roles'));
+		$this->load->config('form_validation', TRUE);
+		$this->load->helper(array('language', 'load', 'form'));
 		$this->lang->load('requerimientos');
+		$this->form_validation->set_error_delimiters('', '<br>');
 	}
 
 	/**

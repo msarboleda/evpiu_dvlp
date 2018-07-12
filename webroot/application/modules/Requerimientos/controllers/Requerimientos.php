@@ -27,6 +27,10 @@ class Requerimientos extends MX_Controller {
 
 	// Estado: Pospuesto
 	public $postponed_state = 8;
+
+	// Tipo de archivo: Soporte de Requerimiento
+	public $file_type_request_support = 1;
+
 	public function __construct() {
 		parent::__construct();
 

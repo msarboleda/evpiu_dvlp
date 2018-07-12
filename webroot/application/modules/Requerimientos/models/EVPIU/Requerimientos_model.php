@@ -60,7 +60,7 @@ class Requerimientos_model extends CI_Model {
 		$this->db_evpiu->limit(1);
 		$query = $this->db_evpiu->get();
   
-		if ($query->num_rows() > 1) {
+		if ($query->num_rows() > 0) {
 			return $query->row('NroRequerimiento');  
 		}
 

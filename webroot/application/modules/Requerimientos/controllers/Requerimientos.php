@@ -107,18 +107,49 @@ class Requerimientos extends MX_Controller {
 	}
 
 	/**
-	 * Método para peticiones Ajax que consultan todos los requerimientos
-	 * de un diseñador, filtrando por su código.
+	 * Envía una notificación de correo electrónico adaptada con información
+	 * relacionada a un requerimiento.
 	 *
-	 * @return json_object
+	 * @param string $to Correo electrónico a quien se enviará la notificación.
+	 * @param string $subject Asunto del correo electrónico.
+	 * @param string $html_message Vista HTML con el contenido del mensaje.
+	 * @param array $additional_data Datos adicionales para anexar al mensaje.
+	 *
+	 * @return boolean TRUE En caso de que el correo electrónico se envie correctamente.
+	 *    FALSE En caso de que el correo electrónico no se haya enviado.
 	 */
-	public function ajax_get_Requerimientos_by_designer() {
-		$designer_id = $this->ion_auth->user()->row()->id;
-		$reqs = $this->Reqs_mdl->get_Requerimientos_by_designer($designer_id, 'desc');
+	public function send_Notification_Email_Request($to, $subject, $html_message, $additional_data = array()) {
+		if (!isset($to) || empty($to) || !isset($subject) || empty($subject) 
+			|| !isset($html_message) || empty($html_message)) {
+			return FALSE;
+		}
 
-		foreach ($reqs as $req) {
-			// Se formatea cada fecha de creación a un formato en Español / Colombia.
-			$req->FechaCreacion = ucfirst(strftime('%B %d, %Y', strtotime($req->FechaCreacion)));
+		$this->load->library('array_utilities');
+
+		if (!$this->array_utilities->is_fully_loaded_array($additional_data)) {
+			return FALSE;
+		}
+
+		$this->load->library('email');
+
+		$vendor_id = $this->ion_auth->user()->row()->id;
+		$vendor_name = $this->ion_auth->user($vendor_id)->row()->first_name.' '.$this->ion_auth->user($vendor_id)->row()->last_name;
+
+		$message_data = array(
+			'charset' => strtolower(config_item('charset')),
+			'subject' => $subject,
+			'user' => $vendor_name,
+			'product_code' => $additional_data['product_code'],
+			'product_description' => $additional_data['product_description'],
+		);
+
+		$body = $this->load->view('requerimientos'.DS.$html_message, $message_data, TRUE);
+
+		$result = $this->email->from('info@estradavelasquez.com', 'Notificaciones EVPIU')
+		    ->to($to)
+		    ->subject($subject)
+		    ->message($body)
+		    ->send();
 
 		return $result;
 	}

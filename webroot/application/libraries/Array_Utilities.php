@@ -21,4 +21,25 @@ class Array_Utilities {
     rsort( $array );
     return isset( $array[0] ) && is_array( $array[0] );
 	} 
+
+	/**
+	 * Se encarga de comprobar si un arreglo está totalmente lleno.
+	 *
+	 * @param $array array Arreglo a comprobar
+	 *
+	 * @return bool TRUE or FALSE
+	 */
+	public function is_fully_loaded_array($array) {
+		if (is_array($array)) {
+			foreach($array as $value) {
+				if (empty($value)) {
+					return FALSE;
+				}
+			}
+			
+			return TRUE;
+		}
+
+		return FALSE;
+	}
 }

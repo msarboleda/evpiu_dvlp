@@ -23,28 +23,58 @@ class Requerimientos_model extends CI_Model {
 	/**
 	 * Agrega un requerimiento a la base de datos.
 	 *
-	 * @param array $data Datos de un requerimiento para agregar a la base
-	 *        de datos.
+	 * @param array $data Datos de un formulario que contiene información del
+	 *        requerimiento para agregar a la base de datos.
+	 * @param array $additional_data Datos que no se pueden obtener del formulario
+	 *        y se necesitan capturar.
 	 *
 	 * @return string Número de requerimiento que se almacenó.
 	 * 		boolean FALSE En caso de que los datos que se mandan como parámetro
 	 *        no tengan una estructura de array o el array de datos este vacío.
 	 */
-	public function add_Request($data = array()) {
-		if (is_array($data) && !empty($data)) {
-			$this->db_evpiu->insert($this->_table, $data);
-			$id = $this->db_evpiu->insert_id();
-
-			if (isset($id)) {
-				return $this->db_evpiu->select('NroRequerimiento')
-					->from($this->_table)
-					->where('idRequerimiento', $id)
-					->get()
-					->row('NroRequerimiento');
-			}
+	public function add_Request($data = array(), $additional_data = array()) {
+		if (!is_array($data) || empty($data)) {
+			return FALSE;
 		}
 
-		return FALSE;	
+		if (!is_array($additional_data) || empty($additional_data)) {
+			return FALSE;
+		}
+
+		if (empty($data['base_product'])) {
+			$CodBase = null;
+		} else {
+			$CodBase = $data['base_product'];
+		}
+
+		$attributes = array(
+			'NroRequerimiento'     => $this->get_Last_Request_number() + 1,
+			'CodVendedor'          => $this->ion_auth->user()->row()->Vendedor,
+			'CodCliente'           => $data['Cliente'],
+			'CodMarca'             => $data['Marca'],
+			'CodParametro'         => $data['Parametro'],
+			'CodEspesor'           => $data['Espesor'],
+			'CodRelieve'           => $data['Relieve'],
+			'CodPrimario'          => $additional_data['Primario'],
+			'FechaCreacion'        => date('Y-m-d H:i:s'),
+			'Estado'               => $additional_data['Estado'],
+			'Descripcion'          => $data['Comentarios'],
+			'Creo'                 => $this->ion_auth->user()->row()->username,
+			'Renderizar'           => $data['requires_rendering'],
+			'RequiereBase'         => $data['applied_art'],
+			'CodBase'              => $CodBase,
+		);
+
+			
+		$this->db_evpiu->insert($this->_table, $attributes);
+		$id = $this->db_evpiu->insert_id();
+
+		if (isset($id)) {
+			return $this->find_Request_by_id($id)->NroRequerimiento;
+		}
+
+		return FALSE;
+	}
 	}
 
 	/**

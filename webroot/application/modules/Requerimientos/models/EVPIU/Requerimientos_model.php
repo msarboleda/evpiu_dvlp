@@ -75,6 +75,26 @@ class Requerimientos_model extends CI_Model {
 
 		return FALSE;
 	}
+
+	/**
+	 * Obtiene toda la información de un requerimiento filtrado por su id.
+	 *
+	 * @param int $id Número de requerimiento que se desea consultar.
+	 *
+	 * @return object Información de un requerimiento específico.
+	 *    boolean En caso de no definir un id de requerimiento para
+	 *    consultar.
+	 */
+	public function find_Request_by_id($id) {
+		if (isset($id) && !empty($id)) {
+			return $this->db_evpiu->select()
+				->from($this->_table)
+				->where('idRequerimiento', $id)
+				->get()
+				->row();
+		}
+
+		return FALSE;
 	}
 
 	/**

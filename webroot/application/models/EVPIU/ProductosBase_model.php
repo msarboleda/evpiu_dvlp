@@ -54,16 +54,48 @@ class ProductosBase_model extends CI_Model {
 	 * Este método se encarga de almacenar un producto base en
 	 * en la respectiva tabla de este modelo en la base de datos.
 	 *
-	 * @param string $data Datos que se van a agregar a la tabla.
+	 * @param array $data Información acerca del producto base.
+	 * @param array $additional_data Código y descripción del producto base.
 	 *
 	 * @return int En caso de que la inserción sea exitosa.
 	 *		boolean En caso de que la inserción no sea correcta.
 	 */
-	public function add_Base_Product($data) {
-		$this->db_evpiu->insert($this->_table, $data);
+	public function add_Base_Product($data = array(), $additional_data = array()) {
+		if (!is_array($data) || empty($data)) {
+			return FALSE;
+		}
+
+		if (!is_array($additional_data) || empty($additional_data)) {
+			return FALSE;
+		}
+
+		$this->load->model('EVPIU/Marcas_model', 'Marcas_mdl');
+		$this->load->library('base_product');
+
+		$generic_mark = $this->Marcas_mdl->find_Mark($data['Marca'])->Generico;
+		$flat_requirement = $this->base_product->check_Flat_Requirement_from_Product($data['Material']);
+					
+		$attributes = array(
+			'CodPrimario' => $additional_data['product_code'],
+			'DescPrimaria' => utf8_decode($additional_data['product_description']),
+			'CodLinea' => $data['Linea'],
+			'CodSublinea' => $data['Sublinea'],
+			'CodCaracteristica' => $data['Caracteristica'],
+			'CodMaterial' => $data['Material'],
+			'CodTamano' => $data['Tamano'],
+			'CodEspesor' => $data['Espesor'],
+			'RequierePlano' => $flat_requirement,
+			'Estado' => $this->base_product_enabled_state,
+			'Generico' => $generic_mark,
+			'Origen' => $data['origen'],
+			'Creo' => $this->ion_auth->user()->row()->username,
+			'FechaCreacion' => date('Y-m-d H:i:s'),
+		); 
+
+		$this->db_evpiu->insert($this->_table, $attributes);
 		$id = $this->db_evpiu->insert_id();
 
-		return (isset($id)) ? $id : FALSE;
+		return (isset($id)) ? $additional_data['product_code'] : FALSE;
 	}
 
 	/**

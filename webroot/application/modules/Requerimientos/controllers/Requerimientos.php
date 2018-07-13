@@ -127,6 +127,45 @@ class Requerimientos extends MX_Controller {
 		}
 
 		echo json_encode($reqs);
+
+	/**
+	 * Almacena un requerimiento en la base de datos.
+	 *
+	 * @param array $product_code Código del producto base.
+	 * @param array $request_data Datos del requerimiento.
+	 *
+	 * @return int Número de requerimiento que se almacenó.
+	 *    boolean FALSE Los datos enviados no tenían un formato correcto o estaban vacíos.
+	 */
+	public function store_Request($product_code, $request_data = array()) {
+		if (!isset($product_code) || empty($product_code)) {
+			return FALSE;
+		}
+
+		if (is_array($request_data) && !empty($request_data)) {
+			$this->load->model('Requerimientos/EVPIU/Requerimientos_model', 'Reqs_mdl');
+			$this->load->library('base_product');
+
+			// El producto necesita plano
+			if ($this->base_product->check_Flat_Requirement_from_Product($this->input->post('Material'))) {
+				$state_to_save = $this->per_plane_state;
+			} else { // El producto no necesita plano
+				$state_to_save = $this->per_review_state;
+			}
+
+			$additional_data = array(
+				'Primario' => $product_code,
+				'Estado'   => $state_to_save,
+			);
+
+			$add_request = $this->Reqs_mdl->add_Request($request_data, $additional_data);
+
+			if ($add_request) {
+				return $add_request;
+			}
+		}
+	
+		return FALSE;
 	}
 
 	/**

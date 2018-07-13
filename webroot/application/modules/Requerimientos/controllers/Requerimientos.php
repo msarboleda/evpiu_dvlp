@@ -177,6 +177,39 @@ class Requerimientos extends MX_Controller {
 		return $result;
 	}
 
+
+	/**
+	 * Envía una notificación de correo electrónico adaptado para
+	 * comunicar el requerimiento de un costo base para un producto base.
+	 *
+	 * @param array $data Código y descripción del producto que necesita costo base.
+	 */
+	public function send_Base_Cost_Notification($data = array()) {
+		$this->load->model('V_users_groups_model', 'V_users_groups_mdl');
+
+		$get_Costs_Manager_email = $this->V_users_groups_mdl->return_Users_Email_from_Group('costs_manager');
+		$costs_manager_email = $get_Costs_Manager_email->email;
+		$base_cost_subject = 'Notificación de Costo Base';
+
+		$this->send_Notification_Email_Request($costs_manager_email, $base_cost_subject, 'email_base_cost_alert', $data);
+	}
+
+	/**
+	 * Envía una notificación de correo electrónico adaptado para
+	 * comunicar el requerimiento de un plano.
+	 *
+	 * @param array $data Código y descripción del producto que necesita plano.
+	 */
+	public function send_Flat_Requirement_Notification($data = array()) {
+		$this->load->model('V_users_groups_model', 'V_users_groups_mdl');
+
+		$get_Flat_Manager_email = $this->V_users_groups_mdl->return_Users_Email_from_Group('flat_manager');
+		$flat_manager_email = $get_Flat_Manager_email->email;
+		$flat_subject = 'Notificación de Requerimiento de Plano';
+
+		$this->send_Notification_Email_Request($flat_manager_email, $flat_subject, 'email_flat_requirement_alert', $data);
+	}
+
 	/**
 	 * Almacena los soportes de un requerimiento al servidor en una carpeta específica
 	 * de cada requerimiento y con sus nombres de archivos encriptados.

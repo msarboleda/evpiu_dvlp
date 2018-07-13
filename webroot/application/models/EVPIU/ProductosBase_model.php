@@ -13,6 +13,12 @@
  */
 
 class ProductosBase_model extends CI_Model {
+	// Estado del producto base: Habilitado
+	public $base_product_enabled_state = 1;
+
+	// Estado del producto base: Deshabilitado
+	public $base_product_disabled_state = 1;
+
 	public function __construct() {
 		parent::__construct();
 

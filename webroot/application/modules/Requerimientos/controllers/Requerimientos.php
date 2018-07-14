@@ -108,25 +108,62 @@ class Requerimientos extends MX_Controller {
 			$req->FechaCreacion = ucfirst(strftime('%B %d, %Y', strtotime($req->FechaCreacion)));
 		}
 
-		echo json_encode($reqs);
+	/**
+	 * Genera la estructura del código y descripción de un producto base.
+	 *
+	 * @param array $data Código de línea, sublínea, característica, material y tamaño.
+	 *
+	 * @return array En caso de que se genere la estructura correctamente.
+	 *		boolean En caso de que no se genere la estructura adecuadamente.
+	 */
+	public function generate_Product_Structure($data = array()) {
+		if (!isset($data) || empty($data)) {
+			return FALSE;
+		}
+
+		$this->load->model('EVPIU/ProductosBase_model', 'ProductosBase_mdl');
+
+		return $this->ProductosBase_mdl->generate_Base_Product_Structure($data);
 	}
 
 	/**
-	 * Método para peticiones Ajax que consultan todos los requerimientos
-	 * de un vendedor, filtrando por su código.
+	 * Almacena un producto base en la base de datos.
 	 *
-	 * @return json_object
+	 * @param array $base_product_data Código de línea, sublínea, característica, material y tamaño.
+	 *
+	 * @return array En caso de que se genere la estructura correctamente.
+	 *		boolean En caso de que no se genere la estructura adecuadamente.
 	 */
-	public function ajax_get_Requerimientos_by_vendor() {
-		$vendor_id = $this->ion_auth->user()->row()->Vendedor;
-		$reqs = $this->Reqs_mdl->get_Requerimientos_by_vendor($vendor_id, 'desc');
+	public function store_Base_Product($base_product_data = array()) {
+		if (is_array($base_product_data) && !empty($base_product_data)) {
+			$product_structure = $this->generate_Product_Structure($base_product_data);
 
-		foreach ($reqs as $req) {
-			// Se formatea cada fecha de creación a un formato en Español / Colombia.
-			$req->FechaCreacion = ucfirst(strftime('%B %d, %Y', strtotime($req->FechaCreacion)));
+			if ($product_structure) {
+				$this->load->model('EVPIU/ProductosBase_model', 'ProductosBase_mdl');
+
+				if ($this->ProductosBase_mdl->duplicated_Base_Product($product_structure['product_code'])) {
+					return $product_structure['product_code'];
+				} else {
+					$add_base_product = $this->ProductosBase_mdl->add_Base_Product($base_product_data, $product_structure);
+
+					if ($add_base_product) {
+						$this->load->library('base_product');
+
+						$this->send_Base_Cost_Notification($product_structure);
+
+						// El producto necesita plano
+						if ($this->base_product->check_Flat_Requirement_from_Product($base_product_data['Material'])) {
+							$this->send_Flat_Requirement_Notification($product_structure);
+						}
+
+						return $add_base_product;
+					}
+				}
+			}
 		}
 
-		echo json_encode($reqs);
+		return FALSE;
+	}
 
 	/**
 	 * Almacena un requerimiento en la base de datos.

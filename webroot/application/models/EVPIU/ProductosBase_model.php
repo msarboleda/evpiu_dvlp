@@ -49,6 +49,105 @@ class ProductosBase_model extends CI_Model {
 	}
 
 	/**
+	 * Genera la estructura del código de un producto base.
+	 *
+	 * @param array $data Datos del producto base.
+	 *
+	 * @return string Código del producto base.
+	 * 		boolean FALSE En caso de que el parámetro tenga un mal formato o esté vacío. 
+	 */
+	public function generate_Base_Product_Code($data = array()) {
+		if (!isset($data) || empty($data)) {
+			return FALSE;
+		}
+
+		if (is_array($data) && !empty($data)) {
+			$this->load->model('EVPIU/Sublineas_model', 'Sublineas_mdl');
+			
+			$Assembly = $this->Sublineas_mdl->find_Subline($data['Linea'], $data['Sublinea'])->Ensamblado;
+
+			switch ($Assembly) {
+				case 0:
+					$CodAssemble = '4';
+					break;
+				case 1:
+					$CodAssemble = '3';
+					break;
+				default:
+					$CodAssemble = NULL;
+					break;
+			}
+
+			if ($CodAssemble === NULL) {
+				return FALSE;
+			} else {
+				$product_code = $CodAssemble.$data['Linea'].$data['Sublinea'].$data['Material'].$data['Tamano'];
+			}
+
+			return $product_code;
+		}
+	}
+
+	/**
+	 * Genera la estructura de la descripción de un producto base.
+	 *
+	 * @param array $data Datos del producto base. 
+	 *
+	 * @return string Descripción del producto base.
+	 *		boolean FALSE En caso de que el parámetro tenga un mal formato o esté vacío.
+	 */
+	public function generate_Base_Product_Description($data = array()) {
+		if (!isset($data) || empty($data)) {
+			return FALSE;
+		}
+
+		if (is_array($data) && !empty($data)) {
+			$this->load->model('EVPIU/Lineas_model', 'Lineas_mdl');
+			$this->load->model('EVPIU/Sublineas_model', 'Sublineas_mdl');
+			$this->load->model('EVPIU/Caracteristicas_model', 'Caracteristicas_mdl');
+			$this->load->model('EVPIU/Materiales_model', 'Materiales_mdl');
+			$this->load->model('EVPIU/Tamanos_model', 'Tamanos_mdl');
+
+			$line_alias     = $this->Lineas_mdl->find_Line($data['Linea'])->Abreviatura;
+			$subline_alias  = $this->Sublineas_mdl->find_Subline($data['Linea'], $data['Sublinea'])->Abreviatura;
+			$feature_alias  = $this->Caracteristicas_mdl->find_Feature($data['Linea'], $data['Sublinea'], $data['Caracteristica'])->Abreviatura;
+			$material_alias = $this->Materiales_mdl->find_Material($data['Material'])->Abreviatura;
+			$size_alias     = $this->Tamanos_mdl->find_Size($data['Linea'], $data['Sublinea'], $data['Material'], $data['Tamano'])->Denominacion;
+
+			if (empty($feature_alias)) {
+				$product_description = $line_alias.' '.$subline_alias.' '.$material_alias.' '.$size_alias;
+			} else {
+				$product_description = $line_alias.' '.$subline_alias.' '.$feature_alias.' '.$material_alias.' '.$size_alias;
+			}
+
+			return $product_description;
+		}
+		
+		return FALSE;
+	}
+
+	/**
+	 * Genera la estructura completa de un producto base.
+	 *
+	 * @param array $data Datos del producto base. 
+	 *
+	 * @return array Código y Descripción del producto base.
+	 *		boolean FALSE En caso de que el parámetro tenga un mal formato o esté vacío.
+	 */
+	public function generate_Base_Product_Structure($data = array()) {
+		if (!isset($data) || empty($data)){
+			return FALSE;
+		}
+
+		$base_product_structure = array(
+			'product_code'        => $this->generate_Base_Product_Code($data),
+			'product_description' => $this->generate_Base_Product_Description($data),
+		);
+
+		return $base_product_structure;
+	}
+
+	/**
 	 * Agrega un producto base a la tabla de la base de datos.
 	 *
 	 * Este método se encarga de almacenar un producto base en

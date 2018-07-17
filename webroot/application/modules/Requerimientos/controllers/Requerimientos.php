@@ -93,20 +93,72 @@ class Requerimientos extends MX_Controller {
 	}
 
 	/**
-	 * Método para peticiones Ajax que consultan todos los requerimientos
+	 * Página principal de Nuevo Requerimiento
 	 *
-	 * @return json_object
+	 * Este formulario permite crear un nuevo requerimiento a un vendedor.
 	 */
-	public function ajax_get_all_Requerimientos() {
-		// Es una consulta bastante amplia, por lo cual se aumenta el buffer para el driver sqlsrv
-		ini_set('sqlsrv.ClientBufferMaxKBSize', '50240');
+	public function new_request() {
+		if ($this->verification_roles->is_vendor() || $this->ion_auth->is_admin()) {
+			$header_data = $this->header->show_Categories_and_Modules();
+			$header_data['module_name'] = lang('new_request_heading');
 
-		$reqs = $this->Reqs_mdl->get_Requerimientos('desc');
+			$rule = NULL;
 
-		foreach ($reqs as $req) {
-			// Se formatea cada fecha de creación a un formato en Español / Colombia.
-			$req->FechaCreacion = ucfirst(strftime('%B %d, %Y', strtotime($req->FechaCreacion)));
+			// En dado caso que el requerimiento se vaya a aplicar a un producto base
+			// se debe adjuntar en las reglas de validación el requerimiento del campo
+			// de producto base.
+			if ($this->input->post('applied_art')) {
+				$rule = 'new_request_with_applied_art_validation';
+			} else {
+				$rule = 'requerimientos/new_request';
+			}
+			
+			if ($this->form_validation->run($rule) === TRUE) {
+				$base_product_code = $this->store_Base_Product($this->input->post());
+
+				if ($base_product_code) {
+					$store_request = $this->store_Request($base_product_code, $this->input->post());
+
+					if ($store_request) {
+						if (isset($_FILES['supports']) && !empty($_FILES['supports']['name'][0])) {
+							$uploaded_supports = $this->upload_Request_Supports($store_request, $_FILES['supports']);
+						}
+
+						$this->session->set_flashdata('message', sprintf(lang('NR_successfully_created_requirement'), $store_request));
+						redirect('requerimientos');
+					} else {
+						$this->session->set_flashdata('message', lang('NR_wrongly_created_requirement'));
+					}
+				} else {
+					$this->session->set_flashdata('message', lang('NR_wrongly_created_base_product'));
+				}
+			}
+			
+			$this->load->model('Requerimientos/MAXEstrada/Customer_Master_model', 'Clientes_mdl');
+			$this->load->model('Requerimientos/EVPIU/Parametros_model', 'Parametros_mdl');
+
+			$view_data['vendors_select']      = $this->Users_mdl->fill_Vendedores_select();
+			$view_data['customers_select']    = $this->Clientes_mdl->fill_Clientes_from_Vendor_select($this->ion_auth->user()->row()->Vendedor);
+			$view_data['params_select']       = $this->Parametros_mdl->fill_Parametros_select();
+
+			// Establecer un mensaje si hay un error de datos flash
+			$view_data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+
+			add_css('themes/elaadmin/css/lib/select2/select2.min.css');
+			add_css('dist/custom/css/requerimientos/new_request.css');
+			add_css('dist/custom/css/requerimientos/file_upload.css');
+			add_js('themes/elaadmin/js/lib/select2/select2.full.min.js');
+			add_js('themes/elaadmin/js/lib/select2/i18n/es.js');
+			add_js('dist/custom/js/requerimientos/file_upload.js');
+			add_js('dist/custom/js/requerimientos/new_request.js');
+
+			$this->load->view('headers'.DS.'header_main_dashboard', $header_data);
+			$this->load->view('requerimientos'.DS.'new_request', $view_data);
+			$this->load->view('footers'.DS.'footer_main_dashboard');
+		}	else {
+			redirect('auth');
 		}
+	}
 
 	/**
 	 * Genera la estructura del código y descripción de un producto base.

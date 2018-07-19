@@ -396,6 +396,8 @@ class XHR extends MX_Controller {
 			}
 
 			echo json_encode($reqs);
+		} else {
+			echo json_encode(array());
 		}
 
 		return FALSE;

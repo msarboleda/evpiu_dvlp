@@ -68,24 +68,25 @@ class Requerimientos extends MX_Controller {
 				'id'    => 'status_filter',
 			);
 
-			if ($this->verification_roles->is_vendor()) { // El usuario actual es un vendedor
+			$view_to_charge = null;
+
+			if ($this->verification_roles->is_vendor()) {
 				add_js('dist/custom/js/requerimientos/index.js');
-
-				$this->load->view('headers' . DS . 'header_main_dashboard', $header_data);
-				$this->load->view('requerimientos' . DS . 'index', $view_data);
-				$this->load->view('footers'. DS . 'footer_main_dashboard');
-			} elseif ($this->verification_roles->is_design_coord() || $this->ion_auth->is_admin()) { // El usuario actual es un coordinador de diseño
+				$view_to_charge = 'index';
+			} elseif ($this->verification_roles->is_design_coord() || $this->ion_auth->is_admin()) {
 				add_js('dist/custom/js/requerimientos/index_to_design_coord.js');
-
-				$this->load->view('headers' . DS . 'header_main_dashboard', $header_data);
-				$this->load->view('requerimientos' . DS . 'index_to_design_coord', $view_data);
-				$this->load->view('footers'. DS . 'footer_main_dashboard');
-			} elseif ($this->verification_roles->is_designer()) { // El usuario actual es un diseñador
+				$view_to_charge = 'index_to_design_coord';
+			} elseif ($this->verification_roles->is_designer()) {
 				add_js('dist/custom/js/requerimientos/index_to_designer.js');
+				$view_to_charge = 'index_to_designer';
+			}
 
-				$this->load->view('headers' . DS . 'header_main_dashboard', $header_data);
-				$this->load->view('requerimientos' . DS . 'index_to_designer', $view_data);
-				$this->load->view('footers'. DS . 'footer_main_dashboard');
+			if (isset($view_to_charge)) {
+				$this->load->view('headers'.DS.'header_main_dashboard', $header_data);
+				$this->load->view('requerimientos'.DS.$view_to_charge, $view_data);
+				$this->load->view('footers'.DS.'footer_main_dashboard');
+			} else {
+				redirect('auth');
 			}
 		}	else {
 			redirect('auth');

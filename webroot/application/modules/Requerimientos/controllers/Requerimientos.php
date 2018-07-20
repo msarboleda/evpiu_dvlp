@@ -4,30 +4,6 @@
  * Class Requerimientos
  */
 class Requerimientos extends MX_Controller {
-	// Estado: Por revisión
-	public $per_review_state = 1;
-
-	// Estado: Por corrección
-	public $per_correction_state = 2;
-
-	// Estado: Por plano
-	public $per_plane_state = 3;
-
-	// Estado: Asignado
-	public $assigned_state = 4;
-
-	// Estado: En proceso
-	public $in_process_state = 5;
-
-	// Estado: Cerrado
-	public $closed_state = 6;
-
-	// Estado: Anulado
-	public $canceled_state = 7;
-
-	// Estado: Pospuesto
-	public $postponed_state = 8;
-
 	// Tipo de archivo: Soporte de Requerimiento
 	public $file_type_request_support = 1;
 
@@ -238,9 +214,9 @@ class Requerimientos extends MX_Controller {
 
 			// El producto necesita plano
 			if ($this->base_product->check_Flat_Requirement_from_Product($this->input->post('Material'))) {
-				$state_to_save = $this->per_plane_state;
+				$state_to_save = $this->Reqs_mdl->per_plane_state;
 			} else { // El producto no necesita plano
-				$state_to_save = $this->per_review_state;
+				$state_to_save = $this->Reqs_mdl->per_review_state;
 			}
 
 			$additional_data = array(

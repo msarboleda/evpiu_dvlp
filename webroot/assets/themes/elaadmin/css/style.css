@@ -5821,37 +5821,6 @@ tbody tr td:last-child {
   font-weight: 400;
   color: #4680ff;
 }
-/*Aleart
--------------*/
-.alert-primary {
-  background-color: #a2bfff;
-  border-color: #a2bfff;
-  color: #4680ff;
-}
-.alert-success {
-  background-color: #93ede9;
-  border-color: #93ede9;
-  color: #26dad2;
-}
-.alert-warning {
-  background-color: #ffeacd;
-  border-color: #ffeacd;
-  color: #ffb64d;
-}
-.alert-danger {
-  background-color: #fedee5;
-  border-color: #fedee5;
-  color: #fc6180;
-}
-.alert-pink {
-  background-color: #f8e4fb;
-  border-color: #f8e4fb;
-  color: #e6a1f2;
-}
-.alert-dismissable .close,
-.alert-dismissible .close {
-  color: rgba(0, 0, 0, 0.8);
-}
 /*    Labels
 ------------------*/
 .label-default {

@@ -89,6 +89,50 @@ class Marcas_model extends CI_Model {
 	}
 
 	/**
+	 * Crea una marca.
+	 * 
+	 * @param array $data Datos para almacenar de una marca.
+	 * 
+	 * @return string En caso de que la marca se haya creado.
+	 * @return boolean En caso de datos con el formato incorrecto o la
+	 * marca sea duplicada.
+	 */
+	public function add_Mark($data = array()) {
+		if (!is_array($data) || empty($data)) {
+			return FALSE;
+		}
+
+		if (!$this->duplicated_Mark_description($data['Nombre'])) {
+			$mark_name = strtoupper($data['Nombre']);
+			$find = strpos($mark_name, strtoupper('generico'));
+			
+			if ($find !== false) {
+				$is_generic_mark = true;
+			} else {
+				$is_generic_mark = $data['Generico'];
+			}
+
+			$to_database = array(
+				'CodMarca'      => $this->get_Last_Mark_code()+1,
+				'NomMarca'      => $mark_name,
+				'Generico'      => $is_generic_mark,
+				'Creo'          => $this->ion_auth->user()->row()->username,
+				'FechaCreacion'	=> date('Y-m-d H:i:s'),
+				'Comentarios'   => $data['Comentarios'],
+			);
+
+			$this->db_evpiu->insert($this->_table, $to_database);
+			$id = $this->db_evpiu->insert_id();
+
+			if (isset($id)) {
+				return $id;
+			}
+		}
+
+		return FALSE;
+	}
+
+	/**
 	 * Verifica si la descripción de una marca ya existe.
 	 * 
 	 * @param string $mark_description Descripción de la marca a verificar.

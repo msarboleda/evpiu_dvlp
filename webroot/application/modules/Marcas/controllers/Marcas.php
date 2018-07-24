@@ -28,18 +28,35 @@ class Marcas extends MX_Controller {
   }
 
   /**
-   * Método para crear una nueva marca
+   * Funcionalidad para crear una nueva marca
    */
   public function new_mark() {
     if ($this->verification_roles->is_vendor() || $this->ion_auth->is_admin()) {
       $header_data = $this->header->show_Categories_and_Modules();
       $header_data['module_name'] = lang('NM_heading');
+
+      $this->load->config('form_validation', TRUE);
+      $this->form_validation->set_error_delimiters('', '<br>');
+      $this->load->library('messages');
+
+      if ($this->form_validation->run('marcas/new_mark') === TRUE) {
+        $messages = $this->store_Mark($this->input->post());
+      }
+
+      if (validation_errors()) {
+        $view_data['validation_errors'] = validation_errors();
+      } else if (isset($messages)) {
+        $view_data['messages'] = $messages;
+      } else {
+        $view_data = null;
+      }
       
       add_css('dist/custom/css/marcas/new_mark.css');
+      add_js('dist/custom/js/marcas/new_mark.js');
 
-      $this->load->view('headers'.DS.'header_main_dashboard', $header_data);
-      $this->load->view('marcas'.DS.'new_mark');
-      $this->load->view('footers'.DS.'footer_main_dashboard');
+      $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+      $this->load->view('marcas'. DS .'new_mark', $view_data);
+      $this->load->view('footers'. DS .'footer_main_dashboard');
     } else {
       redirect('auth');
     }

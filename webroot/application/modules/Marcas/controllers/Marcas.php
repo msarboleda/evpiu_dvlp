@@ -44,4 +44,35 @@ class Marcas extends MX_Controller {
       redirect('auth');
     }
   }
+
+  /**
+   * Almacena una marca en la base de datos.
+   * 
+   * @param array $data Datos de una marca para almacenar.
+   * 
+   * @return array Mensaje de resultado.
+   * @return bool False En caso de que los datos tengan un
+   * formato incorrecto o estén vacíos.
+   */
+  public function store_Mark($data = array()) {
+    if (is_array($data) && !empty($data)) {
+      $this->load->model('EVPIU/Marcas_model', 'Marcas_mdl');
+
+      if ($this->Marcas_mdl->duplicated_Mark_description($data['Nombre'])) {
+        $this->messages->add("Esta marca ya existe.", "warning");
+      } else {
+        $insert_mark_code = $this->Marcas_mdl->add_Mark($data);
+
+        if ($insert_mark_code) {
+          $this->messages->add("La marca se ha creado correctamente.", "success");
+        } else {
+          $this->messages->add("Ocurrió un error almacenando la marca.", "danger");
+        } 
+      }
+
+      return $this->messages->get();
+    }
+
+    return FALSE;
+  }
 }

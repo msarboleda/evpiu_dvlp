@@ -104,4 +104,24 @@ class Marcas_model extends CI_Model {
 						->limit(1)
 						->count_all_results($this->_table) > 0;
 	}
+
+	/**
+	 * Obtiene el último código de marca almacenado en la base de datos.
+	 * 
+	 * @return string Último número de marca almacenado en la base de datos.
+	 * @return boolean False En caso de que la consulta no arroje resultados. 
+	 */
+	public function get_Last_Mark_code() {
+		$this->db_evpiu->select('CodMarca');
+		$this->db_evpiu->from($this->_table);
+		$this->db_evpiu->order_by('CodMarca', 'desc');
+		$this->db_evpiu->limit(1);
+		$query = $this->db_evpiu->get();
+  
+		if ($query->num_rows() > 0) {
+			return $query->row('CodMarca');  
+		}
+
+		return FALSE;
+	}
 }

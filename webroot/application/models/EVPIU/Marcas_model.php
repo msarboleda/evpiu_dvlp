@@ -87,4 +87,21 @@ class Marcas_model extends CI_Model {
 
 		return $marcas;
 	}
+
+	/**
+	 * Verifica si la descripción de una marca ya existe.
+	 * 
+	 * @param string $mark_description Descripción de la marca a verificar.
+	 * 
+	 * @return boolean True or False
+	 */
+	public function duplicated_Mark_description($mark_description) {
+		if (!isset($mark_description) || empty($mark_description)) {
+			return FALSE;
+		}
+
+		return $this->db_evpiu->where('NomMarca', trim($mark_description))
+						->limit(1)
+						->count_all_results($this->_table) > 0;
+	}
 }

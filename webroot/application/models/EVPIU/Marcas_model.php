@@ -21,6 +21,27 @@ class Marcas_model extends CI_Model {
 	}
 
 	/**
+	 * @description Obtiene todas las marcas existentes. 
+	 * 
+	 * @param string $order_column 
+	 * @param string $order 
+	 * 
+	 * @return object
+	 * @return Exception
+	 */
+	public function get_All_Marks($order_column = 'NomMarca', $order = 'desc') {
+		$this->db_evpiu->order_by($order_column, $order);
+
+		$query = $this->db_evpiu->get($this->_table);
+
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			throw new Exception('La consulta de marcas no obtuvo resultados.');
+		}
+	}
+
+	/**
 	 * Devuelve toda la información de una marca.
 	 *
 	 * @param string $mark_code Código de la marca.

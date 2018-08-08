@@ -3,7 +3,7 @@
     <div class="card-body">
       <h4 class="card-title">Mis clientes</h4>
       <div class="table-responsive m-t-20">
-        <table id="marcas" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+        <table id="my_clients" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
             <tr>
               <th scope="row">#</th>

@@ -1812,30 +1812,6 @@ textarea {
   -o-transform: translate(0, -2px);
   transform: translate(0, -2px);
 }
-.badge-success {
-  background-color: #26dad2;
-}
-.badge-info {
-  background-color: #1976d2;
-}
-.badge-primary {
-  background-color: #5c4ac7;
-}
-.badge-warning {
-  background-color: #ffb22b;
-}
-.badge-danger {
-  background-color: #ef5350;
-}
-.badge-purple {
-  background-color: #7460ee;
-}
-.badge-red {
-  background-color: #fb3a3a;
-}
-.badge-inverse {
-  background-color: #2f3d4a;
-}
 .label {
   padding: 3px 10px;
   line-height: 13px;

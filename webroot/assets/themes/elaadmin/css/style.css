@@ -5393,9 +5393,6 @@ thead tr th {
   color: #455a64;
   font-weight: 500;
 }
-thead tr th:last-child {
-  text-align: right;
-}
 tbody tr th {
   color: #455a64;
   font-family: 'Poppins', sans-serif;

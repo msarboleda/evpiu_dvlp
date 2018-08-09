@@ -72,4 +72,15 @@ class Verification_Roles {
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
+
+	/**
+	 * @param int|string $id
+	 *
+	 * @return bool Es un gestor de planos
+	 */
+	public function is_flat_manager($id = FALSE) {
+		$member_group = 'flat_manager';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+	}
 }

@@ -1,4 +1,4 @@
-<?php  defined('BASEPATH') OR exit('No se permite el acceso directo a este Script');
+<?php  defined('BASEPATH') OR exit('No se permite el acceso directo a éste Script');
  /**
   * Clase de Pedidos
   *
@@ -24,7 +24,6 @@
         $this->add_Index_libraries();
         
         $header_data = $this->header->show_Categories_and_Modules();
-        $this->lang->load('index');
         $header_data['module_name'] = lang('index_heading');
 
         $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
@@ -45,6 +44,6 @@
       add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');
       add_js('themes/elaadmin/js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js');
       add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
-      add_js('dist/custom/js/marcas/index.js');
+      add_js('dist/custom/js/pedidos/index.js');
     }
   }

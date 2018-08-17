@@ -18,6 +18,7 @@ nbactions.xml
 .project
 .metadata
 .properties
+.vscode
 
 */config/development
 */logs/log-*.php

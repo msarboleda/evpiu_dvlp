@@ -14,7 +14,7 @@ class Marcas extends MX_Controller {
   public function __construct() {
     parent::__construct();
 
-    $this->load->model('Auth/EVPIU/ModulosxCategoriasxGrupos_model');
+    $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
     $this->load->library(array('header', 'verification_roles'));
     $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('marcas');
@@ -84,7 +84,7 @@ class Marcas extends MX_Controller {
    */
   public function store_Mark($data = array()) {
     if (is_array($data) && !empty($data)) {
-      $this->load->model('EVPIU/Marcas_model', 'Marcas_mdl');
+      $this->load->model('evpiu/Marcas_model', 'Marcas_mdl');
 
       if ($this->Marcas_mdl->duplicated_Mark_description($data['Nombre'])) {
         $this->messages->add("Esta marca ya existe.", "warning");

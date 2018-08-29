@@ -14,7 +14,7 @@ class Get extends MX_Controller {
   public function __construct() {
     parent::__construct();
 
-    $this->load->model('Auth/EVPIU/ModulosxCategoriasxGrupos_model');
+    $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
     $this->load->library(array('header', 'verification_roles'));
     $this->load->helper(array('language', 'load', 'form'));
   }

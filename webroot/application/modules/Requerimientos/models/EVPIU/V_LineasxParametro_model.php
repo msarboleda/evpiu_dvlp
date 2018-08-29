@@ -7,7 +7,7 @@
  * Tiene la funcionalidad de retornar todo tipo de dato relacionado con
  * esta vista.
  */
-class V_LineasxParametro_model extends CI_Model {
+class V_lineasxparametro_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 

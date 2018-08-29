@@ -62,7 +62,7 @@ class ProductosBase_model extends CI_Model {
 		}
 
 		if (is_array($data) && !empty($data)) {
-			$this->load->model('EVPIU/Sublineas_model', 'Sublineas_mdl');
+			$this->load->model('evpiu/Sublineas_model', 'Sublineas_mdl');
 			
 			$Assembly = $this->Sublineas_mdl->find_Subline($data['Linea'], $data['Sublinea'])->Ensamblado;
 
@@ -102,11 +102,11 @@ class ProductosBase_model extends CI_Model {
 		}
 
 		if (is_array($data) && !empty($data)) {
-			$this->load->model('EVPIU/Lineas_model', 'Lineas_mdl');
-			$this->load->model('EVPIU/Sublineas_model', 'Sublineas_mdl');
-			$this->load->model('EVPIU/Caracteristicas_model', 'Caracteristicas_mdl');
-			$this->load->model('EVPIU/Materiales_model', 'Materiales_mdl');
-			$this->load->model('EVPIU/Tamanos_model', 'Tamanos_mdl');
+			$this->load->model('evpiu/Lineas_model', 'Lineas_mdl');
+			$this->load->model('evpiu/Sublineas_model', 'Sublineas_mdl');
+			$this->load->model('evpiu/Caracteristicas_model', 'Caracteristicas_mdl');
+			$this->load->model('evpiu/Materiales_model', 'Materiales_mdl');
+			$this->load->model('evpiu/Tamanos_model', 'Tamanos_mdl');
 
 			$line_alias     = $this->Lineas_mdl->find_Line($data['Linea'])->Abreviatura;
 			$subline_alias  = $this->Sublineas_mdl->find_Subline($data['Linea'], $data['Sublinea'])->Abreviatura;
@@ -168,7 +168,7 @@ class ProductosBase_model extends CI_Model {
 			return FALSE;
 		}
 
-		$this->load->model('EVPIU/Marcas_model', 'Marcas_mdl');
+		$this->load->model('evpiu/Marcas_model', 'Marcas_mdl');
 		$this->load->library('base_product');
 
 		$generic_mark = $this->Marcas_mdl->find_Mark($data['Marca'])->Generico;

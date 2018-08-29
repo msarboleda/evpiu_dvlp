@@ -12,7 +12,7 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
-class V_Relieves_model extends CI_Model {
+class V_relieves_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 

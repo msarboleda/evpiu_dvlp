@@ -10,7 +10,7 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
-class XHR_Clientes extends MX_Controller {
+class Xhr_clientes extends MX_Controller {
   public function __construct() {
     parent::__construct();
   }
@@ -22,7 +22,7 @@ class XHR_Clientes extends MX_Controller {
    */
   public function xhr_getCustomersDataFromCurrentVendor() {
     try {
-      $this->load->model('MAXEstrada/Customer_Master_model', 'Clientes_mdl');
+      $this->load->model('maxestrada/Customer_master_model', 'Clientes_mdl');
       $customers = $this->Clientes_mdl->getCustomersDataFromCurrentVendor();
 
       echo json_encode($customers);

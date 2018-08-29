@@ -8,7 +8,7 @@
  * Tiene la funcionalidad de mostrar todo tipo de dato relacionado con
  * esta tabla.
  */
-class ModulosxCategoriasxGrupos_model extends CI_Model {
+class Modulosxcategoriasxgrupos_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 

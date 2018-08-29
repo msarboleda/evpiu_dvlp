@@ -10,12 +10,12 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
-class XHR extends MX_Controller {
+class Xhr extends MX_Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$this->load->model('Requerimientos/EVPIU/V_Requerimientos_model', 'V_Reqs_mdl');
-		$this->load->model('Requerimientos/MAXEstrada/Customer_Master_model', 'Clientes_mdl');
+		$this->load->model('Requerimientos/evpiu/V_requerimientos_model', 'V_Reqs_mdl');
+		$this->load->model('Requerimientos/maxestrada/Customer_master_model', 'Clientes_mdl');
 		$this->load->library('Object_Utilities');
 		$this->load->library('Date_Utilities');
 	}
@@ -81,7 +81,7 @@ class XHR extends MX_Controller {
 	 */
 	public function xhr_Lines_select() {
 		if (isset($_POST['Parametro']) && !empty($_POST['Parametro'])) {
-			$this->load->model('Requerimientos/EVPIU/V_LineasxParametro_model', 'LineasxParam_mdl');
+			$this->load->model('Requerimientos/evpiu/V_LineasxParametro_model', 'LineasxParam_mdl');
 			$Parametro = $this->input->post('Parametro');
 
 			$lines_select_data = $this->LineasxParam_mdl->fill_Lineas_x_Parametro_select($Parametro);
@@ -110,7 +110,7 @@ class XHR extends MX_Controller {
 		if (isset($_POST['Linea']) && !empty($_POST['Linea'])) {
 			$Linea = $this->input->post('Linea');
 
-			$this->load->model('EVPIU/Sublineas_model', 'Sublineas_mdl');
+			$this->load->model('evpiu/Sublineas_model', 'Sublineas_mdl');
 			$sublineas_select_data = $this->Sublineas_mdl->fill_Sublineas_select($Linea);
 
 			if (!empty($sublineas_select_data)) {
@@ -138,7 +138,7 @@ class XHR extends MX_Controller {
 			$Linea = $this->input->post('Linea');
 			$Sublinea = $this->input->post('Sublinea');
 
-			$this->load->model('EVPIU/Caracteristicas_model', 'Caracteristicas_mdl');
+			$this->load->model('evpiu/Caracteristicas_model', 'Caracteristicas_mdl');
 			$caracteristicas_select_data = $this->Caracteristicas_mdl->fill_Caracteristicas_select($Linea, $Sublinea);
 
 			if (!empty($caracteristicas_select_data)) {
@@ -163,7 +163,7 @@ class XHR extends MX_Controller {
 	 */
 	public function xhr_Materials_select() {
 		if (isset($_POST['Linea']) && isset($_POST['Sublinea']) && !empty($_POST['Linea']) && !empty($_POST['Sublinea'])) {
-			$this->load->model('Requerimientos/EVPIU/V_MaterialesxSublinea_model', 'vMaterialesxSublinea_mdl');
+			$this->load->model('Requerimientos/evpiu/V_materialesxsublinea_model', 'vMaterialesxSublinea_mdl');
 			$Linea = $this->input->post('Linea');
 			$Sublinea = $this->input->post('Sublinea');
 
@@ -192,7 +192,7 @@ class XHR extends MX_Controller {
 	public function xhr_Sizes_select() {
 		if (isset($_POST['Linea']) && isset($_POST['Sublinea']) && isset($_POST['Material']) 
 			&& !empty($_POST['Linea']) && !empty($_POST['Sublinea']) && !empty($_POST['Material'])) {
-			$this->load->model('Requerimientos/EVPIU/V_Tamanos_model', 'vTamanos');
+			$this->load->model('Requerimientos/evpiu/V_tamanos_model', 'vTamanos');
 			$Linea = $this->input->post('Linea');
 			$Sublinea = $this->input->post('Sublinea');
 			$Material = $this->input->post('Material');
@@ -221,7 +221,7 @@ class XHR extends MX_Controller {
 	 */
 	public function xhr_Thicknesses_select() {
 		if (isset($_POST['Material']) && !empty($_POST['Material'])) {
-			$this->load->model('Requerimientos/EVPIU/Espesores_model', 'Espesores');
+			$this->load->model('Requerimientos/evpiu/Espesores_model', 'Espesores');
 			$Material = $this->input->post('Material');
 
 			$espesores_select_data = $this->Espesores->fill_Espesores_select($Material);
@@ -248,7 +248,7 @@ class XHR extends MX_Controller {
 	 */
 	public function xhr_Reliefs_select() {
 		if (isset($_POST['Linea']) && isset($_POST['Sublinea']) && !empty($_POST['Linea']) && !empty($_POST['Sublinea'])) {
-			$this->load->model('Requerimientos/EVPIU/V_Relieves_model', 'Relieves');
+			$this->load->model('Requerimientos/evpiu/V_relieves_model', 'Relieves');
 			$Linea = $this->input->post('Linea');
 			$Sublinea = $this->input->post('Sublinea');
 
@@ -279,7 +279,7 @@ class XHR extends MX_Controller {
 			$term = $_GET['q'];
 
 			if (isset($term) && !empty($term)) {
-				$this->load->model('EVPIU/Marcas_model', 'Marcas_mdl');
+				$this->load->model('evpiu/Marcas_model', 'Marcas_mdl');
 
 				$marks = $this->Marcas_mdl->fill_remote_Marcas_select($term);
 
@@ -307,7 +307,7 @@ class XHR extends MX_Controller {
 			$term = $_GET['q'];
 
 			if (isset($term) && !empty($term)) {
-				$this->load->model('EVPIU/ProductosBase_model', 'ProductosBase_mdl');
+				$this->load->model('evpiu/ProductosBase_model', 'ProductosBase_mdl');
 
 				$base_products = $this->ProductosBase_mdl->fill_remote_Productos_Base_select($term);
 

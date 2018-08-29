@@ -8,8 +8,8 @@ class Categorias extends MX_Controller {
 		parent::__construct();
 
 		$this->load->helper('language');
-		$this->load->model('Auth/EVPIU/ModulosxCategoriasxGrupos_model');
-		$this->load->model('Categorias/EVPIU/Categorias_model', 'Categorias_mdl');
+		$this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
+		$this->load->model('Categorias/evpiu/Categorias_model', 'Categorias_mdl');
 		// Libreria para cargar datos en el Header
 		$this->load->library('header');
 		// Inicio y final del contenido de los errores de form_validation.
@@ -237,7 +237,7 @@ class Categorias extends MX_Controller {
 		$categories_select = $this->Categorias_mdl->fill_Categorias_select();
 
 		// Se carga el modelo de los Módulos, para construir otro control 'Select' de Módulos
-		$this->load->model('Modulos/EVPIU/Modulos_model', 'Modulos_mdl');
+		$this->load->model('Modulos/evpiu/Modulos_model', 'Modulos_mdl');
 		$modules_select = $this->Modulos_mdl->fill_Modulos_select();
 
 		// Reglas de validación para los controles del formulario
@@ -253,7 +253,7 @@ class Categorias extends MX_Controller {
 		}
 
 		if ($this->form_validation->run() === TRUE) {
-			$this->load->model('Modulos/EVPIU/ModulosxCategoria_model', 'ModulosxCategoria_mdl');
+			$this->load->model('Modulos/evpiu/Modulosxcategoria_model', 'ModulosxCategoria_mdl');
 
 			$category_code = $this->input->post('Categoria');
 			$module_code = $this->input->post('Modulo');

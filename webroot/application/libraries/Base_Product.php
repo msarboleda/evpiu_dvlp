@@ -10,7 +10,7 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
-class Base_Product {
+class Base_product {
 	protected $ci;
 
 	public function __construct() {

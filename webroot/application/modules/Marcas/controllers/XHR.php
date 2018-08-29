@@ -10,7 +10,7 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
-class XHR extends MX_Controller {
+class Xhr extends MX_Controller {
 	public function __construct() {
 		parent::__construct();
   }
@@ -22,7 +22,7 @@ class XHR extends MX_Controller {
 	 */
 	public function xhr_get_all_Marks() {
     try {
-      $this->load->model('EVPIU/Marcas_model', 'Marcas_mdl');
+      $this->load->model('evpiu/Marcas_model', 'Marcas_mdl');
       $marks = $this->Marcas_mdl->get_All_Marks('FechaCreacion', 'desc');
 
       echo json_encode($marks);

@@ -7,7 +7,7 @@
  * Tiene la funcionalidad de retornar todo tipo de dato relacionado con
  * esta tabla.
  */
-class Customer_Master_model extends CI_Model {
+class Customer_master_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 

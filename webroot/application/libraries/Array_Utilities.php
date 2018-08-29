@@ -9,7 +9,7 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
-class Array_Utilities {
+class Array_utilities {
 	/**
 	 * Se encarga de comprobar si un arreglo es una matriz multidimensional
 	 *

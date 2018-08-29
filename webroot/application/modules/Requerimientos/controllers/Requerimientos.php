@@ -10,7 +10,7 @@ class Requerimientos extends MX_Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$this->load->model('Auth/EVPIU/ModulosxCategoriasxGrupos_model');
+		$this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
 		$this->load->model('Users_model', 'Users_mdl');
 		$this->load->library(array('header', 'verification_roles'));
 		$this->load->config('form_validation', TRUE);
@@ -30,7 +30,7 @@ class Requerimientos extends MX_Controller {
 			$header_data = $this->header->show_Categories_and_Modules();
 			$header_data['module_name'] = lang('index_heading');
 
-			$this->load->model('Requerimientos/EVPIU/Estados_model', 'Estados_mdl');
+			$this->load->model('Requerimientos/evpiu/Estados_model', 'Estados_mdl');
 			$view_data['status_reqs_select'] = $this->Estados_mdl->fill_EstadosRequerimientos_select();
 
 			add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');
@@ -111,8 +111,8 @@ class Requerimientos extends MX_Controller {
 				}
 			}
 			
-			$this->load->model('Requerimientos/MAXEstrada/Customer_Master_model', 'Clientes_mdl');
-			$this->load->model('Requerimientos/EVPIU/Parametros_model', 'Parametros_mdl');
+			$this->load->model('Requerimientos/maxestrada/Customer_master_model', 'Clientes_mdl');
+			$this->load->model('Requerimientos/evpiu/Parametros_model', 'Parametros_mdl');
 
 			$view_data['vendors_select']      = $this->Users_mdl->fill_Vendedores_select();
 			$view_data['customers_select']    = $this->Clientes_mdl->fill_Clientes_from_Vendor_select($this->ion_auth->user()->row()->Vendedor);
@@ -150,7 +150,7 @@ class Requerimientos extends MX_Controller {
 			return FALSE;
 		}
 
-		$this->load->model('EVPIU/ProductosBase_model', 'ProductosBase_mdl');
+		$this->load->model('evpiu/ProductosBase_model', 'ProductosBase_mdl');
 
 		return $this->ProductosBase_mdl->generate_Base_Product_Structure($data);
 	}
@@ -168,7 +168,7 @@ class Requerimientos extends MX_Controller {
 			$product_structure = $this->generate_Product_Structure($base_product_data);
 
 			if ($product_structure) {
-				$this->load->model('EVPIU/ProductosBase_model', 'ProductosBase_mdl');
+				$this->load->model('evpiu/ProductosBase_model', 'ProductosBase_mdl');
 
 				if ($this->ProductosBase_mdl->duplicated_Base_Product($product_structure['product_code'])) {
 					return $product_structure['product_code'];
@@ -209,7 +209,7 @@ class Requerimientos extends MX_Controller {
 		}
 
 		if (is_array($request_data) && !empty($request_data)) {
-			$this->load->model('Requerimientos/EVPIU/Requerimientos_model', 'Reqs_mdl');
+			$this->load->model('Requerimientos/evpiu/Requerimientos_model', 'Reqs_mdl');
 			$this->load->library('base_product');
 
 			// El producto necesita plano
@@ -361,7 +361,7 @@ class Requerimientos extends MX_Controller {
 	 * @param $uploaded_supports array Datos de los soportes subidos del requerimiento.
 	 */
 	public function save_Stored_Request_Supports($request_id, $uploaded_supports) {
-		$this->load->model('Requerimientos/EVPIU/Archivos_model', 'ArchivosReq_mdl');
+		$this->load->model('Requerimientos/evpiu/Archivos_model', 'ArchivosReq_mdl');
 		$this->load->library('array_utilities');
 
 		// En caso de que solo un soporte haya sido subido, el arreglo de los soportes

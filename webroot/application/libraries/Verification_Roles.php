@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Class Verification_Roles
  */
-class Verification_Roles {
+class Verification_roles {
 	protected $CI;
 
 	/**

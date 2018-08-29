@@ -150,7 +150,7 @@ class Requerimientos extends MX_Controller {
 			return FALSE;
 		}
 
-		$this->load->model('evpiu/ProductosBase_model', 'ProductosBase_mdl');
+		$this->load->model('evpiu/Productosbase_model', 'ProductosBase_mdl');
 
 		return $this->ProductosBase_mdl->generate_Base_Product_Structure($data);
 	}
@@ -168,7 +168,7 @@ class Requerimientos extends MX_Controller {
 			$product_structure = $this->generate_Product_Structure($base_product_data);
 
 			if ($product_structure) {
-				$this->load->model('evpiu/ProductosBase_model', 'ProductosBase_mdl');
+				$this->load->model('evpiu/Productosbase_model', 'ProductosBase_mdl');
 
 				if ($this->ProductosBase_mdl->duplicated_Base_Product($product_structure['product_code'])) {
 					return $product_structure['product_code'];

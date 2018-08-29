@@ -81,7 +81,7 @@ class Xhr extends MX_Controller {
 	 */
 	public function xhr_Lines_select() {
 		if (isset($_POST['Parametro']) && !empty($_POST['Parametro'])) {
-			$this->load->model('Requerimientos/evpiu/V_LineasxParametro_model', 'LineasxParam_mdl');
+			$this->load->model('Requerimientos/evpiu/V_lineasxparametro_model', 'LineasxParam_mdl');
 			$Parametro = $this->input->post('Parametro');
 
 			$lines_select_data = $this->LineasxParam_mdl->fill_Lineas_x_Parametro_select($Parametro);
@@ -307,7 +307,7 @@ class Xhr extends MX_Controller {
 			$term = $_GET['q'];
 
 			if (isset($term) && !empty($term)) {
-				$this->load->model('evpiu/ProductosBase_model', 'ProductosBase_mdl');
+				$this->load->model('evpiu/Productosbase_model', 'ProductosBase_mdl');
 
 				$base_products = $this->ProductosBase_mdl->fill_remote_Productos_Base_select($term);
 

@@ -12,7 +12,7 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
-class ProductosBase_model extends CI_Model {
+class Productosbase_model extends CI_Model {
 	// Estado del producto base: Habilitado
 	public $base_product_enabled_state = 1;
 

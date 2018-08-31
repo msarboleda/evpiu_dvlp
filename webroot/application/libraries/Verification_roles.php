@@ -83,4 +83,15 @@ class Verification_roles {
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
+
+	/**
+	 * @param int|string $id
+	 *
+	 * @return bool Es un gestor de importación de facturas
+	 */
+	public function is_invoice_import_manager($id = FALSE) {
+		$member_group = 'invoice_imp_manager';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+	}
 }

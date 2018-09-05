@@ -14,7 +14,7 @@ class Header {
 
 	public function __construct() {
 		$this->CI =& get_instance();
-		$this->CI->load->model('EVPIU/ModulosxCategoriasxGrupos_model', 'ModulosxCategoriasxGrupos');
+		$this->CI->load->model('evpiu/Modulosxcategoriasxgrupos_model', 'ModulosxCategoriasxGrupos');
 	}
 
 	/**

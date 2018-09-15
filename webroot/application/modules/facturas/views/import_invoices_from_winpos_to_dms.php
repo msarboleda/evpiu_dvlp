@@ -27,23 +27,40 @@
             </tr>
           </thead>
           <tbody>
-            <?php if (isset($latest_invoices) && !empty($latest_invoices)) { ?>
-            <?php foreach ($latest_invoices as $last_invoice): ?>
-            <tr>
-              <td><?php echo $last_invoice->punto_venta; ?></td>
-              <td><?php echo $last_invoice->factura; ?></td>
-              <td><?php echo $last_invoice->fecha; ?></td>
-              <td><button type="button" class="btn btn-sm btn-primary" value="<?php echo $last_invoice->tipo; ?>">Seleccionar</button></td>
-            </tr>
-            <?php endforeach; ?>
-            <?php } else { ?>
+            <?php if (isset($latest_invoices) && !empty($latest_invoices)) {
+                    foreach ($latest_invoices as $last_invoice): ?>
+                      <tr>
+                        <td><?php echo $last_invoice->punto_venta; ?></td>
+                        <td><?php echo $last_invoice->factura; ?></td>
+                        <td><?php echo $last_invoice->fecha; ?></td>
+                        <td><button type="button" class="btn btn-link pick-terminal" value="<?php echo $last_invoice->terminal; ?>"><i class="fa fa-check-square-o"></i></button></td>
+                      </tr>
+            <?php 
+                    endforeach; ?>
+            <?php 
+                  } else { ?>
             <tr>
               <td colspan="4">No se obtuvieron resultados.</td>
             </tr>
-            <?php } ?>
+            <?php 
+                  } ?>
           </tbody>
         </table>
       </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">
+      <h3>Consultar facturas</h3>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="form-group">
+          <?php echo lang('IIWD_invoices_date_label', 'invoices_date'); ?> <br />
+          <input type="text" class="form-control input-default" name="invoices_date" id="invoices_date" readonly />
+        </div>
+        <?php echo form_button('', lang('IIWD_see_last_invoice_submit_button'), 'class="btn btn-primary" id="check_invoices"');?>
+      </form>
     </div>
   </div>
 </div>

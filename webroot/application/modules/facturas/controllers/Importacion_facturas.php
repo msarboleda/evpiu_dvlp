@@ -16,6 +16,7 @@ class Importacion_facturas extends MX_Controller {
     parent::__construct();
 
     $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
+    $this->load->model('Facturas/estradav/Facturas_dms_model', 'Facturas_dms_mdl');
     $this->load->library(array('header', 'verification_roles', 'messages'));
     $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('importacion_facturas');
@@ -37,11 +38,16 @@ class Importacion_facturas extends MX_Controller {
       $header_data = $this->header->show_Categories_and_Modules();
       $header_data['module_name'] = lang('IIWD_heading');
 
-      $this->load->model('Facturas/estradav/Facturas_dms_model', 'Facturas_dms_mdl');
       $view_data['latest_invoices'] = $this->get_latest_invoices_loaded_from_sale_points();
       $view_data['messages'] = $this->messages->get();
 
+      add_css('dist/vendor/pickadate.js/themes/classic.css');
+      add_css('dist/vendor/pickadate.js/themes/classic.date.css');
       add_css('dist/custom/css/facturas/import_invoices_from_winpos_to_dms.css');
+      add_js('dist/vendor/pickadate.js/picker.js');
+      add_js('dist/vendor/pickadate.js/picker.date.js');
+      add_js('dist/vendor/pickadate.js/translations/date_es_ES.js');
+      add_js('dist/custom/js/facturas/import_invoices_from_winpos_to_dms.js');
       
       $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
       $this->load->view('facturas'. DS .'import_invoices_from_winpos_to_dms', $view_data);

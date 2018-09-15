@@ -37,15 +37,19 @@ class Facturas_dms_model extends CI_Model {
         switch ($row->tipo) {
           case 'FP2':
             $row->punto_venta = 'Itagui';
+            $row->terminal = 630;
             break;
           case 'FP3':
             $row->punto_venta = 'Cali';
+            $row->terminal = 620;
             break;
           case 'FP5':
             $row->punto_venta = 'Bogota';
+            $row->terminal = 650;
             break;
           case 'FP6':
             $row->punto_venta = 'Dosquebradas';
+            $row->terminal = 660;
         }
       }
 

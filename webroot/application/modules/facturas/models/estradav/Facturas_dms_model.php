@@ -61,21 +61,19 @@ class Facturas_dms_model extends CI_Model {
   }
 
   /**
-   * Elimina todos los datos de la tabla de documentos_MAX.
+   * Elimina todos los datos de las tablas de importación de facturas
    * 
    * @return boolean
    */
-  public function delete_all_data_from_documentos_max() {
-    return $this->db_dms->empty_table('documentos_MAX');
-  }
+  public function delete_all_data_from_import_tables() {
+    $del_docs_max = $this->db_dms->empty_table('documentos_MAX');
+    $del_movs_max = $this->db_dms->empty_table('movimiento_MAX');
 
-  /**
-   * Elimina todos los datos de la tabla de movimiento_MAX.
-   * 
-   * @return boolean
-   */
-  public function delete_all_data_from_movimiento_max() {
-    return $this->db_dms->empty_table('movimiento_MAX');
+    if ($del_docs_max === TRUE && $del_movs_max === TRUE) {
+      return TRUE;
+    } else {
+      throw new Exception('Los datos de alguna tabla de importación no se pudieron borrar.');
+    }
   }
 
   /**

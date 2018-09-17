@@ -227,8 +227,7 @@ class Importacion_facturas extends MX_Controller {
                 // creado en DMS. Además se eliminan los datos ingresados de las
                 // facturas anteriores en la base de datos para volver a comenzar
                 // con el proceso.
-                $this->delete_all_data_from_documentos_max();
-                $this->delete_all_data_from_movimiento_max();
+                $this->delete_all_data_from_import_tables();
                 $inv_structure->customer_not_created_on_dms_msg = lang('customer_not_created_on_dms') . ' ' . $customer_created_on_dms;
                 $processed_invoices[] = $inv_structure;
                 break;
@@ -240,8 +239,7 @@ class Importacion_facturas extends MX_Controller {
               // con el proceso.
               // NOTA: Generalmente pasa porque la identificación auxiliar del
               // cliente en WinPOS tiene el digito de verificación.
-              $this->delete_all_data_from_documentos_max();
-              $this->delete_all_data_from_movimiento_max();
+              $this->delete_all_data_from_import_tables();
               $inv_structure->nit_error = lang('customer_nit_does_not_exist_on_winpos') . ' ' . $inv_structure->cliente . ' (' . $inv_structure->nit . ')';
               $processed_invoices[] = $inv_structure;
               break;
@@ -515,21 +513,16 @@ class Importacion_facturas extends MX_Controller {
   }
 
   /**
-   * Elimina todos los datos de la tabla de documentos_MAX
+   * Elimina todos los datos de las tablas de importación de facturas
    * 
    * @return boolean
    */
-  public function delete_all_data_from_documentos_max() {
-    return $this->Facturas_dms_mdl->delete_all_data_from_documentos_max();
-  }
-
-  /**
-   * Elimina todos los datos de la tabla de movimientos_MAX
-   * 
-   * @return boolean
-   */
-  public function delete_all_data_from_movimiento_max() {
-    return $this->Facturas_dms_mdl->delete_all_data_from_movimiento_max();
+  public function delete_all_data_from_import_tables() {
+    try {
+      return $this->Facturas_dms_mdl->delete_all_data_from_import_tables();
+    } catch (Exception $e) {
+      return 'Error: ' . $e->getMessage();
+    }
   }
 
   /**

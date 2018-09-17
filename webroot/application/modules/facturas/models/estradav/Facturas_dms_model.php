@@ -166,4 +166,109 @@ class Facturas_dms_model extends CI_Model {
 
     return $this->db_dms->insert('documentos_MAX', $success_invoice);
   }
+
+  /**
+   * Genera la estructura del valor de la mercancía para 
+   * la imputación contable de una factura.
+   * 
+   * @param object $invoice Factura a tratar.
+   * 
+   * @return array
+   */
+  private function generate_goods_value_structure($invoice) {
+    $structure = array(
+      'tipo' => $invoice->tipo_documento,
+      'numero' => $invoice->numero,
+      'seq' => 1,
+      'cuenta' => $invoice->cuenta_venta,
+      'centro' => 0,
+      'nit' => $invoice->nit,
+      'fec' => $invoice->fecha,
+      'valor' => round(-$invoice->valor_mercancia),
+      'base' => 0,
+      'documento' => $invoice->documento
+    );
+
+    return $structure;
+  }
+
+  /**
+   * Genera la estructura del valor del iva para la imputación
+   * contable de una factura.
+   * 
+   * @param object $invoice Factura a tratar.
+   * 
+   * @return array
+   */
+  private function generate_iva_value_structure($invoice) {
+    $structure = array(
+      'tipo' => $invoice->tipo_documento,
+      'numero' => $invoice->numero,
+      'seq' => 2,
+      'cuenta' => 24080507,
+      'centro' => 0,
+      'nit' => $invoice->nit,
+      'fec' => $invoice->fecha,
+      'valor' => round(-$invoice->iva),
+      'base' => round($invoice->valor_mercancia),
+      'documento' => $invoice->documento
+    );
+
+    return $structure;
+  }
+
+  /**
+   * Genera la estructura del valor total para 
+   * la imputación contable de una factura.
+   * 
+   * @param object $invoice Factura a tratar.
+   * 
+   * @return array
+   */
+  private function generate_total_value_structure($invoice) {
+    $structure = array(
+      'tipo' => $invoice->tipo_documento,
+      'numero' => $invoice->numero,
+      'seq' => 3,
+      'cuenta' => $invoice->cuenta_cobrar,
+      'centro' => 0,
+      'nit' => $invoice->nit,
+      'fec' => $invoice->fecha,
+      'valor' => round($invoice->valor_total),
+      'base' => 0,
+      'documento' => $invoice->documento
+    );
+
+    // El NIT debe de ser 0 cuando la cuenta por cobrar sea esta
+    if ($structure['cuenta'] === 11050505) {
+      $structure['nit'] = 0;
+    }
+
+    return $structure;
+  }
+
+  /**
+   * Genera la estructura del valor de la retención en la fuente
+   * para la imputación contable de una factura.
+   * 
+   * @param object $invoice Factura a tratar.
+   * 
+   * @return array
+   */
+  private function generate_retefuente_value_structure($invoice) {
+    $structure = array(
+      'tipo' => $invoice->tipo_documento,
+      'numero' => $invoice->numero,
+      'seq' => 4,
+      'cuenta' => 13551505,
+      'centro' => 0,
+      'nit' => $invoice->nit,
+      'fec' => $invoice->fecha,
+      'valor' => round($invoice->rete_fuente),
+      'base' => round($invoice->valor_mercancia),
+      'documento' => $invoice->documento
+    );
+
+    return $structure;
+  }
 }

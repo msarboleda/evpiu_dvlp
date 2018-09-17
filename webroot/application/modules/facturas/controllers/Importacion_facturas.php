@@ -181,6 +181,33 @@ class Importacion_facturas extends MX_Controller {
 
     return $manual_invoice;
   }
+
+  /**
+   * Procesa una factura de WinPOS con dos medios de pago.
+   * 
+   * Manipula la información de los dos medios de pago de una factura
+   * y fusiona esos datos en un solo objeto.
+   * 
+   * @param object $first_pay_method Factura con el primer medio de pago.
+   * @param object $second_pay_method Factura con el segundo medio de pago.
+   * 
+   * @return object
+   */
+  private function process_invoice_with_double_payment_method($first_pay_method, $second_pay_method) {
+    $first_pay_method->modelo = $second_pay_method->modelo;
+    $first_pay_method->valor_total = $second_pay_method->ValorMP;
+    $first_pay_method->iva += $second_pay_method->iva;
+    $first_pay_method->TotalDescuento += $second_pay_method->TotalDescuento;
+    $first_pay_method->valor_aplicado = $second_pay_method->ValorMP;
+    $first_pay_method->medio_pago_aux = $second_pay_method->idMedioPago;
+    $first_pay_method->rete_fuente = 0;
+
+    if ($first_pay_method->idMedioPago === 6) {
+      $first_pay_method->rete_fuente = $first_pay_method->ValorMP;
+    }
+
+    return $first_pay_method;
+  }
   /**
    * Busca una terminal de un punto de venta de WinPOS por medio de su código.
    * 

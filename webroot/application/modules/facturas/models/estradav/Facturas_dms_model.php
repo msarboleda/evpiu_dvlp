@@ -76,4 +76,36 @@ class Facturas_dms_model extends CI_Model {
   public function delete_all_data_from_movimiento_max() {
     return $this->db_dms->empty_table('movimiento_MAX');
   }
+
+  /**
+   * Reporta una factura anulada.
+   * 
+   * @param object $invoice Factura a ser reportada.
+   * 
+   * @return boolean
+   */
+  public function add_voided_invoice($invoice = '') {
+    if (empty($invoice)) {
+      throw new \InvalidArgumentException('El contenido del parámetro no puede ser vacío.');
+    }
+
+    if (!is_object($invoice)) {
+      throw new \TypeError('El parámetro debe tener una estructura de object.'); 
+    }
+
+    $voided_invoice = array(
+      'sw' => $invoice->sw,
+      'tipo' => $invoice->tipo_documento,
+      'numero' => $invoice->numero,
+      'nit' => 3050,
+      'fecha' => $invoice->fecha,
+      'anulado' => $invoice->anulada,
+      'usuario' => $this->ion_auth->user()->row()->username,
+      'pc' => gethostname(),
+      'fecha_hora' => date('Y-m-d H:i:s'),
+      'bodega' => $invoice->bodega
+    );
+
+    return $this->db_dms->insert('documentos_MAX', $voided_invoice);
+  }
 }

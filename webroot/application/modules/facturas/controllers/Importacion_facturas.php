@@ -350,4 +350,21 @@ class Importacion_facturas extends MX_Controller {
   public function delete_all_data_from_movimiento_max() {
     return $this->Facturas_dms_mdl->delete_all_data_from_movimiento_max();
   }
+
+  /**
+   * Reporta una factura anulada en DMS.
+   * 
+   * @param object $invoice Factura a ser reportada.
+   * 
+   * @return boolean|string
+   */
+  public function report_dms_voided_invoice($invoice) {
+    try {
+      return $this->Facturas_dms_mdl->add_voided_invoice($invoice);
+    } catch (InvalidArgumentException $e) {
+      return 'Argumento inválido: ' . $e->getMessage();
+    } catch (TypeError $e) {
+      return 'Error: ' . $e->getMessage();
+    }
+  }
 }

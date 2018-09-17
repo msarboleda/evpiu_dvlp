@@ -246,6 +246,48 @@ class Importacion_facturas extends MX_Controller {
 
     return $sale_account;
   }
+
+  /**
+   * Define la cuenta por cobrar para una factura de WinPOS.
+   *
+   * @param int $payment_method Código de medio de pago asociado a la factura.
+   * @param int $vendor Código de vendedor asociado a la factura.
+   * @param int $customer_type Tipo de cliente asociado a la factura.
+   * 
+   * @return int
+   */
+  public function set_receivable_account_to_wpos_invoice($payment_method, $vendor, $customer_type) {
+    if ($payment_method === 7) {
+      switch ($vendor) {
+        case 8: // Punto de venta Bogotá
+          $receivable_account = 13050605;
+          break;
+        case 16: // Punto de venta Itagui
+          $receivable_account = 13050601;
+          break;	
+        case 38: // Punto de venta Cali
+          $receivable_account = 13050603;	
+          break;
+        default:
+          if ($customer_type === '1') { // Cuentas por cobrar a RC o PN
+            $receivable_account = 13050505;
+          }
+
+          if ($customer_type === '2') { // Cuentas por cobrar a CI
+            $receivable_account = 13052005;
+          }
+
+          if ($customer_type === '4') { // Cuentas por cobrar a ZF
+            $receivable_account = 13050505;
+          }
+          break;
+      }
+    } else {
+      $receivable_account = 11050505;
+    }
+
+    return $receivable_account;
+  }
   /**
    * Busca una terminal de un punto de venta de WinPOS por medio de su código.
    * 

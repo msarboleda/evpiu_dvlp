@@ -17,6 +17,7 @@ class Importacion_facturas extends MX_Controller {
 
     $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
     $this->load->model('Facturas/estradav/Facturas_dms_model', 'Facturas_dms_mdl');
+    $this->load->model('Facturas/wpos/Facturas_wpos_model', 'Facturas_wpos_mdl');
     $this->load->library(array('header', 'verification_roles', 'messages'));
     $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('importacion_facturas');
@@ -79,6 +80,27 @@ class Importacion_facturas extends MX_Controller {
       }
     } catch (Exception $e) {
       $this->messages->add($e->getMessage(), 'danger');
+      return FALSE;
+    }
+  }
+  /**
+   * Obtiene las facturas de una terminal de
+   * un punto de venta en una fecha específica.
+   * 
+   * @param int $terminal Código de la terminal del punto
+   * de venta de donde se obtendrán las facturas.
+   * @param string $fecha Fecha para obtener las facturas.
+   * 
+   * @return mixed|boolean
+   */
+  public function get_invoices_from_sale_point_on_date($terminal, $fecha) {
+    try {
+      return $this->Facturas_wpos_mdl->get_invoices_from_sale_point_on_date($terminal, $fecha);
+    } catch (InvalidArgumentException $e) {
+      $this->messages->add('Argumento inválido: ' . $e->getMessage(), 'danger');
+      return FALSE;
+    } catch (Exception $e) {
+      $this->messages->add('Error: ' . $e->getMessage(), 'danger');
       return FALSE;
     }
   }

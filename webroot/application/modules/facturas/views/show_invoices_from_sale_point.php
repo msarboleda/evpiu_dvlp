@@ -218,6 +218,12 @@
       <?php 
         endforeach; ?>
     </div>
+    <hr>
+    <h2>Vaciar tablas de importación</h2>
+    En caso de que necesite borrar los datos de la tablas que contienen la información de las facturas que se importarán a DMS, simplemente haga clic en el botón de abajo.
+    <div class="m-t-15">
+      <button type="button" class="btn btn-primary" id="clear_tables">Vaciar</button>
+    </div>
   </div>
 </div>
 <?php 

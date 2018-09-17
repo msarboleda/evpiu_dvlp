@@ -253,6 +253,10 @@ class Importacion_facturas extends MX_Controller {
         $view_data['terminal_data'] = $this->find_terminal($terminal);
         $view_data['messages'] = $this->messages->get();
 
+        add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+        add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+        add_js('dist/custom/js/facturas/show_invoices_from_sale_point.js');
+
         $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
         $this->load->view('facturas'. DS .'show_invoices_from_sale_point', $view_data);
         $this->load->view('footers'. DS .'footer_main_dashboard');

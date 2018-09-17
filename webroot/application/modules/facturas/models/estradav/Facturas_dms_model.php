@@ -108,4 +108,62 @@ class Facturas_dms_model extends CI_Model {
 
     return $this->db_dms->insert('documentos_MAX', $voided_invoice);
   }
+
+  /**
+   * Reporta una factura correcta.
+   * 
+   * @param object $invoice Factura a ser reportada.
+   * 
+   * @return boolean 
+   */
+  public function add_success_invoice($invoice = '') {
+    if (empty($invoice)) {
+      throw new \InvalidArgumentException('El contenido del parámetro no puede ser vacío.');
+    }
+
+    if (!is_object($invoice)) {
+      throw new \TypeError('El parámetro debe tener una estructura de object.'); 
+    }
+  
+    $success_invoice = array(
+      'sw' => $invoice->sw,
+      'tipo' => $invoice->tipo_documento,
+      'numero' => $invoice->numero,
+      'nit' => $invoice->nit,
+      'fecha' => $invoice->fecha,
+      'condicion' => $invoice->condicion,
+      'vencimiento' => $invoice->vencimiento,
+      'valor_total' => round($invoice->valor_total),
+      'iva' => round($invoice->iva),
+      'retencion' => round($invoice->rete_fuente),
+      'retencion_causada' => 0,
+      'retencion_iva' => 0,
+      'retencion_ica' => 0,
+      'descuento_pie' => round($invoice->descuento),
+      'fletes' => 0,
+      'iva_fletes' => 0,
+      'costo' => 0,
+      'vendedor' => $invoice->codigo_vendedor_dms,
+      'valor_aplicado' => round($invoice->valor_aplicado),
+      'anulado' => $invoice->anulada,
+      'modelo' => $invoice->modelo,
+      'documento' => $invoice->documento,
+      'notas' => $invoice->notas,
+      'usuario' => $this->ion_auth->user()->row()->username,
+      'pc' => gethostname(),
+      'fecha_hora' => date('Y-m-d H:i:s'),
+      'retencion2' => 0,
+      'retencion3' => 0,
+      'bodega' => $invoice->bodega,
+      'impoconsumo' => 0,
+      'descuento2' => 0,
+      'duracion' => $invoice->duracion,
+      'concepto' => $invoice->concepto,
+      'impuesto_deporte' => 0,
+      'valor_mercancia' => round($invoice->valor_mercancia),
+      'exportado' => $invoice->exportada
+    );
+
+    return $this->db_dms->insert('documentos_MAX', $success_invoice);
+  }
 }

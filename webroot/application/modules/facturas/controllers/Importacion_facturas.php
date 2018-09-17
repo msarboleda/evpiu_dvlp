@@ -367,4 +367,21 @@ class Importacion_facturas extends MX_Controller {
       return 'Error: ' . $e->getMessage();
     }
   }
+
+  /**
+   * Reporta una factura correcta en DMS.
+   * 
+   * @param object $invoice Factura a ser reportada.
+   *
+   * @return boolean|string
+   */
+  public function report_dms_success_invoice($invoice) {
+    try {
+      return $this->Facturas_dms_mdl->add_success_invoice($invoice);
+    } catch (InvalidArgumentException $e) {
+      return 'Argumento inválido: ' . $e->getMessage();
+    } catch (TypeError $e) {
+      return 'Error: ' . $e->getMessage();
+    }
+  }
 }

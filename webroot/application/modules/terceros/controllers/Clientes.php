@@ -50,4 +50,21 @@ class Clientes extends MX_Controller {
       return 'Error: ' . $e->getMessage();
     }
   }
+
+  /**
+   * Busca el tipo de un cliente de DMS.
+   * 
+   * @param int $nit NIT del Cliente.
+   * 
+   * @return object
+   */
+  public function find_dms_customer_type($nit) {
+    try {
+      return $this->Clientes_dms_mdl->find_customer_type($nit);
+    } catch (InvalidArgumentException $e) {
+      return 'Argumento inválido: ' . $e->getMessage();
+    } catch (Exception $e) {
+      return 'Error: ' . $e->getMessage();
+    }
+  }
 }

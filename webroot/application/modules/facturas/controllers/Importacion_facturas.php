@@ -84,6 +84,7 @@ class Importacion_facturas extends MX_Controller {
     }
   }
 
+
   /**
    * Obtiene las facturas de una terminal de
    * un punto de venta en una fecha específica.
@@ -160,6 +161,25 @@ class Importacion_facturas extends MX_Controller {
     }
     
     return $invoice_structure;
+  }
+
+  /**
+   * Genera una estructura corta de una factura de WinPOS con más de
+   * dos medios de pago.
+   * 
+   * @param int $number Número de la factura.
+   * @param boolean $state Indica si la factura está anulada o no.
+   * 
+   * @return object
+   */
+  private function generate_manual_invoice_structure($number, $state){
+    $manual_invoice = new stdClass();
+    $manual_invoice->numero = $number;
+    $manual_invoice->anulada = $state;
+    $manual_invoice->is_manual_invoice_msg = lang('manual_invoice_error');
+    $manual_invoice->is_manual_invoice_status = TRUE;
+
+    return $manual_invoice;
   }
   /**
    * Busca una terminal de un punto de venta de WinPOS por medio de su código.

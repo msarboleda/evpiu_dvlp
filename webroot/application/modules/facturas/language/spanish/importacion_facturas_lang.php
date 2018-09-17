@@ -17,3 +17,6 @@ $lang['IIWD_see_last_invoice_submit_button'] = 'Consultar facturas';
 $lang['IIWD_last_point_sale_label'] = 'Punto de venta';
 $lang['IIWD_last_invoice_number_label'] = 'Número';
 $lang['IIWD_last_invoice_date_label'] = 'Fecha';
+
+// Generate manual invoice structure
+$lang['manual_invoice_error'] = 'Esta factura se debe importar manualmente, sobrepasa el límite de cantidad de medios de pago.';

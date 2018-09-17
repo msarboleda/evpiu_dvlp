@@ -6,6 +6,7 @@
  * Descripción del modelo
  *
  * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
+ * @author Martin Arboleda Montoya <sistemas@estradavelasquez.com>
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 

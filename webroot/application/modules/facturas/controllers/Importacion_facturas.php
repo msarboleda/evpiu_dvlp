@@ -90,179 +90,179 @@ class Importacion_facturas extends MX_Controller {
    * 
    */
   public function show_invoices_from_sale_point_on_date() {
-    if (!$this->verification_roles->is_invoice_import_manager() || !$this->ion_auth->is_admin()) {
-      redirect('auth');
-    }
+    if ($this->verification_roles->is_invoice_import_manager() || $this->ion_auth->is_admin()) {
+      $terminal = $this->input->get('t');
+      $fecha = $this->input->get('d');
 
-    $terminal = $this->input->get('t');
-    $fecha = $this->input->get('d');
+      if (!empty($terminal) && !empty($fecha)) {
+        $header_data = $this->header->show_Categories_and_Modules();
+        $header_data['module_name'] = lang('SISP_heading');
+        $orig_invoices = $this->get_invoices_from_sale_point_on_date($terminal, $fecha);
 
-    if (!empty($terminal) && !empty($fecha)) {
-      $header_data = $this->header->show_Categories_and_Modules();
-      $header_data['module_name'] = lang('SISP_heading');
-      $orig_invoices = $this->get_invoices_from_sale_point_on_date($terminal, $fecha);
+        if (!empty($orig_invoices)) {
+          // Número de veces que se repite cada factura, en teoría cuenta los medios de
+          // pago de una factura.
+          $repeated_invoices = array_count_values(array_column($orig_invoices, 'numero'));
 
-      if (!empty($orig_invoices)) {
-        // Número de veces que se repite cada factura, en teoría cuenta los medios de
-        // pago de una factura.
-        $repeated_invoices = array_count_values(array_column($orig_invoices, 'numero'));
+          foreach ($orig_invoices as $curr_key => $orig_invoice) {
+            // Cantidad de medios de pago de la factura actual
+            $repeated_times = $repeated_invoices[$orig_invoice->numero];
 
-        foreach ($orig_invoices as $curr_key => $orig_invoice) {
-          // Cantidad de medios de pago de la factura actual
-          $repeated_times = $repeated_invoices[$orig_invoice->numero];
-
-          switch ($repeated_times) {
-             // Procesando las facturas manuales (Facturas con más de dos medios de pago)
-            case $repeated_times > 2:
-              if ($curr_key > 0) {
-                // En caso de que el número de factura actual sea igual al anterior,
-                // simplemente se ignora y continua con la próxima iteración.
-                if ($orig_invoice->numero === $orig_invoices[$curr_key-1]->numero) {
-                  continue 2;
-                } else {
-                  // Se genera la estructura para mostrar el error de factura manual,
-                  // se añade a las facturas procesadas para mostrarse en la vista
-                  // y se continua con la próxima iteración.
-                  $processed_invoice = $this->generate_manual_invoice_structure($orig_invoice->numero, $orig_invoice->Anulado);
-                  $processed_invoices[] = $processed_invoice;
-                  continue 2;
+            switch ($repeated_times) {
+              // Procesando las facturas manuales (Facturas con más de dos medios de pago)
+              case $repeated_times > 2:
+                if ($curr_key > 0) {
+                  // En caso de que el número de factura actual sea igual al anterior,
+                  // simplemente se ignora y continua con la próxima iteración.
+                  if ($orig_invoice->numero === $orig_invoices[$curr_key-1]->numero) {
+                    continue 2;
+                  } else {
+                    // Se genera la estructura para mostrar el error de factura manual,
+                    // se añade a las facturas procesadas para mostrarse en la vista
+                    // y se continua con la próxima iteración.
+                    $processed_invoice = $this->generate_manual_invoice_structure($orig_invoice->numero, $orig_invoice->Anulado);
+                    $processed_invoices[] = $processed_invoice;
+                    continue 2;
+                  }
                 }
+                break;
+              // Procesando las facturas con dos medios de pago
+              case $repeated_times === 2:
+                if ($curr_key > 0) {
+                  if ($orig_invoice->numero === $orig_invoices[$curr_key-1]->numero) {
+                    continue 2;
+                  } else {
+                    // Se envía la información de la factura actual y la próxima, ya que su
+                    // número de factura es igual. Luego se genera una fusión para formar la
+                    // factura en un solo objeto.
+                    $orig_invoice = $this->process_invoice_with_double_payment_method($orig_invoice, $orig_invoices[$curr_key+1]);
+                    $inv_structure = $this->generate_invoice_structure($orig_invoice, TRUE);
+                  }
+                }
+                break;
+              // Procesando las facturas correctas
+              default:
+                $inv_structure = $this->generate_invoice_structure($orig_invoice);
+                break;
+            }
+
+            // La factura debe tener un NIT de cliente asociado
+            if (isset($inv_structure->nit) && !empty($inv_structure->nit)) {
+              $customer_created_on_dms = modules::run('terceros/clientes/check_created_dms_client', $inv_structure->nit);
+
+              // El cliente debe estar creado en DMS para importar la factura
+              if ($customer_created_on_dms === TRUE) {
+                // Se consulta el vendedor asignado a un cliente
+                $assigned_vendor_data = modules::run('terceros/clientes/find_vendor_assigned_to_dms_customer', $inv_structure->nit);
+                $inv_structure->codigo_vendedor_dms = $assigned_vendor_data->vendedor;
+                $inv_structure->nombre_vendedor_dms = $assigned_vendor_data->NombreVendedor;
+
+                // En caso de que el vendedor de la factura pertenezca a un punto de venta, se respeta
+                // la venta al punto de venta que realizó la transacción.
+                $sale_points_vendors = array(3, 8, 16, 38);
+
+                if (in_array($inv_structure->codigo_vendedor_dms, $sale_points_vendors)) {
+                  $inv_structure->codigo_vendedor_dms = $this->set_vendor_code_to_terminal($terminal);
+                  $dms_vendor_data = modules::run('terceros/vendedores/find_dms_vendor', $inv_structure->codigo_vendedor_dms);
+                  $inv_structure->nombre_vendedor_dms = $dms_vendor_data->nombres;
+                }
+
+                if ($inv_structure->anulada) {
+                  // Ya que es una factura anulada, simplemente se almacena con la
+                  // mayoría de valores nulos y se envía la notificación del proceso.
+                  $reported_invoice = $this->report_dms_voided_invoice($inv_structure);
+      
+                  if ($reported_invoice === TRUE) {
+                    $inv_structure->void_invoice_msg = lang('void_invoice_successfully_reported');
+                    $inv_structure->void_invoice_status = TRUE;
+                  } else {
+                    $inv_structure->void_invoice_msg = lang('void_invoice_no_reported') . ' ' . $reported_invoice;
+                    $inv_structure->void_invoice_status = FALSE;
+                  }
+                } else {
+                  // Se consulta el tipo de cliente de la factura actual
+                  $customer_type = modules::run('terceros/clientes/find_dms_customer_type', $inv_structure->nit)->TipoCliente;
+                  // Define la cuenta de venta de la factura
+                  $inv_structure->cuenta_venta = $this->set_sale_account_to_wpos_invoice($inv_structure->codigo_vendedor_dms, $customer_type, $inv_structure->iva);
+
+                  // En caso de que la factura tenga doble medio de pago se debe enviar
+                  // un medio de pago auxiliar para poder definir la cuenta por cobrar
+                  // de la factura.
+                  if ($repeated_times === 2) {
+                    $inv_structure->cuenta_cobrar = $this->set_receivable_account_to_wpos_invoice($inv_structure->medio_pago_aux, $inv_structure->codigo_vendedor_dms, $customer_type);
+                  } else {
+                    $inv_structure->cuenta_cobrar = $this->set_receivable_account_to_wpos_invoice($inv_structure->medio_pago, $inv_structure->codigo_vendedor_dms, $customer_type);
+                  }
+
+                  // Se reporta la factura correcta en la base de datos.
+                  $reported_success_invoice = $this->report_dms_success_invoice($inv_structure);
+                  // Se reporta la imputación contable de la factura en la base de datos.
+                  $reported_accounting_imputation = $this->report_accounting_imputation($inv_structure);
+      
+                  // Evalúa el resultado de la inserción de la factura en la base de datos
+                  // para enviar una notificación al usuario.
+                  if ($reported_success_invoice === TRUE) {
+                    $inv_structure->success_invoice_msg = lang('normal_invoice_successfully_reported');
+                    $inv_structure->success_invoice_status = TRUE;
+                  } else {
+                    $inv_structure->success_invoice_msg = lang('normal_invoice_no_reported') . ' '. $reported_success_invoice;
+                    $inv_structure->success_invoice_status = FALSE;
+                  }
+
+                  // Evalúa el resultado de la inserción de la imputación contable de
+                  // la factura en la base de datos para enviar una notificación al usuario.
+                  if ($reported_accounting_imputation === TRUE) {
+                    $inv_structure->acc_imputation_msg = lang('accounting_imputation_successfully_reported');
+                    $inv_structure->acc_imputation_status = TRUE;
+                  } else {
+                    $inv_structure->acc_imputation_msg = lang('accounting_imputation_no_reported'). ' ' . $reported_accounting_imputation;
+                    $inv_structure->acc_imputation_status = FALSE;
+                  }
+                }
+
+                // Se anexa como una factura procesada lista para mostrar.
+                $processed_invoices[] = $inv_structure;
+              } else { // El cliente no está creado en DMS
+                // Se debe cancelar el proceso ya que el cliente tiene que estar
+                // creado en DMS. Además se eliminan los datos ingresados de las
+                // facturas anteriores en la base de datos para volver a comenzar
+                // con el proceso.
+                $this->delete_all_data_from_documentos_max();
+                $this->delete_all_data_from_movimiento_max();
+                $inv_structure->customer_not_created_on_dms_msg = lang('customer_not_created_on_dms') . ' ' . $customer_created_on_dms;
+                $processed_invoices[] = $inv_structure;
+                break;
               }
-              break;
-            // Procesando las facturas con dos medios de pago
-            case $repeated_times === 2:
-              if ($curr_key > 0) {
-                if ($orig_invoice->numero === $orig_invoices[$curr_key-1]->numero) {
-                  continue 2;
-                } else {
-                  // Se envía la información de la factura actual y la próxima, ya que su
-                  // número de factura es igual. Luego se genera una fusión para formar la
-                  // factura en un solo objeto.
-                  $orig_invoice = $this->process_invoice_with_double_payment_method($orig_invoice, $orig_invoices[$curr_key+1]);
-                  $inv_structure = $this->generate_invoice_structure($orig_invoice, TRUE);
-                }
-              }
-              break;
-            // Procesando las facturas correctas
-            default:
-              $inv_structure = $this->generate_invoice_structure($orig_invoice);
-              break;
-          }
-
-          // La factura debe tener un NIT de cliente asociado
-          if (isset($inv_structure->nit) && !empty($inv_structure->nit)) {
-            $customer_created_on_dms = modules::run('terceros/clientes/check_created_dms_client', $inv_structure->nit);
-
-            // El cliente debe estar creado en DMS para importar la factura
-            if ($customer_created_on_dms === TRUE) {
-              // Se consulta el vendedor asignado a un cliente
-              $assigned_vendor_data = modules::run('terceros/clientes/find_vendor_assigned_to_dms_customer', $inv_structure->nit);
-              $inv_structure->codigo_vendedor_dms = $assigned_vendor_data->vendedor;
-              $inv_structure->nombre_vendedor_dms = $assigned_vendor_data->NombreVendedor;
-
-              // En caso de que el vendedor de la factura pertenezca a un punto de venta, se respeta
-              // la venta al punto de venta que realizó la transacción.
-              $sale_points_vendors = array(3, 8, 16, 38);
-
-              if (in_array($inv_structure->codigo_vendedor_dms, $sale_points_vendors)) {
-                $inv_structure->codigo_vendedor_dms = $this->set_vendor_code_to_terminal($terminal);
-                $dms_vendor_data = modules::run('terceros/vendedores/find_dms_vendor', $inv_structure->codigo_vendedor_dms);
-                $inv_structure->nombre_vendedor_dms = $dms_vendor_data->nombres;
-              }
-
-              if ($inv_structure->anulada) {
-                // Ya que es una factura anulada, simplemente se almacena con la
-                // mayoría de valores nulos y se envía la notificación del proceso.
-                $reported_invoice = $this->report_dms_voided_invoice($inv_structure);
-    
-                if ($reported_invoice === TRUE) {
-                  $inv_structure->void_invoice_msg = lang('void_invoice_successfully_reported');
-                  $inv_structure->void_invoice_status = TRUE;
-                } else {
-                  $inv_structure->void_invoice_msg = lang('void_invoice_no_reported') . ' ' . $reported_invoice;
-                  $inv_structure->void_invoice_status = FALSE;
-                }
-              } else {
-                // Se consulta el tipo de cliente de la factura actual
-                $customer_type = modules::run('terceros/clientes/find_dms_customer_type', $inv_structure->nit)->TipoCliente;
-                // Define la cuenta de venta de la factura
-                $inv_structure->cuenta_venta = $this->set_sale_account_to_wpos_invoice($inv_structure->codigo_vendedor_dms, $customer_type, $inv_structure->iva);
-
-                // En caso de que la factura tenga doble medio de pago se debe enviar
-                // un medio de pago auxiliar para poder definir la cuenta por cobrar
-                // de la factura.
-                if ($repeated_times === 2) {
-                  $inv_structure->cuenta_cobrar = $this->set_receivable_account_to_wpos_invoice($inv_structure->medio_pago_aux, $inv_structure->codigo_vendedor_dms, $customer_type);
-                } else {
-                  $inv_structure->cuenta_cobrar = $this->set_receivable_account_to_wpos_invoice($inv_structure->medio_pago, $inv_structure->codigo_vendedor_dms, $customer_type);
-                }
-
-                // Se reporta la factura correcta en la base de datos.
-                $reported_success_invoice = $this->report_dms_success_invoice($inv_structure);
-                // Se reporta la imputación contable de la factura en la base de datos.
-                $reported_accounting_imputation = $this->report_accounting_imputation($inv_structure);
-    
-                // Evalúa el resultado de la inserción de la factura en la base de datos
-                // para enviar una notificación al usuario.
-                if ($reported_success_invoice === TRUE) {
-                  $inv_structure->success_invoice_msg = lang('normal_invoice_successfully_reported');
-                  $inv_structure->success_invoice_status = TRUE;
-                } else {
-                  $inv_structure->success_invoice_msg = lang('normal_invoice_no_reported') . ' '. $reported_success_invoice;
-                  $inv_structure->success_invoice_status = FALSE;
-                }
-
-                // Evalúa el resultado de la inserción de la imputación contable de
-                // la factura en la base de datos para enviar una notificación al usuario.
-                if ($reported_accounting_imputation === TRUE) {
-                  $inv_structure->acc_imputation_msg = lang('accounting_imputation_successfully_reported');
-                  $inv_structure->acc_imputation_status = TRUE;
-                } else {
-                  $inv_structure->acc_imputation_msg = lang('accounting_imputation_no_reported'). ' ' . $reported_accounting_imputation;
-                  $inv_structure->acc_imputation_status = FALSE;
-                }
-              }
-
-              // Se anexa como una factura procesada lista para mostrar.
-              $processed_invoices[] = $inv_structure;
-            } else { // El cliente no está creado en DMS
-              // Se debe cancelar el proceso ya que el cliente tiene que estar
-              // creado en DMS. Además se eliminan los datos ingresados de las
+            } else { // El cliente tiene un problema con el NIT en WinPOS.
+              // Se debe cancelar el proceso ya que el cliente tiene que poseer
+              // un NIT correcto. Además se eliminan los datos ingresados de las
               // facturas anteriores en la base de datos para volver a comenzar
               // con el proceso.
+              // NOTA: Generalmente pasa porque la identificación auxiliar del
+              // cliente en WinPOS tiene el digito de verificación.
               $this->delete_all_data_from_documentos_max();
               $this->delete_all_data_from_movimiento_max();
-              $inv_structure->customer_not_created_on_dms_msg = lang('customer_not_created_on_dms') . ' ' . $customer_created_on_dms;
+              $inv_structure->nit_error = lang('customer_nit_does_not_exist_on_winpos') . ' ' . $inv_structure->cliente . ' (' . $inv_structure->nit . ')';
               $processed_invoices[] = $inv_structure;
               break;
             }
-          } else { // El cliente tiene un problema con el NIT en WinPOS.
-            // Se debe cancelar el proceso ya que el cliente tiene que poseer
-            // un NIT correcto. Además se eliminan los datos ingresados de las
-            // facturas anteriores en la base de datos para volver a comenzar
-            // con el proceso.
-            // NOTA: Generalmente pasa porque la identificación auxiliar del
-            // cliente en WinPOS tiene el digito de verificación.
-            $this->delete_all_data_from_documentos_max();
-            $this->delete_all_data_from_movimiento_max();
-            $inv_structure->nit_error = lang('customer_nit_does_not_exist_on_winpos') . ' ' . $inv_structure->cliente . ' (' . $inv_structure->nit . ')';
-            $processed_invoices[] = $inv_structure;
-            break;
           }
+
+          $view_data['invoices'] = $processed_invoices;
+          $view_data['count_invoices'] = count($processed_invoices);
         }
 
-        $view_data['invoices'] = $processed_invoices;
-        $view_data['count_invoices'] = count($processed_invoices);
+        $view_data['terminal_data'] = $this->find_terminal($terminal);
+        $view_data['messages'] = $this->messages->get();
+
+        $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+        $this->load->view('facturas'. DS .'show_invoices_from_sale_point', $view_data);
+        $this->load->view('footers'. DS .'footer_main_dashboard');
+      } else {
+        redirect('facturas/importacion_facturas/import_invoices_from_winpos_to_dms');
       }
-
-      $view_data['terminal_data'] = $this->find_terminal($terminal);
-      $view_data['messages'] = $this->messages->get();
-
-      $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
-      $this->load->view('facturas'. DS .'show_invoices_from_sale_point', $view_data);
-      $this->load->view('footers'. DS .'footer_main_dashboard');
     } else {
-      redirect('facturas/importacion_facturas/import_invoices_from_winpos_to_dms');
+      redirect('auth');
     }
   }
 

@@ -101,7 +101,7 @@ class Facturas_dms_model extends CI_Model {
       'nit' => 3050,
       'fecha' => $invoice->fecha,
       'anulado' => $invoice->anulada,
-      'usuario' => $this->ion_auth->user()->row()->username,
+      'usuario' => substr($this->ion_auth->user()->row()->username, 0, 10),
       'pc' => gethostname(),
       'fecha_hora' => date('Y-m-d H:i:s'),
       'bodega' => $invoice->bodega
@@ -150,7 +150,7 @@ class Facturas_dms_model extends CI_Model {
       'modelo' => $invoice->modelo,
       'documento' => $invoice->documento,
       'notas' => $invoice->notas,
-      'usuario' => $this->ion_auth->user()->row()->username,
+      'usuario' => substr($this->ion_auth->user()->row()->username, 0, 10),
       'pc' => gethostname(),
       'fecha_hora' => date('Y-m-d H:i:s'),
       'retencion2' => 0,

@@ -288,6 +288,32 @@ class Importacion_facturas extends MX_Controller {
 
     return $receivable_account;
   }
+
+  /**
+   * Asigna un código de vendedor a una terminal de
+   * punto de venta.
+   * 
+   * @param int $terminal Código de la terminal del punto
+   * de venta.
+   * 
+   * @return int
+   */
+  public function set_vendor_code_to_terminal($terminal) {
+    switch ($terminal) {
+      case 620: // Punto de venta Cali
+        $vendor = 38;
+        break;
+      case 630: // Punto de venta Itagui
+        $vendor = 16;
+        break;
+      case 650: // Punto de venta Bogotá
+        $vendor = 8;
+        break;
+    }
+
+    return $vendor; 
+  }
+
   /**
    * Busca una terminal de un punto de venta de WinPOS por medio de su código.
    * 

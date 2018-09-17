@@ -208,6 +208,44 @@ class Importacion_facturas extends MX_Controller {
 
     return $first_pay_method;
   }
+
+  /**
+   * Define la cuenta de venta para una factura de WinPOS.
+   * 
+   * @param int $vendor Código de vendedor asociado a la factura.
+   * @param int $customer_type Tipo de cliente asociado a la factura.
+   * @param int $iva IVA de la factura.
+   * 
+   * @return int
+   */
+  public function set_sale_account_to_wpos_invoice($vendor, $customer_type, $iva) {
+    switch ($vendor) {
+      case 8: // Punto de venta Bogotá
+        $sale_account = 41209540;
+        break;
+      case 16: // Punto de venta Itagui
+        $sale_account = 41209530;
+        break;
+      case 38: // Punto de venta Cali
+        $sale_account = 41209535;
+        break;
+      case 55: // Punto de venta Dosquebradas
+        $sale_account = 41209550;
+        break;
+      default:
+        if ($customer_type == 1)
+          $sale_account = 41209505;
+        if ($customer_type == 2 && $iva >= 1)
+          $sale_account = 41209515;
+        if ($customer_type == 2 && $iva == 0)
+          $sale_account = 41209510;
+        if ($customer_type == 4)
+          $sale_account = 41209521;
+        break;
+    }
+
+    return $sale_account;
+  }
   /**
    * Busca una terminal de un punto de venta de WinPOS por medio de su código.
    * 

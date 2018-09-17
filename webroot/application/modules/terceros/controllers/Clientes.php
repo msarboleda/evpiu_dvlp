@@ -33,4 +33,21 @@ class Clientes extends MX_Controller {
       return 'Error: ' . $e->getMessage();
     }
   }
+
+  /**
+   * Verifica que un cliente está creado en DMS.
+   * 
+   * @param int $nit NIT del Cliente.
+   * 
+   * @return boolean
+   */
+  public function check_created_dms_client($nit) {
+    try {
+      return $this->Clientes_dms_mdl->check_created_client($nit);
+    } catch (InvalidArgumentException $e) {
+      return 'Argumento inválido: ' . $e->getMessage();
+    } catch (Exception $e) {
+      return 'Error: ' . $e->getMessage();
+    }
+  }
 }

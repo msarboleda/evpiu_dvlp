@@ -58,4 +58,22 @@ class Facturas_dms_model extends CI_Model {
       throw new Exception('La consulta para obtener las últimas facturas de los puntos de venta cargadas no obtuvo resultados.');
     }
   }
+
+  /**
+   * Elimina todos los datos de la tabla de documentos_MAX.
+   * 
+   * @return boolean
+   */
+  public function delete_all_data_from_documentos_max() {
+    return $this->db_dms->empty_table('documentos_MAX');
+  }
+
+  /**
+   * Elimina todos los datos de la tabla de movimiento_MAX.
+   * 
+   * @return boolean
+   */
+  public function delete_all_data_from_movimiento_max() {
+    return $this->db_dms->empty_table('movimiento_MAX');
+  }
 }

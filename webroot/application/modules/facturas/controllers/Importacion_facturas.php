@@ -332,4 +332,22 @@ class Importacion_facturas extends MX_Controller {
       return 'Error: ' . $e->getMessage();
     }
   }
+
+  /**
+   * Elimina todos los datos de la tabla de documentos_MAX
+   * 
+   * @return boolean
+   */
+  public function delete_all_data_from_documentos_max() {
+    return $this->Facturas_dms_mdl->delete_all_data_from_documentos_max();
+  }
+
+  /**
+   * Elimina todos los datos de la tabla de movimientos_MAX
+   * 
+   * @return boolean
+   */
+  public function delete_all_data_from_movimiento_max() {
+    return $this->Facturas_dms_mdl->delete_all_data_from_movimiento_max();
+  }
 }

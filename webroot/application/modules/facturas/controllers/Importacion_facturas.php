@@ -83,6 +83,7 @@ class Importacion_facturas extends MX_Controller {
       return FALSE;
     }
   }
+
   /**
    * Obtiene las facturas de una terminal de
    * un punto de venta en una fecha específica.
@@ -105,6 +106,61 @@ class Importacion_facturas extends MX_Controller {
     }
   }
 
+  /**
+   * Genera la estructura de una factura normal de WinPOS.
+   * 
+   * @param object $invoice Factura a la que se cambiará la estructura.
+   * @param boolean $with_retefuente Añade un medio de pago auxiliar
+   * a la nueva estructura.
+   * 
+   * @return object
+   */
+  private function generate_invoice_structure($invoice, $with_payment_method_aux = FALSE) {
+    $invoice_structure = new stdClass();
+    $invoice_structure->sw = $invoice->sw;
+    $invoice_structure->anulada = $invoice->Anulado;
+    $invoice_structure->documento = $invoice->documento;
+    $invoice_structure->tipo_documento = $invoice->tipo;
+    $invoice_structure->numero = $invoice->numero;
+    $invoice_structure->nit = $invoice->IdentificacionAuxiliar;
+    $invoice_structure->nit_digito = $invoice->Nit;
+    $invoice_structure->cliente = $invoice->Nombre . ' ' . $invoice->Apellidos;
+    $invoice_structure->medio_pago = $invoice->idMedioPago;
+    $invoice_structure->modelo = $invoice->modelo;
+    $invoice_structure->condicion = $invoice->condicion;
+    $invoice_structure->concepto = $invoice->concepto;
+    $invoice_structure->valor_mercancia = $invoice->valor_mercancia;
+    $invoice_structure->valor_bruto = $invoice->ValorBruto;
+    $invoice_structure->valor_aplicado = $invoice->valor_aplicado;
+    $invoice_structure->valor_mp = $invoice->ValorMP;
+    $invoice_structure->iva = $invoice->iva;
+    $invoice_structure->descuento = $invoice->TotalDescuento;
+    $invoice_structure->valor_total = $invoice->valor_total;
+    $invoice_structure->fecha = $invoice->Fecha;
+    $invoice_structure->vencimiento = $invoice->vencimiento;
+    $invoice_structure->vendedor_wpos = $invoice->Vendedor;
+    $invoice_structure->bodega = $invoice->bodega;
+    $invoice_structure->duracion = $invoice->duracion;
+    $invoice_structure->exportada = $invoice->Exportado;
+    $invoice_structure->terminado = $invoice->Terminado;
+    $invoice_structure->terminal = $invoice->idTerminal;
+    $invoice_structure->notas = $invoice->notas;
+    $invoice_structure->rete_fuente = 0;
+
+    // En caso de que el medio de pago sea retención en la fuente (6)
+    // se debe sobrescribir el valor de rete_fuente en la nueva estructura.
+    if ($invoice_structure->medio_pago === 6) {
+      $invoice_structure->rete_fuente = $invoice->rete_fuente;
+    }
+
+    // En caso de que la factura posea dos medios de pago, permite
+    // añadir un medio de pago auxiliar del segundo medio de pago de la factura.
+    if ($with_payment_method_aux === TRUE) {
+      $invoice_structure->medio_pago_aux = $invoice->medio_pago_aux;
+    }
+    
+    return $invoice_structure;
+  }
   /**
    * Busca una terminal de un punto de venta de WinPOS por medio de su código.
    * 

@@ -384,4 +384,19 @@ class Importacion_facturas extends MX_Controller {
       return 'Error: ' . $e->getMessage();
     }
   }
+
+  /**
+   * Reporta la imputación contable de una factura.
+   * 
+   * @param object $invoice Factura a ser reportada.
+   */
+  public function report_accounting_imputation($invoice) {
+    try {
+      return $this->Facturas_dms_mdl->add_accounting_imputation($invoice);
+    } catch (InvalidArgumentException $e) {
+      return 'Argumento inválido: ' . $e->getMessage();
+    } catch (TypeError $e) {
+      return 'Error: ' . $e->getMessage();
+    }
+  }
 }

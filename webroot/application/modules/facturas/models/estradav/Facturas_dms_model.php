@@ -271,4 +271,45 @@ class Facturas_dms_model extends CI_Model {
 
     return $structure;
   }
+
+  /**
+   * Reporta toda la imputación contable de una factura.
+   * 
+   * @param object $invoice Factura a ser reportada.
+   * 
+   * @return boolean
+   */
+  public function add_accounting_imputation($invoice = '') {
+    if (empty($invoice)) {
+      throw new \InvalidArgumentException('El contenido del parámetro no puede ser vacío.');
+    }
+
+    if (!is_object($invoice)) {
+      throw new \TypeError('El parámetro debe tener una estructura de object.'); 
+    }
+
+    $goods_value_data = $this->generate_goods_value_structure($invoice);
+    $iva_value_data = $this->generate_iva_value_structure($invoice);
+    $total_value_data = $this->generate_total_value_structure($invoice);
+
+    $this->db_dms->trans_begin();
+    $this->db_dms->insert('movimiento_MAX', $goods_value_data);
+    $this->db_dms->insert('movimiento_MAX', $iva_value_data);
+    $this->db_dms->insert('movimiento_MAX', $total_value_data);
+
+    // En caso de que el medio de pago de la factura sea retención en la fuente (6)
+    // se debe anexar a la imputación contable el valor de la retención.
+    if ($invoice->medio_pago === 6) {
+      $retefuente_value_data = $this->generate_retefuente_value_structure($invoice);
+      $this->db_dms->insert('movimiento_MAX', $retefuente_value_data);
+    }
+
+    if ($this->db->trans_status() === FALSE) {
+      $this->db_dms->trans_rollback();
+      throw new Exception('Error al ejecutar la transacción de imputación contable de la factura.');
+    } else {
+      $this->db_dms->trans_commit();
+      return TRUE;
+    }
+  }
 }

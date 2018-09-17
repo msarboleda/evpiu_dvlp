@@ -104,4 +104,23 @@ class Importacion_facturas extends MX_Controller {
       return FALSE;
     }
   }
+
+  /**
+   * Busca una terminal de un punto de venta de WinPOS por medio de su código.
+   * 
+   * @param int $terminal Código de la terminal del punto
+   * de venta.
+   * 
+   * @return boolean|string
+   */
+  public function find_terminal($terminal) {
+    try {
+      $this->load->model('Facturas/wpos/Terminales_wpos_model', 'Terminales_wpos_mdl');
+      return $this->Terminales_wpos_mdl->find_terminal($terminal);
+    } catch (InvalidArgumentException $e) {
+      return 'Argumento inválido: ' . $e->getMessage();
+    } catch (Exception $e) {
+      return 'Error: ' . $e->getMessage();
+    }
+  }
 }

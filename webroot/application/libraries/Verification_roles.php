@@ -94,4 +94,15 @@ class Verification_roles {
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
+
+	/**
+	 * @param int|string|bool $id
+	 *
+	 * @return bool Es un visor de activos
+	 */
+	public function is_assets_viewer($id = FALSE) {
+		$member_group = 'assets_viewer';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+	}
 }

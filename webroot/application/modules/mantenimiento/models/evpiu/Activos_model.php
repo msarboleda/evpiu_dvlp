@@ -12,6 +12,7 @@
 class Activos_model extends CI_Model {
   public $_table = 'Activos';
   public $_master_view_table = 'V_Activos';
+  public $_files_table = 'act_Archivos';
 
 	public function __construct() {
     parent::__construct();
@@ -41,5 +42,48 @@ class Activos_model extends CI_Model {
 		} else {
 			throw new Exception(lang('get_all_assets_no_results'));
 		}
-	}
+  }
+
+  /**
+   * Obtiene la información de un activo existente.
+   * 
+   * @param $asset_code Código del activo.
+   * 
+   * @return object
+   */
+  public function get_asset($asset_code) {
+    $this->db_evpiu->where('CodActivo', $asset_code);
+    $query = $this->db_evpiu->get($this->_master_view_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->row();
+    } else {
+      throw new Exception(lang('get_asset_no_results'));
+    }
+  }
+
+  /**
+   * Obtiene los documentos anexados a un activo existente.
+   * 
+   * @param $asset_code Código del activo.
+   * 
+   * @return object
+   */
+  public function get_asset_files($asset_code) {
+    $this->load->library('Date_Utilities');
+    $this->db_evpiu->where('CodActivo', $asset_code);
+    $query = $this->db_evpiu->get($this->_files_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->FechaCreacion = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaCreacion));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('asset_files_no_results'));
+    }
+  }
 }

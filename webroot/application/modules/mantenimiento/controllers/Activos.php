@@ -58,4 +58,41 @@ class Activos extends MX_Controller {
       echo json_encode($exception_data);
     }
   }
+
+  /**
+   * Visualizar un activo.
+   */
+  public function view_asset() {
+    if ($this->verification_roles->is_assets_viewer() || $this->ion_auth->is_admin()) {
+      $asset_code = $this->input->get('ac');
+
+      if (!empty($asset_code)) {
+        $header_data = $this->header->show_Categories_and_Modules();
+        $header_data['module_name'] = lang('view_asset_heading');
+
+        $this->load->library('Date_Utilities');
+
+        $asset_data = $this->Activos_mdl->get_asset($asset_code);
+        $asset_data->UltimaRevision = ucfirst($this->date_utilities->format_date('%B %d, %Y', $asset_data->UltimaRevision));
+
+        try {
+          $asset_files = $this->Activos_mdl->get_asset_files($asset_code);
+        } catch (Exception $e) {
+          $asset_files = $e->getMessage();
+        }
+
+        $view_data['asset'] = $asset_data;
+        $view_data['files'] = $asset_files;
+
+        add_css('dist/vendor/lightbox2/css/lightbox.min.css');
+        add_js('dist/vendor/lightbox2/js/lightbox.min.js');
+
+        $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+        $this->load->view('mantenimiento'. DS .'view_asset', $view_data);
+        $this->load->view('footers'. DS .'footer_main_dashboard');
+      }
+    } else {
+      redirect('auth');
+    }
+  }
 }

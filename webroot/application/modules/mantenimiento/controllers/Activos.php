@@ -14,6 +14,7 @@ class Activos extends MX_Controller {
     parent::__construct();
 
     $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
+    $this->load->model('Mantenimiento/evpiu/Activos_model', 'Activos_mdl');
     $this->load->library(array('header', 'verification_roles', 'messages'));
     $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('activos');
@@ -48,7 +49,6 @@ class Activos extends MX_Controller {
    */
   public function xhr_get_all_assets() {
     try {
-      $this->load->model('Mantenimiento/evpiu/Activos_model', 'Activos_mdl');
       $assets = $this->Activos_mdl->get_all_assets();
       echo json_encode($assets);
     } catch (Exception $e) {

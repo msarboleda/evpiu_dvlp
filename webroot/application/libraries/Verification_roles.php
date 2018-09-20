@@ -105,4 +105,15 @@ class Verification_roles {
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
+
+	/**
+	 * @param int|string|bool $id
+	 *
+	 * @return bool Es un gestor de activos
+	 */
+	public function is_assets_manager($id = FALSE) {
+		$member_group = 'assets_manager';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+	}
 }

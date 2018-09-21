@@ -123,10 +123,10 @@ class Requerimientos extends MX_Controller {
 
 			add_css('themes/elaadmin/css/lib/select2/select2.min.css');
 			add_css('dist/custom/css/requerimientos/new_request.css');
-			add_css('dist/custom/css/requerimientos/file_upload.css');
+			add_css('dist/custom/css/file_upload.css');
 			add_js('themes/elaadmin/js/lib/select2/select2.full.min.js');
 			add_js('themes/elaadmin/js/lib/select2/i18n/es.js');
-			add_js('dist/custom/js/requerimientos/file_upload.js');
+			add_js('dist/custom/js/file_upload.js');
 			add_js('dist/custom/js/requerimientos/new_request.js');
 
 			$this->load->view('headers'.DS.'header_main_dashboard', $header_data);

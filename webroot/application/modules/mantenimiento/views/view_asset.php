@@ -60,7 +60,7 @@
         <div class="col-md-2">
           <div class="card mb-4 box-shadow">
       <?php      
-            if ($file->Extension === '.PDF') { ?>
+            if ($file->Extension === '.pdf') { ?>
             <a target="_blank" href="<?php echo site_url('assets/uploads/Mantenimiento/Anexos/'. $file->CodActivo .'/' . $file->NomArchivo); ?>">
               <img src="<?php echo site_url('assets/dist/custom/icons/pdf.svg'); ?>" alt="">
             </a>

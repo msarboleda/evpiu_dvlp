@@ -27,7 +27,7 @@ class Usuarios_model extends CI_Model {
    * @return object
    */
   public function populate_users() {
-    $this->db_evpiu->select("id, first_name + ' ' + last_name as Nombre");
+    $this->db_evpiu->select("username, first_name + ' ' + last_name as Nombre");
     $this->db_evpiu->order_by('Nombre', 'asc');
     $query = $this->db_evpiu->get($this->_table);
 

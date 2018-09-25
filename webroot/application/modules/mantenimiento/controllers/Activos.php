@@ -189,7 +189,7 @@ class Activos extends MX_Controller {
   public function attach_asset_documents($asset_code) {
     $assets_path = $this->config->item('physical_assets_path');
     $restrict_file_path = $assets_path.'index.html';
-    $assets_documents_path = $assets_path.'uploads/Mantenimiento/Anexos/'.$asset_code;
+    $assets_documents_path = $assets_path.'uploads/Mantenimiento/Anexos/'.strtoupper($asset_code);
 
     if (!file_exists($assets_documents_path)) {
       mkdir($assets_documents_path, 0755);
@@ -240,7 +240,7 @@ class Activos extends MX_Controller {
       $uploaded_document_data = array(
         'idTipoArchivo' => $this->ActArchivos_mdl->file_type_asset_document,
         'NomArchivo' => $uploaded_document['file_name'],
-        'CodActivo' => $asset_code,
+        'CodActivo' => strtoupper($asset_code),
         'Usuario' => $this->ion_auth->user()->row()->username,
         'Extension' => $uploaded_document['file_ext'],
         'FechaCreacion' => date('Y-m-d H:i:s'),

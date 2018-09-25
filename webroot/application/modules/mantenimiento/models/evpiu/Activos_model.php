@@ -91,8 +91,8 @@ class Activos_model extends CI_Model {
    * Actualiza la información de un activo específico.
    * 
    * @param string $asset_code Código del activo.
-   * @param object $data Nuevos datos para el activo.
    * 
+   * @param array $data Nuevos datos para el activo.
    * @return boolean
    */
   public function update_asset($asset_code, $data) {

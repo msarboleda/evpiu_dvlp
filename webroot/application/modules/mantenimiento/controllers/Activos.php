@@ -4,7 +4,7 @@
  * Clase de Activos
  *
  * Descripción de la clase
- * 
+ *
  * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
@@ -46,7 +46,7 @@ class Activos extends MX_Controller {
 
   /**
    * Petición AJAX para obtener todos los activos existentes.
-   * 
+   *
    * @return string JSON
    */
   public function xhr_get_all_assets() {
@@ -100,7 +100,7 @@ class Activos extends MX_Controller {
 
   /**
    * Edita la información de un activo.
-   * 
+   *
    * @param $asset_code Código del activo.
    */
   public function edit_asset($asset_code) {
@@ -166,10 +166,10 @@ class Activos extends MX_Controller {
 
   /**
    * Actualiza los datos de un activo específico.
-   * 
+   *
    * @param string $asset_code Código del activo.
    * @param array $data Nuevos datos para el activo.
-   * 
+   *
    * @return boolean
    */
   public function update_asset($asset_code, $data) {
@@ -178,7 +178,7 @@ class Activos extends MX_Controller {
 
   /**
    * Anexa documentos a un activo.
-   * 
+   *
    * Los documentos de cada activo se almacenan en una carpeta específica
    * de cada activo y con sus nombres de archivos encriptados.
    *
@@ -214,19 +214,19 @@ class Activos extends MX_Controller {
       return FALSE;
     }
   }
-  
+
   /**
    * Reporta en la base de datos todos los documentos anexados a un activo.
    *
    * @param string $asset_code int Número del requerimiento que se vincula a los soportes.
    * @param array $uploaded_documents array Detalles de los archivos anexados.
-   * 
-   * @return void 
+   *
+   * @return void
    */
   public function save_stored_asset_documents($asset_code, $uploaded_documents) {
     $this->load->model('Mantenimiento/evpiu/Activos_archivos_model', 'ActArchivos_mdl');
     $this->load->library('array_utilities');
-    
+
     // En caso de que solo un documento se haya subido, el arreglo de los documentos
     // subidos se debe convertir a multidimensional para que el ciclo pueda obtener
     // el nombre de archivo del documento.
@@ -244,7 +244,7 @@ class Activos extends MX_Controller {
         'Usuario' => $this->ion_auth->user()->row()->username,
         'Extension' => $uploaded_document['file_ext'],
         'FechaCreacion' => date('Y-m-d H:i:s'),
-      ); 
+      );
 
       $this->ActArchivos_mdl->add_document($uploaded_document_data);
     }

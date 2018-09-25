@@ -2,7 +2,7 @@
 
 /**
  * Modelo: Activos
- * 
+ *
  * Descripción del modelo
  *
  * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
@@ -16,15 +16,15 @@ class Activos_model extends CI_Model {
 
 	public function __construct() {
     parent::__construct();
-    
+
     $this->db_evpiu = $this->load->database('EVPIU', true);
     $this->load->helper('language');
     $this->lang->load('activos');
   }
-  
+
   /**
-	 * Obtiene todos los activos existentes. 
-	 * 
+	 * Obtiene todos los activos existentes.
+	 *
 	 * @return object
 	 */
 	public function get_all_assets() {
@@ -33,7 +33,7 @@ class Activos_model extends CI_Model {
 
 		if ($query->num_rows() > 0) {
       $results = $query->result();
-      
+
       foreach ($results as $result) {
         $result->UltimaRevision = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->UltimaRevision));
       }
@@ -46,9 +46,9 @@ class Activos_model extends CI_Model {
 
   /**
    * Obtiene la información de un activo existente.
-   * 
+   *
    * @param $asset_code Código del activo.
-   * 
+   *
    * @return object
    */
   public function get_asset($asset_code) {
@@ -64,9 +64,9 @@ class Activos_model extends CI_Model {
 
   /**
    * Obtiene los documentos anexados a un activo existente.
-   * 
+   *
    * @param $asset_code Código del activo.
-   * 
+   *
    * @return object
    */
   public function get_asset_files($asset_code) {
@@ -89,10 +89,10 @@ class Activos_model extends CI_Model {
 
   /**
    * Actualiza la información de un activo específico.
-   * 
+   *
    * @param string $asset_code Código del activo.
-   * 
    * @param array $data Nuevos datos para el activo.
+   *
    * @return boolean
    */
   public function update_asset($asset_code, $data) {

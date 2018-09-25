@@ -86,4 +86,30 @@ class Activos_model extends CI_Model {
       throw new Exception(lang('asset_files_no_results'));
     }
   }
+
+  /**
+   * Actualiza la información de un activo específico.
+   * 
+   * @param string $asset_code Código del activo.
+   * @param object $data Nuevos datos para el activo.
+   * 
+   * @return boolean
+   */
+  public function update_asset($asset_code, $data) {
+    $formatted_data = array(
+      'NombreActivo' => $data['nom_activo'],
+      'idClasificacion' => $data['clasif_sel'],
+      'Responsable' => $data['resp_sel'],
+      'idEstado' => $data['est_sel'],
+      'idPlanta' => $data['plant_sel'],
+      'idPrioridad' => $data['prior_sel'],
+      'UltimaRevision' => $data['ult_revis'],
+      'CostoMantenimiento' => $data['cost_mant'],
+      'FichaTecnica' => $data['ficha_tecnica'],
+      'Funcionalidad' => $data['funcionalidad'],
+    );
+
+    $this->db_evpiu->where('CodigoActivo', $asset_code);
+    return $this->db_evpiu->update($this->_table, $formatted_data);
+  }
 }

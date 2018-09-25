@@ -18,6 +18,8 @@ class Activos extends MX_Controller {
     $this->load->library(array('header', 'verification_roles', 'messages'));
     $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('activos');
+    $this->load->config('form_validation', TRUE);
+    $this->form_validation->set_error_delimiters('', '<br>');
   }
 
   /**
@@ -93,6 +95,158 @@ class Activos extends MX_Controller {
       }
     } else {
       redirect('auth');
+    }
+  }
+
+  /**
+   * Edita la información de un activo.
+   * 
+   * @param $asset_code Código del activo.
+   */
+  public function edit_asset($asset_code) {
+    if ($this->verification_roles->is_assets_manager() || $this->ion_auth->is_admin()) {
+      if (isset($asset_code)) {
+        if (!empty($asset_code)) {
+          $header_data = $this->header->show_Categories_and_Modules();
+          $header_data['module_name'] = lang('edit_asset_heading');
+
+          $this->load->library('Date_Utilities');
+
+          $asset_data = $this->Activos_mdl->get_asset($asset_code);
+          $asset_data->formatted_ult_revision = ucfirst($this->date_utilities->format_date('%B %d, %Y', $asset_data->UltimaRevision));
+
+          try {
+            $asset_files = $this->Activos_mdl->get_asset_files($asset_code);
+          } catch (Exception $e) {
+            $asset_files = $e->getMessage();
+          }
+
+          if ($this->form_validation->run('activos/edit_asset') === TRUE) {
+            $updated = $this->update_asset($asset_code, $this->input->post());
+
+            if ($updated) {
+              if (isset($_FILES['attach'])) {
+                if (!empty($_FILES['attach']['name'][0])) {
+                  $this->attach_asset_documents($asset_code);
+                }
+              }
+
+              header('Refresh:0');
+              exit;
+            }
+          }
+
+          $view_data['asset'] = $asset_data;
+          $view_data['files'] = $asset_files;
+          $view_data['classifications'] = modules::run('mantenimiento/clasificaciones/populate_classifications');
+          $view_data['responsibles'] = modules::run('terceros/usuarios/populate_users');
+          $view_data['states'] = modules::run('mantenimiento/estados_activos/populate_assets_states');
+          $view_data['plants'] = modules::run('mantenimiento/plantas/populate_plants');
+          $view_data['priorities'] = modules::run('mantenimiento/prioridades/populate_priorities');
+          $view_data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+
+          add_css('themes/elaadmin/css/lib/select2/select2.min.css');
+          add_css('dist/vendor/lightbox2/css/lightbox.min.css');
+          add_css('dist/custom/css/file_upload.css');
+          add_js('themes/elaadmin/js/lib/select2/select2.full.min.js');
+          add_js('themes/elaadmin/js/lib/select2/i18n/es.js');
+          add_js('dist/vendor/lightbox2/js/lightbox.min.js');
+          add_js('dist/custom/js/file_upload.js');
+          add_js('dist/custom/js/mantenimiento/edit_asset.js');
+
+          $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+          $this->load->view('mantenimiento'. DS .'edit_asset', $view_data);
+          $this->load->view('footers'. DS .'footer_main_dashboard');
+        }
+      }
+    } else {
+      redirect('auth');
+    }
+  }
+
+  /**
+   * Actualiza los datos de un activo específico.
+   * 
+   * @param string $asset_code Código del activo.
+   * @param array $data Nuevos datos para el activo.
+   * 
+   * @return boolean
+   */
+  public function update_asset($asset_code, $data) {
+    return $this->Activos_mdl->update_asset($asset_code, $data);
+  }
+
+  /**
+   * Anexa documentos a un activo.
+   * 
+   * Los documentos de cada activo se almacenan en una carpeta específica
+   * de cada activo y con sus nombres de archivos encriptados.
+   *
+   * @param string $asset_code Código del activo.
+   *
+   * @return boolean
+   */
+  public function attach_asset_documents($asset_code) {
+    $assets_path = $this->config->item('physical_assets_path');
+    $restrict_file_path = $assets_path.'index.html';
+    $assets_documents_path = $assets_path.'uploads/Mantenimiento/Anexos/'.$asset_code;
+
+    if (!file_exists($assets_documents_path)) {
+      mkdir($assets_documents_path, 0755);
+      copy($restrict_file_path, $assets_documents_path.'/index.html');
+    }
+
+    $config['upload_path'] = $assets_documents_path;
+    $config['allowed_types'] = 'jpg|jpeg|png|pdf';
+    $config['file_ext_tolower'] = TRUE;
+    $config['max_size'] = '5120';
+    $config['multi'] = 'ignore'; // Ignora los archivos que obtengan error y sigue subiendo
+    $config['encrypt_name'] = TRUE;
+
+    $this->load->library('upload', $config);
+    $do_upload = $this->upload->do_upload('attach');
+
+    if ($do_upload) {
+      $uploaded_documents = $this->upload->data();
+      $db_stored_asset_documents = $this->save_stored_asset_documents($asset_code, $uploaded_documents);
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+  
+  /**
+   * Reporta en la base de datos todos los documentos anexados a un activo.
+   *
+   * @param string $asset_code int Número del requerimiento que se vincula a los soportes.
+   * @param array $uploaded_documents array Detalles de los archivos anexados.
+   * 
+   * @return void 
+   */
+  public function save_stored_asset_documents($asset_code, $uploaded_documents) {
+    $this->load->model('Mantenimiento/evpiu/Activos_archivos_model', 'ActArchivos_mdl');
+    $this->load->library('array_utilities');
+    
+    // En caso de que solo un documento se haya subido, el arreglo de los documentos
+    // subidos se debe convertir a multidimensional para que el ciclo pueda obtener
+    // el nombre de archivo del documento.
+    if (!$this->array_utilities->is_multidimensional_array($uploaded_documents)) {
+      $old_uploaded_documents = $uploaded_documents;
+      $uploaded_documents = array();
+      $uploaded_documents[] = $old_uploaded_documents;
+    }
+
+    foreach ($uploaded_documents as $uploaded_document) {
+      $uploaded_document_data = array(
+        'idTipoArchivo' => $this->ActArchivos_mdl->file_type_asset_document,
+        'NomArchivo' => $uploaded_document['file_name'],
+        'CodActivo' => $asset_code,
+        'Usuario' => $this->ion_auth->user()->row()->username,
+        'Extension' => $uploaded_document['file_ext'],
+        'FechaCreacion' => date('Y-m-d H:i:s'),
+      ); 
+
+      $this->ActArchivos_mdl->add_document($uploaded_document_data);
     }
   }
 }

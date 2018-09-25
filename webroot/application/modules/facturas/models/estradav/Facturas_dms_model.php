@@ -2,7 +2,7 @@
 
 /**
  * Modelo: Facturas DMS
- * 
+ *
  * Descripción del modelo
  *
  * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
@@ -13,14 +13,14 @@
 class Facturas_dms_model extends CI_Model {
 	public function __construct() {
     parent::__construct();
-    
+
 		$this->db_dms = $this->load->database('DMS', true);
   }
-  
+
   /**
    * Obtiene las últimas facturas cargadas de cada punto
    * de venta.
-   * 
+   *
    * @return mixed $result
    * @return Exception
    */
@@ -62,7 +62,7 @@ class Facturas_dms_model extends CI_Model {
 
   /**
    * Elimina todos los datos de las tablas de importación de facturas
-   * 
+   *
    * @return boolean
    */
   public function delete_all_data_from_import_tables() {
@@ -78,9 +78,9 @@ class Facturas_dms_model extends CI_Model {
 
   /**
    * Reporta una factura anulada.
-   * 
+   *
    * @param object $invoice Factura a ser reportada.
-   * 
+   *
    * @return boolean
    */
   public function add_voided_invoice($invoice = '') {
@@ -89,7 +89,7 @@ class Facturas_dms_model extends CI_Model {
     }
 
     if (!is_object($invoice)) {
-      throw new \TypeError('El parámetro debe tener una estructura de object.'); 
+      throw new \TypeError('El parámetro debe tener una estructura de object.');
     }
 
     $voided_invoice = array(
@@ -110,10 +110,10 @@ class Facturas_dms_model extends CI_Model {
 
   /**
    * Reporta una factura correcta.
-   * 
+   *
    * @param object $invoice Factura a ser reportada.
-   * 
-   * @return boolean 
+   *
+   * @return boolean
    */
   public function add_success_invoice($invoice = '') {
     if (empty($invoice)) {
@@ -121,9 +121,9 @@ class Facturas_dms_model extends CI_Model {
     }
 
     if (!is_object($invoice)) {
-      throw new \TypeError('El parámetro debe tener una estructura de object.'); 
+      throw new \TypeError('El parámetro debe tener una estructura de object.');
     }
-  
+
     $success_invoice = array(
       'sw' => $invoice->sw,
       'tipo' => $invoice->tipo_documento,
@@ -167,11 +167,11 @@ class Facturas_dms_model extends CI_Model {
   }
 
   /**
-   * Genera la estructura del valor de la mercancía para 
+   * Genera la estructura del valor de la mercancía para
    * la imputación contable de una factura.
-   * 
+   *
    * @param object $invoice Factura a tratar.
-   * 
+   *
    * @return array
    */
   private function generate_goods_value_structure($invoice) {
@@ -194,9 +194,9 @@ class Facturas_dms_model extends CI_Model {
   /**
    * Genera la estructura del valor del iva para la imputación
    * contable de una factura.
-   * 
+   *
    * @param object $invoice Factura a tratar.
-   * 
+   *
    * @return array
    */
   private function generate_iva_value_structure($invoice) {
@@ -217,11 +217,11 @@ class Facturas_dms_model extends CI_Model {
   }
 
   /**
-   * Genera la estructura del valor total para 
+   * Genera la estructura del valor total para
    * la imputación contable de una factura.
-   * 
+   *
    * @param object $invoice Factura a tratar.
-   * 
+   *
    * @return array
    */
   private function generate_total_value_structure($invoice) {
@@ -249,9 +249,9 @@ class Facturas_dms_model extends CI_Model {
   /**
    * Genera la estructura del valor de la retención en la fuente
    * para la imputación contable de una factura.
-   * 
+   *
    * @param object $invoice Factura a tratar.
-   * 
+   *
    * @return array
    */
   private function generate_retefuente_value_structure($invoice) {
@@ -273,9 +273,9 @@ class Facturas_dms_model extends CI_Model {
 
   /**
    * Reporta toda la imputación contable de una factura.
-   * 
+   *
    * @param object $invoice Factura a ser reportada.
-   * 
+   *
    * @return boolean
    */
   public function add_accounting_imputation($invoice = '') {
@@ -284,7 +284,7 @@ class Facturas_dms_model extends CI_Model {
     }
 
     if (!is_object($invoice)) {
-      throw new \TypeError('El parámetro debe tener una estructura de object.'); 
+      throw new \TypeError('El parámetro debe tener una estructura de object.');
     }
 
     $goods_value_data = $this->generate_goods_value_structure($invoice);

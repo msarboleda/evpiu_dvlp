@@ -6,11 +6,11 @@
         echo $msg;
         echo "</div>";
       }
-    } 
+    }
   }
 ?>
 
-<?php 
+<?php
   if (!empty($invoices)) { ?>
 <div class="card">
   <div class="card-title">
@@ -22,7 +22,7 @@
         foreach ($invoices as $invoice):
           if ($invoice->anulada === TRUE) { ?>
             <h3>Factura #<?php echo $invoice->numero; ?> <span class="badge badge-danger"><?php echo 'Anulada'; ?></span></h3><hr>
-      <?php 
+      <?php
             if (isset($invoice->void_invoice_status)) {
               if ($invoice->void_invoice_status === TRUE) { ?>
                 <div class="alert alert-warning" role="alert">
@@ -33,44 +33,44 @@
                 <div class="alert alert-danger" role="alert">
                   <i class="fa fa-exclamation"></i> <?php echo $invoice->void_invoice_msg; ?>
                 </div>
-      <?php 
+      <?php
               } ?>
-      <?php 
+      <?php
             } ?>
-      <?php 
+      <?php
           } else { ?>
             <h3>Factura #<?php echo $invoice->numero; ?> <span class="badge badge-success"><?php echo 'No anulada'; ?></span></h3><hr>
-      <?php 
+      <?php
           } ?>
-      <?php 
+      <?php
           if (isset($invoice->nit_error)) { ?>
             <div class="alert alert-danger" role="alert">
               <i class="fa fa-exclamation"></i> <?php echo $invoice->nit_error; ?>
             </div>
-      <?php 
-            break; 
+      <?php
+            break;
           } ?>
-      <?php 
+      <?php
           if (isset($invoice->customer_not_created_on_dms_msg)) { ?>
             <div class="alert alert-danger" role="alert">
               <i class="fa fa-exclamation"></i> <?php echo $invoice->customer_not_created_on_dms_msg; ?>
             </div>
       <?php
-            break; 
+            break;
           } ?>
-      <?php 
+      <?php
           if (isset($invoice->is_manual_invoice_status)) {
             if ($invoice->is_manual_invoice_status === TRUE) { ?>
               <div class="alert alert-danger" role="alert">
                 <i class="fa fa-exclamation"></i> <?php echo $invoice->is_manual_invoice_msg; ?>
               </div>
-      <?php 
+      <?php
               continue; ?>
-      <?php 
-            } ?>  
-      <?php 
+      <?php
+            } ?>
+      <?php
           } ?>
-      <?php 
+      <?php
           if (isset($invoice->success_invoice_status)) {
             if ($invoice->success_invoice_status === TRUE) { ?>
               <div class="alert alert-success" role="alert">
@@ -95,10 +95,10 @@
             <th>Plazo</th>
             <th>Valor mercancía</th>
             <th>IVA</th>
-            <?php 
+            <?php
               if ($invoice->rete_fuente > 0) { ?>
                 <th>Retención Fuente</th>
-            <?php 
+            <?php
               } ?>
             <th>Valor aplicado</th>
             <th>Descuento</th>
@@ -107,13 +107,13 @@
           </tr>
         </thead>
         <tbody>
-          <?php 
+          <?php
             if ($invoice->anulada) { ?>
               <tr class="table-danger">
-          <?php 
+          <?php
             } else { ?>
               <tr>
-          <?php 
+          <?php
             } ?>
             <td><?php echo $invoice->nit; ?></td>
             <td><?php echo $invoice->cliente; ?></td>
@@ -127,10 +127,10 @@
             <td class="color-danger" style="text-align:right;"><?php echo '$' . number_format($invoice->descuento, 0, ',', '.'); ?></td>
             <td class="color-primary" style="text-align:right;"><?php echo '$' . number_format($invoice->valor_total, 0, ',', '.'); ?></td>
             <td>
-            <?php 
+            <?php
               if (isset($invoice->nombre_vendedor_dms)) {
                 echo $invoice->nombre_vendedor_dms;
-              } 
+              }
             ?>
             </td>
           </tr>
@@ -140,27 +140,27 @@
 
       <br>
 
-      <?php 
+      <?php
         if ($invoice->anulada) { ?>
-      <?php 
+      <?php
           continue; ?>
-      <?php 
+      <?php
         } ?>
-      <?php 
+      <?php
         if (isset($invoice->acc_imputation_status)) { ?>
-      <?php 
+      <?php
           if ($invoice->acc_imputation_status === TRUE) { ?>
             <div class="alert alert-success" role="alert">
               <i class="fa fa-check"></i> <?php echo $invoice->acc_imputation_msg; ?>
             </div>
-      <?php 
+      <?php
           } else { ?>
             <div class="alert alert-danger" role="alert">
               <i class="fa fa-exclamation"></i> <?php echo $invoice->acc_imputation_msg; ?>
             </div>
-      <?php 
+      <?php
           } ?>
-      <?php 
+      <?php
         } ?>
 
       <!-- Tabla de imputación contable -->
@@ -215,7 +215,7 @@
       </table>
       <!-- Fin de tabla de imputación contable -->
       <br>
-      <?php 
+      <?php
         endforeach; ?>
     </div>
     <hr>
@@ -226,5 +226,5 @@
     </div>
   </div>
 </div>
-<?php 
+<?php
   } ?>

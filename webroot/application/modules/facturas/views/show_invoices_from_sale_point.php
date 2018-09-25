@@ -20,7 +20,7 @@
     <div class="table-responsive">
       <?php
         foreach ($invoices as $invoice):
-          if ($invoice->anulada === TRUE) { ?>
+          if ($invoice->anulada == TRUE) { ?>
             <h3>Factura #<?php echo $invoice->numero; ?> <span class="badge badge-danger"><?php echo 'Anulada'; ?></span></h3><hr>
       <?php
             if (isset($invoice->void_invoice_status)) {

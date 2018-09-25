@@ -249,4 +249,88 @@ class Activos extends MX_Controller {
       $this->ActArchivos_mdl->add_document($uploaded_document_data);
     }
   }
+
+  /**
+   * Añade un activo a la base de datos.
+   *
+   */
+  public function add_asset() {
+    if ($this->verification_roles->is_assets_manager() || $this->ion_auth->is_admin()) {
+      $header_data = $this->header->show_Categories_and_Modules();
+      $header_data['module_name'] = lang('add_asset_heading');
+
+      if ($this->form_validation->run('activos/add_asset') === TRUE) {
+        try {
+          $added = $this->save_asset($this->input->post());
+
+          if ($added === TRUE) {
+            if (isset($_FILES['attach'])) {
+              if (!empty($_FILES['attach']['name'][0])) {
+                $asset_code = $this->input->post('cod_activo');
+                $this->attach_asset_documents($asset_code);
+              }
+            }
+
+            redirect('mantenimiento/activos');
+          } else {
+            $this->messages->add(lang('asset_not_added_to_db'), 'danger');
+          }
+        } catch (Exception $e) {
+          $this->messages->add($e->getMessage(), 'danger');
+        }
+      }
+
+      $view_data['classifications'] = modules::run('mantenimiento/clasificaciones/populate_classifications');
+      $view_data['responsibles'] = modules::run('terceros/usuarios/populate_users');
+      $view_data['states'] = modules::run('mantenimiento/estados_activos/populate_assets_states');
+      $view_data['plants'] = modules::run('mantenimiento/plantas/populate_plants');
+      $view_data['priorities'] = modules::run('mantenimiento/prioridades/populate_priorities');
+      $view_data['valid_errors'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+      $view_data['app_errors'] = $this->messages->get();
+
+      add_css('themes/elaadmin/css/lib/select2/select2.min.css');
+      add_css('dist/vendor/pickadate.js/themes/classic.css');
+      add_css('dist/vendor/pickadate.js/themes/classic.date.css');
+      add_css('dist/custom/css/file_upload.css');
+      add_js('themes/elaadmin/js/lib/select2/select2.full.min.js');
+      add_js('themes/elaadmin/js/lib/select2/i18n/es.js');
+      add_js('dist/vendor/pickadate.js/picker.js');
+      add_js('dist/vendor/pickadate.js/picker.date.js');
+      add_js('dist/vendor/pickadate.js/translations/date_es_ES.js');
+      add_js('dist/custom/js/file_upload.js');
+      add_js('dist/custom/js/mantenimiento/add_asset.js');
+
+      $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+      $this->load->view('mantenimiento'. DS .'add_asset', $view_data);
+      $this->load->view('footers'. DS .'footer_main_dashboard');
+    } else {
+      redirect('auth');
+    }
+  }
+
+  /**
+   * Agrega un activo a la base de datos.
+   *
+   * @param array $data Nuevos datos para el activo.
+   *
+   * @return boolean
+   */
+  public function save_asset($data) {
+    try {
+      return $this->Activos_mdl->add_asset($data);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  /**
+   * Verificar si un activo existe en la base de datos.
+   *
+   * @param string $asset_code Código del activo.
+   *
+   * @return boolean
+   */
+  public function check_if_exists($asset_code) {
+    return $this->Activos_mdl->check_asset_if_exists($asset_code);
+  }
 }

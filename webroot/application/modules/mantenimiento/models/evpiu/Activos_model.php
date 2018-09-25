@@ -112,4 +112,54 @@ class Activos_model extends CI_Model {
     $this->db_evpiu->where('CodigoActivo', $asset_code);
     return $this->db_evpiu->update($this->_table, $formatted_data);
   }
+
+  /**
+   * Verificar si un activo existe en la base de datos.
+   *
+   * @param string $asset_code Código del activo.
+   *
+   * @return boolean
+   */
+  public function check_asset_if_exists($asset_code) {
+    try {
+      $check_if_exists = $this->get_asset($asset_code);
+
+      if (is_object($check_if_exists) && !empty($check_if_exists)) {
+        return TRUE;
+      }
+    } catch (Exception $e) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Agrega un activo a la base de datos.
+   *
+   * @param array $data
+   *
+   * @return boolean
+   */
+  public function add_asset($data) {
+    $check_if_exists = $this->check_asset_if_exists($data['cod_activo']);
+
+    if ($check_if_exists === TRUE) {
+      throw new Exception(lang('asset_already_exists'));
+    }
+
+    $formatted_data = array(
+      'CodigoActivo' => strtoupper($data['cod_activo']),
+      'NombreActivo' => ucfirst($data['nom_activo']),
+      'idClasificacion' => $data['clasif_sel'],
+      'Responsable' => $data['resp_sel'],
+      'idEstado' => $data['est_sel'],
+      'idPlanta' => $data['plant_sel'],
+      'idPrioridad' => $data['prior_sel'],
+      'UltimaRevision' => $data['ult_revis_submit'],
+      'FichaTecnica' => $data['ficha_tecnica'],
+      'Funcionalidad' => $data['funcionalidad'],
+      'CostoMantenimiento' => 0 // Sin valor por defecto
+    );
+
+    return $this->db_evpiu->insert($this->_table, $formatted_data);
+  }
 }

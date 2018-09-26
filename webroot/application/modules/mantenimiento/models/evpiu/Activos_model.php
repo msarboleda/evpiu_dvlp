@@ -180,4 +180,26 @@ class Activos_model extends CI_Model {
       throw new Exception(lang('populate_assets_no_results'));
     }
   }
+
+  /**
+   * Obtiene los valores necesarios para poblar un control
+   * <select> con los activos existentes y filtrando por
+   * el estado de estos.
+   *
+   * @param int $state_value Estado por el que se desea filtrar.
+   *
+   * @return object
+   */
+  public function populate_assets_by_state($state_value) {
+    $this->db_evpiu->select('CodigoActivo, NombreActivo');
+    $this->db_evpiu->where('idEstado', $state_value);
+    $this->db_evpiu->order_by('NombreActivo', 'asc');
+    $query = $this->db_evpiu->get($this->_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('populate_assets_no_results'));
+    }
+  }
 }

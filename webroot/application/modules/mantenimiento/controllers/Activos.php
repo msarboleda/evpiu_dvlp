@@ -346,4 +346,20 @@ class Activos extends MX_Controller {
       return FALSE;
     }
   }
+
+  /**
+   * Poblar un control <select> con todos los activos existentes
+   * filtrando por un estado.
+   *
+   * @param int $state_value Estado por el que se desea filtrar.
+   *
+   * @return object|boolean
+   */
+  public function populate_assets_by_state($state_value) {
+    try {
+      return $this->Activos_mdl->populate_assets_by_state($state_value);
+    } catch (Exception $e) {
+      return FALSE;
+    }
+  }
 }

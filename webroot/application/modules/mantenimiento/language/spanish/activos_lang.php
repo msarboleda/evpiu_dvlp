@@ -16,6 +16,7 @@ $lang['get_asset_no_results'] = 'La consulta del activo no obtuvo resultados';
 $lang['asset_files_no_results'] = 'La consulta de archivos del activo no obtuvo resultados.';
 $lang['asset_already_exists'] = 'El activo no se puede ingresar porque ya existe.';
 $lang['asset_not_added_to_db'] = 'El activo no se pudo ingresar a la base de datos.';
+$lang['populate_assets_no_results'] = 'La consulta de activos no obtuvo resultados.';
 
 // View asset
 $lang['view_asset_heading'] = 'Visualizar activo';

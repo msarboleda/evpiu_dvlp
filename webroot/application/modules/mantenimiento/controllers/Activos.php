@@ -333,4 +333,17 @@ class Activos extends MX_Controller {
   public function check_if_exists($asset_code) {
     return $this->Activos_mdl->check_asset_if_exists($asset_code);
   }
+
+  /**
+   * Poblar un control <select> con todas los activos existentes.
+   *
+   * @return object|boolean
+   */
+  public function populate_assets() {
+    try {
+      return $this->Activos_mdl->populate_assets();
+    } catch (Exception $e) {
+      return FALSE;
+    }
+  }
 }

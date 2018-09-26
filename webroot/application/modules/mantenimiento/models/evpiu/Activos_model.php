@@ -162,4 +162,22 @@ class Activos_model extends CI_Model {
 
     return $this->db_evpiu->insert($this->_table, $formatted_data);
   }
+
+  /**
+   * Obtiene los valores necesarios para poblar un control
+   * <select> con todos los activos existentes.
+   *
+   * @return object
+   */
+  public function populate_assets() {
+    $this->db_evpiu->select('CodigoActivo, NombreActivo');
+    $this->db_evpiu->order_by('NombreActivo', 'asc');
+    $query = $this->db_evpiu->get($this->_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('populate_assets_no_results'));
+    }
+  }
 }

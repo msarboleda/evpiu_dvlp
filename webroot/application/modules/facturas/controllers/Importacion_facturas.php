@@ -5,7 +5,7 @@
  *
  * Esta clase se utiliza para realizar procedimientos relacionados
  * con la importación de facturas de diferentes entidades.
- * 
+ *
  * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
  * @author Martin Arboleda Montoya <maarboleda@estradavelasquez.com>
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
@@ -31,7 +31,7 @@ class Importacion_facturas extends MX_Controller {
   }
 
   /**
-   * Importa las facturas de la aplicación WinPOS 
+   * Importa las facturas de la aplicación WinPOS
    * a la aplicación DMS.
    */
   public function import_invoices_from_winpos_to_dms() {
@@ -49,7 +49,7 @@ class Importacion_facturas extends MX_Controller {
       add_js('dist/vendor/pickadate.js/picker.date.js');
       add_js('dist/vendor/pickadate.js/translations/date_es_ES.js');
       add_js('dist/custom/js/facturas/import_invoices_from_winpos_to_dms.js');
-      
+
       $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
       $this->load->view('facturas'. DS .'import_invoices_from_winpos_to_dms', $view_data);
       $this->load->view('footers'. DS .'footer_main_dashboard');
@@ -61,7 +61,7 @@ class Importacion_facturas extends MX_Controller {
   /**
    * Obtiene las últimas facturas cargadas de cada punto
    * de venta.
-   * 
+   *
    * @return mixed $latest_invoices
    * @return boolean False
    */
@@ -71,11 +71,11 @@ class Importacion_facturas extends MX_Controller {
 
       if (!empty($latest_invoices)) {
         $this->load->library('Date_Utilities');
-  
+
         foreach ($latest_invoices as $last_invoice) {
           $last_invoice->fecha = ucfirst($this->date_utilities->format_date('%B %d, %Y', $last_invoice->fecha));
         }
-  
+
         return $latest_invoices;
       }
     } catch (Exception $e) {
@@ -87,7 +87,7 @@ class Importacion_facturas extends MX_Controller {
   /**
    * Muestra las facturas de la terminal de un punto de venta
    * en una fecha específica.
-   * 
+   *
    */
   public function show_invoices_from_sale_point_on_date() {
     if ($this->verification_roles->is_invoice_import_manager() || $this->ion_auth->is_admin()) {
@@ -171,7 +171,7 @@ class Importacion_facturas extends MX_Controller {
                   // Ya que es una factura anulada, simplemente se almacena con la
                   // mayoría de valores nulos y se envía la notificación del proceso.
                   $reported_invoice = $this->report_dms_voided_invoice($inv_structure);
-      
+
                   if ($reported_invoice === TRUE) {
                     $inv_structure->void_invoice_msg = lang('void_invoice_successfully_reported');
                     $inv_structure->void_invoice_status = TRUE;
@@ -198,7 +198,7 @@ class Importacion_facturas extends MX_Controller {
                   $reported_success_invoice = $this->report_dms_success_invoice($inv_structure);
                   // Se reporta la imputación contable de la factura en la base de datos.
                   $reported_accounting_imputation = $this->report_accounting_imputation($inv_structure);
-      
+
                   // Evalúa el resultado de la inserción de la factura en la base de datos
                   // para enviar una notificación al usuario.
                   if ($reported_success_invoice === TRUE) {
@@ -271,11 +271,11 @@ class Importacion_facturas extends MX_Controller {
   /**
    * Obtiene las facturas de una terminal de
    * un punto de venta en una fecha específica.
-   * 
+   *
    * @param int $terminal Código de la terminal del punto
    * de venta de donde se obtendrán las facturas.
    * @param string $fecha Fecha para obtener las facturas.
-   * 
+   *
    * @return mixed|boolean
    */
   public function get_invoices_from_sale_point_on_date($terminal, $fecha) {
@@ -292,11 +292,11 @@ class Importacion_facturas extends MX_Controller {
 
   /**
    * Genera la estructura de una factura normal de WinPOS.
-   * 
+   *
    * @param object $invoice Factura a la que se cambiará la estructura.
    * @param boolean $with_retefuente Añade un medio de pago auxiliar
    * a la nueva estructura.
-   * 
+   *
    * @return object
    */
   private function generate_invoice_structure($invoice, $with_payment_method_aux = FALSE) {
@@ -342,17 +342,17 @@ class Importacion_facturas extends MX_Controller {
     if ($with_payment_method_aux === TRUE) {
       $invoice_structure->medio_pago_aux = $invoice->medio_pago_aux;
     }
-    
+
     return $invoice_structure;
   }
 
   /**
    * Genera una estructura corta de una factura de WinPOS con más de
    * dos medios de pago.
-   * 
+   *
    * @param int $number Número de la factura.
    * @param boolean $state Indica si la factura está anulada o no.
-   * 
+   *
    * @return object
    */
   private function generate_manual_invoice_structure($number, $state){
@@ -367,13 +367,13 @@ class Importacion_facturas extends MX_Controller {
 
   /**
    * Procesa una factura de WinPOS con dos medios de pago.
-   * 
+   *
    * Manipula la información de los dos medios de pago de una factura
    * y fusiona esos datos en un solo objeto.
-   * 
+   *
    * @param object $first_pay_method Factura con el primer medio de pago.
    * @param object $second_pay_method Factura con el segundo medio de pago.
-   * 
+   *
    * @return object
    */
   private function process_invoice_with_double_payment_method($first_pay_method, $second_pay_method) {
@@ -394,11 +394,11 @@ class Importacion_facturas extends MX_Controller {
 
   /**
    * Define la cuenta de venta para una factura de WinPOS.
-   * 
+   *
    * @param int $vendor Código de vendedor asociado a la factura.
    * @param int $customer_type Tipo de cliente asociado a la factura.
    * @param int $iva IVA de la factura.
-   * 
+   *
    * @return int
    */
   public function set_sale_account_to_wpos_invoice($vendor, $customer_type, $iva) {
@@ -436,7 +436,7 @@ class Importacion_facturas extends MX_Controller {
    * @param int $payment_method Código de medio de pago asociado a la factura.
    * @param int $vendor Código de vendedor asociado a la factura.
    * @param int $customer_type Tipo de cliente asociado a la factura.
-   * 
+   *
    * @return int
    */
   public function set_receivable_account_to_wpos_invoice($payment_method, $vendor, $customer_type) {
@@ -447,9 +447,9 @@ class Importacion_facturas extends MX_Controller {
           break;
         case 16: // Punto de venta Itagui
           $receivable_account = 13050601;
-          break;	
+          break;
         case 38: // Punto de venta Cali
-          $receivable_account = 13050603;	
+          $receivable_account = 13050603;
           break;
         default:
           if ($customer_type === '1') { // Cuentas por cobrar a RC o PN
@@ -475,10 +475,10 @@ class Importacion_facturas extends MX_Controller {
   /**
    * Asigna un código de vendedor a una terminal de
    * punto de venta.
-   * 
+   *
    * @param int $terminal Código de la terminal del punto
    * de venta.
-   * 
+   *
    * @return int
    */
   public function set_vendor_code_to_terminal($terminal) {
@@ -494,15 +494,15 @@ class Importacion_facturas extends MX_Controller {
         break;
     }
 
-    return $vendor; 
+    return $vendor;
   }
 
   /**
    * Busca una terminal de un punto de venta de WinPOS por medio de su código.
-   * 
+   *
    * @param int $terminal Código de la terminal del punto
    * de venta.
-   * 
+   *
    * @return boolean|string
    */
   public function find_terminal($terminal) {
@@ -518,7 +518,7 @@ class Importacion_facturas extends MX_Controller {
 
   /**
    * Elimina todos los datos de las tablas de importación de facturas
-   * 
+   *
    * @return boolean
    */
   public function delete_all_data_from_import_tables() {
@@ -531,9 +531,9 @@ class Importacion_facturas extends MX_Controller {
 
   /**
    * Reporta una factura anulada en DMS.
-   * 
+   *
    * @param object $invoice Factura a ser reportada.
-   * 
+   *
    * @return boolean|string
    */
   public function report_dms_voided_invoice($invoice) {
@@ -548,7 +548,7 @@ class Importacion_facturas extends MX_Controller {
 
   /**
    * Reporta una factura correcta en DMS.
-   * 
+   *
    * @param object $invoice Factura a ser reportada.
    *
    * @return boolean|string
@@ -565,7 +565,7 @@ class Importacion_facturas extends MX_Controller {
 
   /**
    * Reporta la imputación contable de una factura.
-   * 
+   *
    * @param object $invoice Factura a ser reportada.
    */
   public function report_accounting_imputation($invoice) {

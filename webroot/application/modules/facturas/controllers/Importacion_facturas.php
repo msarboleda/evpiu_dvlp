@@ -378,14 +378,16 @@ class Importacion_facturas extends MX_Controller {
    */
   private function process_invoice_with_double_payment_method($first_pay_method, $second_pay_method) {
     $first_pay_method->modelo = $second_pay_method->modelo;
-    $first_pay_method->valor_total = $second_pay_method->ValorMP;
-    $first_pay_method->iva += $second_pay_method->iva;
-    $first_pay_method->TotalDescuento += $second_pay_method->TotalDescuento;
-    $first_pay_method->valor_aplicado = $second_pay_method->ValorMP;
+    $first_pay_method->valor_total = $second_pay_method->valor_total;
+    $first_pay_method->iva = $second_pay_method->iva;
+    $first_pay_method->TotalDescuento = $second_pay_method->TotalDescuento;
+    $first_pay_method->valor_aplicado = $second_pay_method->valor_aplicado;
     $first_pay_method->medio_pago_aux = $second_pay_method->idMedioPago;
     $first_pay_method->rete_fuente = 0;
 
     if ($first_pay_method->idMedioPago === 6) {
+      $first_pay_method->valor_total -= $first_pay_method->ValorMP;
+      $first_pay_method->valor_aplicado -= $first_pay_method->ValorMP;
       $first_pay_method->rete_fuente = $first_pay_method->ValorMP;
     }
 

@@ -17,7 +17,17 @@ class Usuarios extends MX_Controller {
   }
 
   /**
-   * Poblar un control <select> con todos los usuarios 
+   * Petición AJAX para obtener el nombre de usuario
+   * actual en la plataforma.
+   *
+   */
+  public function xhr_get_current_username() {
+    $data = new stdClass();
+    $data->username = $this->ion_auth->user()->row()->username;
+    header('Content-Type: application/json');
+    echo json_encode($data);
+  }
+
   /**
    * Poblar un control <select> con todos los usuarios
    * existentes de la plataforma.

@@ -7,6 +7,9 @@
 * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
 */
 
+// Index
+$lang['index_heading'] = 'Listar solicitudes de mantenimiento';
+
 // New request maintenance
 $lang['new_rm_heading'] = 'Solicitar mantenimiento';
 $lang['new_rm_damage_date_label'] = 'Fecha del daño';
@@ -24,3 +27,5 @@ $lang['new_rm_damage_description_help'] = 'Escriba una breve descripción del in
 // Solicitudes_model
 $lang['add_rm_success'] = 'La solicitud de mantenimiento con el código <b>%s</b> se ha creado correctamente.';
 $lang['add_rm_error'] = 'No se pudo crear la solicitud de mantenimiento.';
+$lang['get_all_maintenance_requests_no_results'] = 'La consulta de solicitudes de mantenimiento no obtuvo resultados.';
+$lang['get_user_maintenance_requests_no_results'] = 'La consulta de tus solicitudes de mantenimiento no obtuvo resultados.';

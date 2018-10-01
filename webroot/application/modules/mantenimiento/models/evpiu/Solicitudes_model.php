@@ -11,6 +11,7 @@
 
 class Solicitudes_model extends CI_Model {
   public $_table = 'mant_Solicitudes';
+  public $_master_view_table = 'V_Solicitudes_Mantenimiento';
 
 	public function __construct() {
     parent::__construct();
@@ -18,6 +19,57 @@ class Solicitudes_model extends CI_Model {
     $this->db_evpiu = $this->load->database('EVPIU', true);
     $this->load->helper('language');
     $this->lang->load('solicitudes');
+  }
+
+  /**
+   * Obtiene todas las solicitudes de mantenimiento existentes.
+   *
+   * @return object
+   */
+  public function get_all_maintenance_requests() {
+    $this->load->library('Date_Utilities');
+    $query = $this->db_evpiu->get($this->_master_view_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->BeautyDamageDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaIncidente));
+        $result->BeautyRequestDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaSolicitud));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('get_all_maintenance_requests_no_results'));
+    }
+  }
+
+  /**
+   * Obtiene las solicitudes de mantenimiento que ha realizado
+   * un usuario de la plataforma.
+   *
+   * @param string $user Usuario de la plataforma.
+   *
+   * @return object
+   */
+  public function get_user_maintenance_requests($user) {
+    $this->load->library('Date_Utilities');
+
+    $this->db_evpiu->where('CodSolicitante', $user);
+    $query = $this->db_evpiu->get($this->_master_view_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->BeautyDamageDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaIncidente));
+        $result->BeautyRequestDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaSolicitud));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('get_user_maintenance_requests_no_results'));
+    }
   }
 
   /**

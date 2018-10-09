@@ -71,6 +71,7 @@ class Solicitudes extends MX_Controller {
     $user_id = $this->ion_auth->user()->row()->id;
 
     add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+    add_css('dist/custom/css/mantenimiento/view_manager_maint_req.css');
     add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
 
     // Se muestran los datos necesarios dependiendo del rol del usuario.
@@ -81,6 +82,26 @@ class Solicitudes extends MX_Controller {
 
         try {
           $view_data['maint_request'] = $this->get_maintenance_request($maint_request_code);
+
+          try {
+            $view_data['maint_request_history'] = $this->get_maintenance_request_history($maint_request_code);
+          } catch (Exception $e) {
+            $view_data['maint_request_history_error_message'] = $e->getMessage();
+          }
+
+          if ($this->input->post('comments')) {
+            if (trim($this->input->post('comments')) !== '') {
+              $concept_code = $this->Solicitudes_mdl->_updated_concept;
+
+              try {
+                $this->add_event_to_history($concept_code, $maint_request_code, $this->input->post('comments'));
+              } catch (Exception $e) {
+                $view_data['add_event_error'] = $this->messages->add($e->getMessage(), 'danger');
+              }
+
+              redirect('mantenimiento/solicitudes/view_maint_request/'.$maint_request_code);
+            }
+          }
         } catch (Exception $e) {
           $view_data['maint_request_not_exist_error'] = $e->getMessage();
         }
@@ -212,6 +233,39 @@ class Solicitudes extends MX_Controller {
   public function save_request_maintenance($data) {
     try {
       return $this->Solicitudes_mdl->add_request_maintenance($data);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  /**
+   * Obtiene el histórico de una solicitud de mantenimiento en específico.
+   *
+   * @param int $maint_request_code Código de la solicitud de mantenimiento.
+   *
+   * @return object
+   */
+  public function get_maintenance_request_history($maint_request_code) {
+    try {
+      return $this->Solicitudes_mdl->get_maintenance_request_history($maint_request_code);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  /**
+   * Añade un evento al histórico de una solicitud de mantenimiento.
+   *
+   * @param int $concept_code Código del concepto del evento.
+   * @param int $maint_request_code Código de la solicitud de mantenimiento.
+   * @param string $comments En caso de que sea un concepto de actualización,
+   * se deben anexar los comentarios que se hicieron en el formulario.
+   *
+   * @return int
+   */
+  public function add_event_to_history($concept_code, $maint_request_code, $comments = '') {
+    try {
+      return $this->Solicitudes_mdl->add_event_to_history($concept_code, $maint_request_code, $comments);
     } catch (Exception $e) {
       throw $e;
     }

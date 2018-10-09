@@ -49,6 +49,52 @@ if (isset($maint_request)) { ?>
       </div>
     </div>
   </div>
+  <div class="card">
+    <div class="card-body">
+      <h2><?php echo lang('view_mr_card_second_title'); ?></h2>
+      <hr>
+      <?php echo form_open(uri_string(), 'id="add_comments-form"'); ?>
+      <div class="form-group">
+        <textarea class="form-control" name="comments" rows="4" placeholder="<?php echo lang('view_mr_comments_placeholder'); ?>"></textarea>
+      </div>
+      <?php echo form_submit('submit', lang('view_mr_update_submit_button'), 'class="btn btn-primary"');?>
+      <?php echo form_close();?>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h2><?php echo lang('view_mr_card_fourth_title'); ?></h2>
+      <hr>
+      <?php
+        if (isset($maint_request_history)) {
+          if (is_array($maint_request_history)) { ?>
+            <ul class="timeline">
+      <?php
+            foreach ($maint_request_history as $event): ?>
+              <li>
+                <div>
+                  <h5><b><?php echo $event->NomConcepto; ?></b></h5>
+                  <h6><i class="fa fa-user"></i> <?php echo $event->NomUsuario; ?></h6>
+                  <h6><i class="fa fa-clock-o"></i> <?php echo $event->BeautyEventDate; ?></h6>
+                  <?php echo $event->Descripcion; ?>
+                </div>
+              </li>
+      <?php
+            endforeach; ?>
+            </ul>
+      <?php
+          }
+        }
+
+        if (isset($maint_request_history_error_message)) { ?>
+          <div class="alert alert-danger" role="alert">
+      <?php
+            echo $maint_request_history_error_message; ?>
+          </div>
+      <?php
+        } ?>
+    </div>
+  </div>
 </div>
 <?php
 } ?>

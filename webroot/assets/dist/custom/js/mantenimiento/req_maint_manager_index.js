@@ -27,7 +27,7 @@ $(document).ready(function() {
       {
         data: null,
         render: function ( data, type, row ) {
-          return '<a href="'+app_url+'mantenimiento/solicitudes/view_maint_request?mrc='+row.CodSolicitud+'" class="btn btn-sm btn-primary"> Visualizar</a>';
+          return '<a href="'+app_url+'mantenimiento/solicitudes/view_maint_request/'+row.CodSolicitud+'" class="btn btn-sm btn-primary"> Visualizar</a>';
         }
       }
     ],

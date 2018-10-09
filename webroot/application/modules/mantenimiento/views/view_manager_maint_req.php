@@ -68,20 +68,27 @@ if (isset($maint_request)) { ?>
       <?php
         if (isset($maint_request_history)) {
           if (is_array($maint_request_history)) { ?>
-            <ul class="timeline">
+            <div class="profiletimeline">
       <?php
             foreach ($maint_request_history as $event): ?>
-              <li>
-                <div>
-                  <h5><b><?php echo $event->NomConcepto; ?></b></h5>
-                  <h6><i class="fa fa-user"></i> <?php echo $event->NomUsuario; ?></h6>
-                  <h6><i class="fa fa-clock-o"></i> <?php echo $event->BeautyEventDate; ?></h6>
-                  <?php echo $event->Descripcion; ?>
+              <div class="sl-item">
+                <div class="sl-left">
+                  <img src="<?php echo $this->config->item('assets_path').'themes/elaadmin/images/users/user.png'; ?>" alt="user" class="img-circle">
                 </div>
-              </li>
+                <div class="sl-right">
+                  <div>
+                    <a href="javascript:void(0);" class="color-primary"><?php echo $event->NomUsuario; ?></a> <span class="sl-date"><?php echo $event->BeautyEventDate; ?></span>
+                    <p>ha realizado un nuevo evento: <b><?php echo $event->NomConcepto; ?></b></p>
+                    <blockquote class="m-t-10">
+                      <?php echo $event->Descripcion; ?>
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+              <hr>
       <?php
             endforeach; ?>
-            </ul>
+            </div>
       <?php
           }
         }

@@ -24,8 +24,12 @@ $lang['new_rm_damage_time_help'] = 'Debe seleccionar la hora en la que se produj
 $lang['new_rm_damaged_asset_help'] = 'Debe seleccionar el equipo al que se produjo el incidente.';
 $lang['new_rm_damage_description_help'] = 'Escriba una breve descripción del incidente ocurrido al equipo seleccionado.';
 
+// View maintenance request
+$lang['view_mr_heading'] = 'Visualizar solicitud de mantenimiento';
+$lang['view_mr_card_first_title'] = 'Información básica';
 // Solicitudes_model
 $lang['add_rm_success'] = 'La solicitud de mantenimiento con el código <b>%s</b> se ha creado correctamente.';
 $lang['add_rm_error'] = 'No se pudo crear la solicitud de mantenimiento.';
 $lang['get_all_maintenance_requests_no_results'] = 'La consulta de solicitudes de mantenimiento no obtuvo resultados.';
 $lang['get_user_maintenance_requests_no_results'] = 'La consulta de tus solicitudes de mantenimiento no obtuvo resultados.';
+$lang['get_maintenance_request_no_results'] = 'La consulta de la solicitud de mantenimiento no obtuvo resultados.';

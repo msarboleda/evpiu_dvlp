@@ -73,6 +73,30 @@ class Solicitudes_model extends CI_Model {
   }
 
   /**
+   * Obtiene la información de una solicitud de mantenimiento en específico.
+   *
+   * @param int $maint_request_code Código de la solicitud de mantenimiento.
+   *
+   * @return object
+   */
+  public function get_maintenance_request($maint_request_code) {
+    $this->load->library('Date_Utilities');
+
+    $this->db_evpiu->where('CodSolicitud', $maint_request_code);
+    $query = $this->db_evpiu->get($this->_master_view_table);
+
+    if ($query->num_rows() > 0) {
+      $row = $query->row();
+      $row->BeautyDamageDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $row->FechaIncidente));
+      $row->BeautyRequestDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $row->FechaSolicitud));
+
+      return $row;
+    } else {
+      throw new Exception(lang('get_maintenance_request_no_results'));
+    }
+  }
+
+  /**
    * Agrega una solicitud de mantenimiento a la base de datos.
    *
    * @param array $data

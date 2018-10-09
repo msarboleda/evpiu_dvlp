@@ -60,6 +60,44 @@ class Solicitudes extends MX_Controller {
   }
 
   /**
+   * Visualizar una solicitud de mantenimiento.
+   *
+   * @param int $maint_request_code Código de la solicitud de mantenimiento.
+   *
+   */
+  public function view_maint_request($maint_request_code) {
+    $header_data = $this->header->show_Categories_and_Modules();
+    $header_data['module_name'] = lang('view_mr_heading');
+    $user_id = $this->ion_auth->user()->row()->id;
+
+    add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+    add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+
+    // Se muestran los datos necesarios dependiendo del rol del usuario.
+    switch ($user_id) {
+      case $this->verification_roles->is_assets_manager($user_id):
+      case $this->ion_auth->is_admin($user_id):
+        $view_name = 'view_manager_maint_req';
+
+        try {
+          $view_data['maint_request'] = $this->get_maintenance_request($maint_request_code);
+        } catch (Exception $e) {
+          $view_data['maint_request_not_exist_error'] = $e->getMessage();
+        }
+
+        $view_data['app_errors'] = $this->messages->get();
+        break;
+      default:
+        redirect('auth');
+        break;
+    }
+
+    $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+    $this->load->view('mantenimiento'. DS . $view_name, $view_data);
+    $this->load->view('footers'. DS .'footer_main_dashboard');
+  }
+
+  /**
    * Petición AJAX para obtener todas las solicitudes de
    * mantenimiento existentes.
    *
@@ -146,6 +184,21 @@ class Solicitudes extends MX_Controller {
       $this->load->view('footers'. DS .'footer_main_dashboard');
     } else {
       redirect('auth');
+    }
+  }
+
+  /**
+   * Obtiene la información de una solicitud de mantenimiento en específico.
+   *
+   * @param int $maint_request_code Código de la solicitud de mantenimiento.
+   *
+   * @return object
+   */
+  public function get_maintenance_request($maint_request_code) {
+    try {
+      return $this->Solicitudes_mdl->get_maintenance_request($maint_request_code);
+    } catch (Exception $e) {
+      throw $e;
     }
   }
 

@@ -2,7 +2,7 @@
 
 /**
  * Modelo: Usuarios
- * 
+ *
  * Descripción del modelo
  *
  * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
@@ -14,7 +14,7 @@ class Usuarios_model extends CI_Model {
 
 	public function __construct() {
     parent::__construct();
-    
+
     $this->db_evpiu = $this->load->database('users', true);
     $this->load->helper('language');
     $this->lang->load('usuarios');
@@ -23,7 +23,7 @@ class Usuarios_model extends CI_Model {
   /**
    * Obtiene los valores necesarios para poblar un control
    * <select> de todos los usuarios existentes de la plataforma.
-   * 
+   *
    * @return object
    */
   public function populate_users() {

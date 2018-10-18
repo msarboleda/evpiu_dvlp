@@ -182,16 +182,16 @@ class Solicitudes_model extends CI_Model {
    *
    * @return string
    */
-  private function set_event_message($concept_code) {
+  private function set_event_message($concept_code, $comments = '') {
     switch ($concept_code) {
       case $this->_created_concept:
         $message = lang('created_maint_request_event');
         break;
       case $this->_updated_concept:
-        $message = lang('com_added_maint_request_event');
+        $message = sprintf(lang('com_added_maint_request_event'), $comments);
         break;
       case $this->_work_order_created_concept:
-        $message = lang('wo_created_maint_request_event');
+        $message = sprintf(lang('wo_created_maint_request_event'), $comments);
         break;
       case $this->_started_concept:
         $message = lang('started_maint_request_event');
@@ -200,10 +200,10 @@ class Solicitudes_model extends CI_Model {
         $message = lang('completed_maint_request_event');
         break;
       case $this->_canceled_concept:
-        $message = lang('approved_maint_request_event');
+        $message = lang('canceled_maint_request_event');
         break;
       case $this->_approved_concept:
-        $message = lang('canceled_maint_request_event');
+        $message = lang('approved_maint_request_event');
         break;
       default:
         $message = NULL;
@@ -229,12 +229,16 @@ class Solicitudes_model extends CI_Model {
    */
   public function add_event_to_history($concept_code, $maint_request_code, $comments = '') {
     try {
-      $event_message = $this->set_event_message($concept_code);
-
       // Si se añade un evento con el concepto de actualización, se anexan comentarios
       // a la descripción del evento.
-      if ($concept_code === $this->_updated_concept) {
-        $event_message = sprintf(lang('com_added_maint_request_event'), $comments);
+      switch ($concept_code) {
+        case $this->_updated_concept:
+        case $this->_work_order_created_concept:
+          $event_message = $this->set_event_message($concept_code, $comments);
+          break;
+        default:
+          $event_message = $this->set_event_message($concept_code);
+          break;
       }
 
       $formatted_data = array(

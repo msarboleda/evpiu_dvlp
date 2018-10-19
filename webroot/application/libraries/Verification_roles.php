@@ -126,5 +126,16 @@ class Verification_roles {
 		$member_group = 'maint_req_manager';
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
+  }
+
+  /**
+	 * @param int|string|bool $id
+	 *
+	 * @return boolean Es un solicitante de mantenimiento
+	 */
+	public function is_maint_applicant($id = FALSE) {
+		$member_group = 'maint_applicant';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
 	}
 }

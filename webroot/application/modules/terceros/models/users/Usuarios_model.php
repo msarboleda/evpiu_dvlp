@@ -11,6 +11,7 @@
 
 class Usuarios_model extends CI_Model {
   public $_table = 'users';
+  public $_users_groups_view_table = 'V_users_groups';
 
 	public function __construct() {
     parent::__construct();
@@ -18,6 +19,25 @@ class Usuarios_model extends CI_Model {
     $this->db_evpiu = $this->load->database('users', true);
     $this->load->helper('language');
     $this->lang->load('usuarios');
+  }
+
+  /**
+   * Obtiene el id de un usuario con base al nombre de usuario.
+   *
+   * @param string $username Nombre del usuario.
+   *
+   * @return int
+   */
+  public function get_user_id_from_username($username) {
+    $this->db_evpiu->select('id');
+    $this->db_evpiu->where('username', $username);
+    $query = $this->db_evpiu->get($this->_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->row()->id;
+    } else {
+      throw new Exception(lang('get_user_id_from_username_no_results'));
+    }
   }
 
   /**
@@ -35,6 +55,25 @@ class Usuarios_model extends CI_Model {
       return $query->result();
     } else {
       throw new Exception(lang('populate_users_no_results'));
+    }
+  }
+
+  /**
+   * Obtiene todos los usuarios de la plataforma que se encuentran
+   * dentro del grupo de técnicos de mantenimiento.
+   *
+   * @return object
+   */
+  public function get_all_maintenance_technicians() {
+    $this->db_evpiu->select('usuario, nombre_usuario');
+    $this->db_evpiu->where('grupo', 'maint_technician');
+    $this->db_evpiu->order_by('nombre_usuario', 'asc');
+    $query = $this->db_evpiu->get($this->_users_groups_view_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('get_maintenance_technicians_no_results'));
     }
   }
 }

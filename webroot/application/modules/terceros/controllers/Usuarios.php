@@ -17,6 +17,21 @@ class Usuarios extends MX_Controller {
   }
 
   /**
+   * Obtiene el id de un usuario con base al nombre de usuario.
+   *
+   * @param string $username Nombre del usuario.
+   *
+   * @return int
+   */
+  public function get_user_id_from_username($username) {
+    try {
+      return $this->Usuarios_mdl->get_user_id_from_username($username);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  /**
    * Petición AJAX para obtener el nombre de usuario
    * actual en la plataforma.
    *
@@ -26,6 +41,26 @@ class Usuarios extends MX_Controller {
     $data->username = $this->ion_auth->user()->row()->username;
     header('Content-Type: application/json');
     echo json_encode($data);
+  }
+
+  /**
+   * Petición AJAX para obtener todos los técnicos de
+   * mantenimiento de la plataforma.
+   *
+   */
+  public function xhr_get_all_maintenance_technicians() {
+    try {
+      $maintenance_technicians = $this->Usuarios_mdl->get_all_maintenance_technicians();
+      header('Content-Type: application/json');
+      echo json_encode($maintenance_technicians);
+    } catch (Exception $e) {
+      $data = new stdClass();
+      $data->message = $e->getMessage();
+      $data->content = array();
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    }
   }
 
   /**

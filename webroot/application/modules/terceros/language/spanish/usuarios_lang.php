@@ -9,3 +9,5 @@
 
 // Usuarios_model
 $lang['populate_users_no_results'] = 'La consulta de usuarios no obtuvo resultados.';
+$lang['get_maintenance_technicians_no_results'] = 'La consulta de técnicos de mantenimiento no obtuvo resultados.';
+$lang['get_user_id_from_username_no_results'] = 'La consulta del id del usuario proporcionado no obtuvo resultados.';

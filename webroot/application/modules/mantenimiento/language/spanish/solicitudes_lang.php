@@ -28,13 +28,18 @@ $lang['new_rm_damage_description_help'] = 'Escriba una breve descripción del in
 $lang['view_mr_heading'] = 'Visualizar solicitud de mantenimiento';
 $lang['view_mr_card_first_title'] = 'Información básica';
 $lang['view_mr_card_second_title'] = 'Comentarios de la solicitud';
+$lang['view_mr_card_third_title'] = 'Acciones';
 $lang['view_mr_card_fourth_title'] = 'Últimos eventos';
 $lang['view_mr_comments_placeholder'] = 'Si necesitas adjuntar algún comentario a la solicitud de mantenimiento, aquí lo puedes hacer...';
 $lang['view_mr_update_submit_button'] = 'Enviar comentario';
 
+// Send new work order email notification
+$lang['wo_email_notification_not_sended'] = 'Ocurrió un error al enviar la notificación de orden de trabajo para una solicitud de mantenimiento.';
+
 // Solicitudes_model
 $lang['add_rm_success'] = 'La solicitud de mantenimiento con el código <b>%s</b> se ha creado correctamente.';
 $lang['add_rm_error'] = 'No se pudo crear la solicitud de mantenimiento.';
+$lang['update_mr_error'] = 'No se pudo actualizar la solicitud de mantenimiento.';
 $lang['get_all_maintenance_requests_no_results'] = 'La consulta de solicitudes de mantenimiento no obtuvo resultados.';
 $lang['get_user_maintenance_requests_no_results'] = 'La consulta de tus solicitudes de mantenimiento no obtuvo resultados.';
 $lang['get_maintenance_request_no_results'] = 'La consulta de la solicitud de mantenimiento no obtuvo resultados.';

@@ -10,9 +10,13 @@
  */
 
 class Solicitudes_model extends CI_Model {
+  // Tabla de solicitudes de mantenimiento
   public $_table = 'mant_Solicitudes';
+  // Vista de las solicitudes de mantenimiento
   public $_master_view_table = 'V_Solicitudes_Mantenimiento';
+  // Tabla del histórico de las solicitudes de mantenimiento
   public $_timeline_mr_table = 'mant_HistoricoSolicitudes';
+  // Vista del histórico de las solicitudes de mantenimiento
   public $_timeline_mr_view_table = 'V_mant_HistoricoSolicitudes';
 
   // Concepto de solicitud creada
@@ -145,6 +149,31 @@ class Solicitudes_model extends CI_Model {
       return $insert_id;
     } else {
       throw new Exception(lang('add_rm_error'));
+    }
+  }
+
+  /**
+   * Actualiza el estado de una solicitud de mantenimiento.
+   *
+   * @param int $maint_request_code Código de la solicitud de mantenimiento.
+   * @param int $new_state Código del nuevo estado de la solicitud.
+   *
+   * @return boolean
+   */
+  public function update_maintenance_request_state(int $maint_request_code, int $new_state) {
+    $formatted_data = array(
+      'Estado' => $new_state,
+      'Actualizo' => $this->ion_auth->user()->row()->username,
+      'FechaActualizacion' => date('Y-m-d H:i:s')
+    );
+
+    $this->db_evpiu->where('idSolicitud', $maint_request_code);
+    $updated = $this->db_evpiu->update($this->_table, $formatted_data);
+
+    if ($updated) {
+      return $updated;
+    } else {
+      throw new Exception(lang('update_mr_error'));
     }
   }
 

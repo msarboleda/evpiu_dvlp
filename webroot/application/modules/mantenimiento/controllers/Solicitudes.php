@@ -15,6 +15,7 @@ class Solicitudes extends MX_Controller {
 
     $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
     $this->load->model('Mantenimiento/evpiu/Solicitudes_model', 'Solicitudes_mdl');
+    $this->load->model('Mantenimiento/evpiu/Estados_solicitudes_model', 'EstSolicitudes_mdl');
     $this->load->library(array('header', 'verification_roles', 'messages'));
     $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('solicitudes');
@@ -76,12 +77,13 @@ class Solicitudes extends MX_Controller {
 
     // Se muestran los datos necesarios dependiendo del rol del usuario.
     switch ($user_id) {
-      case $this->verification_roles->is_assets_manager($user_id):
+      case $this->verification_roles->is_maint_req_manager($user_id):
       case $this->ion_auth->is_admin($user_id):
         $view_name = 'view_manager_maint_req';
 
         try {
-          $view_data['maint_request'] = $this->get_maintenance_request($maint_request_code);
+          $mr_data = $this->get_maintenance_request($maint_request_code);
+          $view_data['maint_request'] = $mr_data;
 
           try {
             $view_data['maint_request_history'] = $this->get_maintenance_request_history($maint_request_code);
@@ -101,6 +103,26 @@ class Solicitudes extends MX_Controller {
 
               redirect('mantenimiento/solicitudes/view_maint_request/'.$maint_request_code);
             }
+          }
+
+          // Estados en los que se debe habilitar la generación de orden de trabajo.
+          $avalaible_states_for_gen_work_orders = array(
+            $this->EstSolicitudes_mdl->_in_revision_state,
+            $this->EstSolicitudes_mdl->_approved_state,
+            $this->EstSolicitudes_mdl->_in_process_state
+          );
+
+          // En caso de que el estado de la solicitud de mantenimiento coincida con alguno
+          // de los estados habilitados para generar una orden de trabajo, se muestra el
+          // botón, de lo contrario se oculta toda la sección de acciones.
+          if (in_array($mr_data->CodEstado, $avalaible_states_for_gen_work_orders)) {
+            $view_data['gen_wo_button_enabled'] = TRUE;
+
+            add_js('dist/custom/js/mantenimiento/work_orders.js');
+            add_js('dist/custom/js/terceros/maintenance_technicians.js');
+            add_js('dist/custom/js/mantenimiento/view_manager_maint_req.js');
+          } else {
+            $view_data['gen_wo_button_enabled'] = FALSE;
           }
         } catch (Exception $e) {
           $view_data['maint_request_not_exist_error'] = $e->getMessage();
@@ -248,6 +270,22 @@ class Solicitudes extends MX_Controller {
   }
 
   /**
+   * Actualiza el estado de una solicitud de mantenimiento.
+   *
+   * @param int $maint_request_code Código de la solicitud de mantenimiento.
+   * @param int $new_state Código del nuevo estado de la solicitud.
+   *
+   * @return boolean
+   */
+  public function update_maintenance_request_state($maint_request_code, $new_state) {
+    try {
+      return $this->Solicitudes_mdl->update_maintenance_request_state($maint_request_code, $new_state);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  /**
    * Obtiene el histórico de una solicitud de mantenimiento en específico.
    *
    * @param int $maint_request_code Código de la solicitud de mantenimiento.
@@ -277,6 +315,48 @@ class Solicitudes extends MX_Controller {
       return $this->Solicitudes_mdl->add_event_to_history($concept_code, $maint_request_code, $comments);
     } catch (Exception $e) {
       throw $e;
+    }
+  }
+
+  /**
+   * Envía una notificación de correo electrónico para informar que se
+   * generó una orden de trabajo para una solicitud de mantenimiento
+   * en específico.
+   *
+   * @param string $to Destinatario de la notificación de correo electrónico.
+   * @param string $wo_creator Código del usuario que creó la orden de trabajo.
+   * @param string $wo_date Fecha de la creación de la orden de trabajo.
+   * @param int $mr_code Código de la solicitud de mantenimiento.
+   * @param string $asset_name Nombre del activo al cuál se generó orden de trabajo.
+   *
+   * @return boolean
+   */
+  public function send_new_work_order_email_notification($to, $wo_creator, $wo_date, $mr_code, $asset_name) {
+    $this->load->library('email');
+
+    $subject = '¡Se ha generado una nueva orden de trabajo para tu solicitud de mantenimiento!';
+
+    $params = array(
+      'charset' => strtolower(config_item('charset')),
+      'subject' => $subject,
+      'wo_creator' => $wo_creator,
+      'wo_date' => $wo_date,
+      'maint_request' => $mr_code,
+      'asset' => $asset_name
+    );
+
+    $body = $this->load->view('mantenimiento/notify_new_work_order', $params, TRUE);
+
+    $result = $this->email->from('info@estradavelasquez.com', 'Notificaciones EVPIU')
+        ->to($to)
+        ->subject($subject)
+        ->message($body)
+        ->send();
+
+    if ($result) {
+      return $result;
+    } else {
+      throw new Exception(lang('wo_email_notification_not_sended'));
     }
   }
 }

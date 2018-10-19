@@ -7,7 +7,7 @@
  * Descripción:  Esta librería permite identificar cuando un usuario pertenece a un grupo en específico.
  *
  * Dependencias:
- * 
+ *
  * @package    CodeIgniter-Ion-Auth
  * @author     Ben Edmunds
  * @link       http://github.com/benedmunds/CodeIgniter-Ion-Auth
@@ -113,6 +113,17 @@ class Verification_roles {
 	 */
 	public function is_assets_manager($id = FALSE) {
 		$member_group = 'assets_manager';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+  }
+
+  /**
+	 * @param int|string|bool $id
+	 *
+	 * @return boolean
+	 */
+	public function is_maint_req_manager($id = FALSE) {
+		$member_group = 'maint_req_manager';
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
 	}

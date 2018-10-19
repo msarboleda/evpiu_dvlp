@@ -36,6 +36,9 @@ $lang['view_mr_update_submit_button'] = 'Enviar comentario';
 // Send new work order email notification
 $lang['wo_email_notification_not_sended'] = 'Ocurrió un error al enviar la notificación de orden de trabajo para una solicitud de mantenimiento.';
 
+// Send new comment email notification
+$lang['comment_email_notification_not_sended'] = 'Ocurrió un error al enviar la notificación de comentario para una solicitud de mantenimiento.';
+
 // Solicitudes_model
 $lang['add_rm_success'] = 'La solicitud de mantenimiento con el código <b>%s</b> se ha creado correctamente.';
 $lang['add_rm_error'] = 'No se pudo crear la solicitud de mantenimiento.';
@@ -44,6 +47,7 @@ $lang['get_all_maintenance_requests_no_results'] = 'La consulta de solicitudes d
 $lang['get_user_maintenance_requests_no_results'] = 'La consulta de tus solicitudes de mantenimiento no obtuvo resultados.';
 $lang['get_maintenance_request_no_results'] = 'La consulta de la solicitud de mantenimiento no obtuvo resultados.';
 $lang['get_maintenance_request_history_no_results'] = 'No se ha logrado obtener el histórico de esta solicitud de mantenimiento.';
+$lang['get_event_no_results'] = 'La consulta del evento no obtuvo resultados.';
 $lang['created_maint_request_event'] = 'Se ha creado la solicitud de mantenimiento.';
 $lang['com_added_maint_request_event'] = 'Se ha realizado un comentario para esta solicitud de mantenimiento: "<b>%s</b>"';
 $lang['wo_created_maint_request_event'] = 'Se ha creado una orden de trabajo para esta solicitud de mantenimiento con el código <b>%s</b>.';

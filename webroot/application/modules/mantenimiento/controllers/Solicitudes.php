@@ -96,7 +96,24 @@ class Solicitudes extends MX_Controller {
               $concept_code = $this->Solicitudes_mdl->_updated_concept;
 
               try {
-                $this->add_event_to_history($concept_code, $maint_request_code, $this->input->post('comments'));
+                $event_code = $this->add_event_to_history($concept_code, $maint_request_code, $this->input->post('comments'));
+                $event_data = $this->get_event_from_maintenance_request_history($event_code);
+
+                // Se obtiene el id del usuario que realizó la solicitud de mantenimiento, de esta forma se averigua
+                // el email al cuál enviar la notificación de un nuevo comentario para esta solicitud.
+                $applicant_user_id = modules::run('terceros/usuarios/get_user_id_from_username', $mr_data->CodSolicitante);
+                $applicant_user_email = $this->ion_auth->user($applicant_user_id)->row()->email;
+
+                // Parámetros incluidos en la notificación de correo electrónico.
+                $co_params = array(
+                  'comment_creator' => $event_data->NomUsuario,
+                  'comment_date' => $event_data->BeautyDate,
+                  'maint_request_code' => $maint_request_code,
+                  'asset_name' => $mr_data->NomActivo
+                );
+
+                // Se notifica la adición de un nuevo comentario en la solicitud
+                modules::run('mantenimiento/solicitudes/send_new_comment_email_notification', $applicant_user_email, $co_params['comment_creator'], $co_params['comment_date'], $co_params['maint_request_code'], $co_params['asset_name']);
               } catch (Exception $e) {
                 $view_data['add_event_error'] = $this->messages->add($e->getMessage(), 'danger');
               }
@@ -148,7 +165,30 @@ class Solicitudes extends MX_Controller {
               $concept_code = $this->Solicitudes_mdl->_updated_concept;
 
               try {
-                $this->add_event_to_history($concept_code, $maint_request_code, $this->input->post('comments'));
+                $event_code = $this->add_event_to_history($concept_code, $maint_request_code, $this->input->post('comments'));
+                $event_data = $this->get_event_from_maintenance_request_history($event_code);
+
+                // Se obtienen los correos electrónicos de los gestores de solicitudes de mantenimiento
+                $maint_req_manager_emails = modules::run('terceros/usuarios/get_emails_from_users_group', 'maint_req_manager');
+
+                // Parámetros incluidos en la notificación de correo electrónico.
+                $co_params = array(
+                  'comment_creator' => $event_data->NomUsuario,
+                  'comment_date' => $event_data->BeautyDate,
+                  'maint_request_code' => $maint_request_code,
+                  'asset_name' => $mr_data->NomActivo
+                );
+
+                // Si hay más de un gestor de solicitudes, se envían múltiples correos
+                if (count($maint_req_manager_emails > 1)) {
+                  foreach ($maint_req_manager_emails as $email) {
+                    modules::run('mantenimiento/solicitudes/send_new_comment_email_notification', $email->email, $co_params['comment_creator'], $co_params['comment_date'], $co_params['maint_request_code'], $co_params['asset_name']);
+                  }
+                }
+
+                if (count($maint_req_manager_emails === 1)) {
+                  modules::run('mantenimiento/solicitudes/send_new_comment_email_notification', $maint_req_manager_emails, $co_params['comment_creator'], $co_params['comment_date'], $co_params['maint_request_code'], $co_params['asset_name']);
+                }
               } catch (Exception $e) {
                 $view_data['add_event_error'] = $this->messages->add($e->getMessage(), 'danger');
               }
@@ -333,6 +373,22 @@ class Solicitudes extends MX_Controller {
   }
 
   /**
+   * Obtiene información de un evento del histórico de las solicitudes de
+   * mantenimiento.
+   *
+   * @param int $event_code Código de evento a consultar.
+   *
+   * @return object
+   */
+  public function get_event_from_maintenance_request_history($event_code) {
+    try {
+      return $this->Solicitudes_mdl->get_event_from_maintenance_request_history($event_code);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  /**
    * Añade un evento al histórico de una solicitud de mantenimiento.
    *
    * @param int $concept_code Código del concepto del evento.
@@ -389,6 +445,47 @@ class Solicitudes extends MX_Controller {
       return $result;
     } else {
       throw new Exception(lang('wo_email_notification_not_sended'));
+    }
+  }
+
+  /**
+   * Envía una notificación de correo electrónico para informar que se
+   * realizó un comentario en una solicitud de mantenimiento en específico.
+   *
+   * @param string $to Destinatario de la notificación de correo electrónico.
+   * @param string $co_creator Código del usuario que creó la orden de trabajo.
+   * @param string $co_date Fecha de la creación de la orden de trabajo.
+   * @param int $mr_code Código de la solicitud de mantenimiento.
+   * @param string $asset_name Nombre del activo al cuál se generó orden de trabajo.
+   *
+   * @return boolean
+   */
+  public function send_new_comment_email_notification($to, $co_creator, $co_date, $mr_code, $asset_name) {
+    $this->load->library('email');
+
+    $subject = '¡Se ha realizado un nuevo comentario en una solicitud de mantenimiento!';
+
+    $params = array(
+      'charset' => strtolower(config_item('charset')),
+      'subject' => $subject,
+      'user' => $co_creator,
+      'co_date' => $co_date,
+      'maint_request' => $mr_code,
+      'asset' => $asset_name
+    );
+
+    $body = $this->load->view('mantenimiento/notify_new_comment', $params, TRUE);
+
+    $result = $this->email->from('info@estradavelasquez.com', 'Notificaciones EVPIU')
+        ->to($to)
+        ->subject($subject)
+        ->message($body)
+        ->send();
+
+    if ($result) {
+      return $result;
+    } else {
+      throw new Exception(lang('comment_email_notification_not_sended'));
     }
   }
 }

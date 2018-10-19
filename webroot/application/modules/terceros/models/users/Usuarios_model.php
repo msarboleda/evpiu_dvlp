@@ -76,4 +76,30 @@ class Usuarios_model extends CI_Model {
       throw new Exception(lang('get_maintenance_technicians_no_results'));
     }
   }
+
+  /**
+	 * Obtiene los correos electrónicos de todos los usuarios de un grupo
+   * de la plataforma.
+	 *
+	 * @param string $group Grupo del cuál obtener los correos electrónicos
+   * de los usuarios.
+	 *
+	 * @return object
+	 */
+	public function get_emails_from_users_group($group) {
+		$this->db_evpiu->select('email');
+		$this->db_evpiu->where('grupo', $group);
+
+		$query = $this->db_evpiu->get($this->_users_groups_view_table);
+
+		if ($query->num_rows() > 1) {
+			return $query->result();
+    }
+
+    if ($query->num_rows() === 1) {
+			return $query->row('email');
+		}
+
+    throw new Exception(lang('get_emails_from_users_group_no_results'));
+	}
 }

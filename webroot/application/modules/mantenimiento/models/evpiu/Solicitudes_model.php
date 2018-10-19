@@ -205,6 +205,31 @@ class Solicitudes_model extends CI_Model {
   }
 
   /**
+   * Obtiene información de un evento del histórico de las solicitudes de
+   * mantenimiento.
+   *
+   * @param int $event_code Código de evento a consultar.
+   *
+   * @return object
+   */
+  public function get_event_from_maintenance_request_history($event_code) {
+    $this->load->library('Date_Utilities');
+
+    $this->db_evpiu->where('CodEvento', $event_code);
+    $query = $this->db_evpiu->get($this->_timeline_mr_view_table);
+
+    if ($query->num_rows() > 0) {
+      $row = $query->row();
+
+      $row->BeautyDate = ucfirst($this->date_utilities->format_date('%B %d, %Y %r', $row->Fecha));
+
+      return $row;
+    } else {
+      throw new Exception(lang('get_event_no_results'));
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una solicitud de mantenimiento.
    *
    * @param int $concept_code Código del concepto del evento.

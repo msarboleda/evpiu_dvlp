@@ -76,4 +76,22 @@ class Usuarios extends MX_Controller {
       return FALSE;
     }
   }
+
+  /**
+   * Obtiene los correos electrónicos de todos los usuarios de un grupo
+   * de la plataforma.
+   *
+   * @param string $group Grupo del cuál obtener los correos electrónicos
+   * de los usuarios.
+   *
+   * @return object
+   */
+  public function get_emails_from_users_group($group) {
+    try {
+      return $this->Usuarios_mdl->get_emails_from_users_group($group);
+      exit;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 }

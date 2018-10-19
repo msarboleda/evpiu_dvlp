@@ -120,7 +120,7 @@ class Verification_roles {
   /**
 	 * @param int|string|bool $id
 	 *
-	 * @return boolean
+	 * @return boolean Es un gestor de solicitudes de mantenimiento
 	 */
 	public function is_maint_req_manager($id = FALSE) {
 		$member_group = 'maint_req_manager';

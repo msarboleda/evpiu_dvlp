@@ -130,6 +130,38 @@ class Solicitudes extends MX_Controller {
 
         $view_data['app_errors'] = $this->messages->get();
         break;
+      case $this->verification_roles->is_maint_applicant($user_id):
+        $view_name = 'view_applicant_maint_req';
+
+        try {
+          $mr_data = $this->get_maintenance_request($maint_request_code);
+          $view_data['maint_request'] = $mr_data;
+
+          try {
+            $view_data['maint_request_history'] = $this->get_maintenance_request_history($maint_request_code);
+          } catch (Exception $e) {
+            $view_data['maint_request_history_error_message'] = $e->getMessage();
+          }
+
+          if ($this->input->post('comments')) {
+            if (trim($this->input->post('comments')) !== '') {
+              $concept_code = $this->Solicitudes_mdl->_updated_concept;
+
+              try {
+                $this->add_event_to_history($concept_code, $maint_request_code, $this->input->post('comments'));
+              } catch (Exception $e) {
+                $view_data['add_event_error'] = $this->messages->add($e->getMessage(), 'danger');
+              }
+
+              redirect('mantenimiento/solicitudes/view_maint_request/'.$maint_request_code);
+            }
+          }
+        } catch (Exception $e) {
+          $view_data['maint_request_not_exist_error'] = $e->getMessage();
+        }
+
+        $view_data['app_errors'] = $this->messages->get();
+        break;
       default:
         redirect('auth');
         break;

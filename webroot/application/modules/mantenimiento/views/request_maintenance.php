@@ -36,11 +36,13 @@
           <select class="form-control" id="damaged_asset" name="damaged_asset">
             <option></option>
           <?php
-            if (!empty($assets)) {
-              foreach ($assets as $asset): ?>
-                <option value="<?php echo $asset->CodigoActivo; ?>"><?php echo $asset->NombreActivo; ?></option>
+            if (isset($assets)) {
+              if (!empty($assets)) {
+                foreach ($assets as $asset): ?>
+                  <option value="<?php echo $asset->CodigoActivo; ?>"><?php echo $asset->NombreActivo; ?></option>
           <?php
-              endforeach;
+                endforeach;
+              }
             } ?>
           </select>
           <small class="text-muted"><?php echo lang('new_rm_damaged_asset_help'); ?></small>
@@ -50,7 +52,17 @@
           <textarea class="form-control" name="damage_description" rows="4"></textarea>
           <small class="text-muted"><?php echo lang('new_rm_damage_description_help'); ?></small>
         </div>
-        <?php echo form_submit('submit', lang('new_rm_submit_button'), 'id="submit" class="btn btn-primary"');?>
+        <?php
+          if (isset($assets_not_loaded)) {
+            if ($assets_not_loaded === TRUE) {
+              echo form_submit('submit', lang('new_rm_submit_button'), 'id="submit" class="btn btn-primary" disabled');
+            }
+          }
+
+          if (isset($assets)) {
+            echo form_submit('submit', lang('new_rm_submit_button'), 'id="submit" class="btn btn-primary"');
+          }
+        ?>
       <?php echo form_close();?>
       </div>
     </div>

@@ -14,6 +14,7 @@ class Solicitudes extends MX_Controller {
     parent::__construct();
 
     $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
+    $this->load->model('Mantenimiento/evpiu/Activos_model', 'Activos_mdl');
     $this->load->model('Mantenimiento/evpiu/Solicitudes_model', 'Solicitudes_mdl');
     $this->load->model('Mantenimiento/evpiu/Estados_solicitudes_model', 'EstSolicitudes_mdl');
     $this->load->library(array('header', 'verification_roles', 'messages'));
@@ -285,8 +286,15 @@ class Solicitudes extends MX_Controller {
         }
       }
 
-      // Se filtran solo los activos que se encuentren en buen estado.
-      $view_data['assets'] = modules::run('mantenimiento/activos/populate_assets_by_state', 1);
+      // Se filtran solo los activos de un responsable que se encuentren en buen estado.
+      try {
+        $asset_good_state = $this->Activos_mdl->_good_state;
+        $view_data['assets'] = modules::run('mantenimiento/activos/populate_assets_by_responsible_and_state', $asset_good_state, $this->ion_auth->user()->row()->username);
+      } catch (Exception $e) {
+        $this->messages->add($e->getMessage() . ' No tienes activos asignados.', 'danger');
+        $view_data['assets_not_loaded'] = TRUE;
+      }
+
       $view_data['valid_errors'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
       $view_data['app_msgs'] = $this->messages->get();
 

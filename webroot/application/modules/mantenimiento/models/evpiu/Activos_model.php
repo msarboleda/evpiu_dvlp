@@ -14,6 +14,15 @@ class Activos_model extends CI_Model {
   public $_master_view_table = 'V_Activos';
   public $_files_table = 'act_Archivos';
 
+  // Un activo en buen estado
+  public $_good_state = 1;
+
+  // Un activo en estado de reparación
+  public $_in_repair_state = 2;
+
+  // Un activo desechado
+  public $_discarded_state = 3;
+
 	public function __construct() {
     parent::__construct();
 
@@ -193,6 +202,31 @@ class Activos_model extends CI_Model {
   public function populate_assets_by_state($state_value) {
     $this->db_evpiu->select('CodigoActivo, NombreActivo');
     $this->db_evpiu->where('idEstado', $state_value);
+    $this->db_evpiu->order_by('NombreActivo', 'asc');
+    $query = $this->db_evpiu->get($this->_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('populate_assets_no_results'));
+    }
+  }
+
+
+  /**
+   * Obtiene los valores necesarios para poblar un control
+   * <select> con los activos asignados a un responsable y
+   * filtrando por el estado de estos.
+   *
+   * @param int $state_value Estado de los activo para obtener.
+   * @param string $responsible_user Usuario responsable del activo.
+   *
+   * @return object
+   */
+  public function populate_assets_by_responsible_and_state($state_value, $responsible_user) {
+    $this->db_evpiu->select('CodigoActivo, NombreActivo');
+    $this->db_evpiu->where('idEstado', $state_value);
+    $this->db_evpiu->where('Responsable', $responsible_user);
     $this->db_evpiu->order_by('NombreActivo', 'asc');
     $query = $this->db_evpiu->get($this->_table);
 

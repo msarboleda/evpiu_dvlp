@@ -362,4 +362,22 @@ class Activos extends MX_Controller {
       return FALSE;
     }
   }
+
+  /**
+   * Obtiene los valores necesarios para poblar un control
+   * <select> con los activos asignados a un responsable y
+   * filtrando por el estado de estos.
+   *
+   * @param int $state_value Estado de los activo para obtener.
+   * @param string $responsible_user Usuario responsable del activo.
+   *
+   * @return object
+   */
+  public function populate_assets_by_responsible_and_state($state_value, $responsible_user) {
+    try {
+      return $this->Activos_mdl->populate_assets_by_responsible_and_state($state_value, $responsible_user);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 }

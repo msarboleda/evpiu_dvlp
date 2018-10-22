@@ -15,7 +15,7 @@ class Ordenes_trabajo_model extends CI_Model {
   // Vista que fusiona el encabezado y detalle de las ordenes de trabajo
   public $_work_order_view_table = 'V_mant_OrdenesTrabajo';
   // Tabla de tipos de mantenimiento de las ordenes de trabajo
-  public $_maintenance_types_table = 'mant_TiposTrabajos';
+  public $_maintenance_types_table = 'mant_TiposMantenimiento';
 
   public function __construct() {
     parent::__construct();
@@ -90,7 +90,7 @@ class Ordenes_trabajo_model extends CI_Model {
    * @return object
    */
   public function get_all_maintenance_types() {
-    $this->db_evpiu->select('CodTipoTrabajo, Descripcion');
+    $this->db_evpiu->select('idTipoMantenimiento, Descripcion');
     $this->db_evpiu->order_by('Descripcion', 'asc');
     $query = $this->db_evpiu->get($this->_maintenance_types_table);
 

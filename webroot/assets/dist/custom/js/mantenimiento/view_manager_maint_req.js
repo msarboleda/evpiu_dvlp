@@ -125,7 +125,7 @@ async function return_maintenance_types() {
     var new_result = {};
 
     result.forEach(function(obj) {
-      new_result[obj.CodTipoTrabajo] = obj.Descripcion;
+      new_result[obj.idTipoMantenimiento] = obj.Descripcion;
     });
 
     return new_result;

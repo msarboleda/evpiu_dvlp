@@ -28,6 +28,31 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Obtiene todas las ordenes de trabajo existentes.
+   *
+   * @return object
+   */
+  public function get_all_work_orders() {
+    $this->load->library('Date_Utilities');
+    $query = $this->db_evpiu->get($this->_work_order_view_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->BeautyCreationDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaCreacion));
+        $result->BeautyStartDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaInicio));
+        $result->BeautyUpdateDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaActualizacion));
+        $result->BeautyEndDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaFin));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('get_all_work_orders_no_results'));
+    }
+  }
+
+  /**
    * Obtiene toda la información de una orden de trabajo en específico.
    *
    * @param int $work_order_code Código de la orden de trabajo.

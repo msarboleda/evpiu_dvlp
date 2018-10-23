@@ -137,5 +137,16 @@ class Verification_roles {
 		$member_group = 'maint_applicant';
 
 		return $this->CI->ion_auth->in_group($member_group, $id);
-	}
+  }
+
+  /**
+	 * @param int|string|bool $id
+	 *
+	 * @return boolean Es un técnico de mantenimiento
+	 */
+  public function is_maint_technician($id = FALSE) {
+    $member_group = 'maint_technician';
+
+		return $this->CI->ion_auth->in_group($member_group, $id);
+  }
 }

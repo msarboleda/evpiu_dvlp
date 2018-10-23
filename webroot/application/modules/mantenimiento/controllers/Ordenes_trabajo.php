@@ -23,6 +23,38 @@ class Ordenes_trabajo extends MX_Controller {
   }
 
   /**
+   * Lista de ordenes de trabajo para el gestor y técnicos de mantenimiento.
+   *
+   */
+  public function index() {
+    $header_data = $this->header->show_Categories_and_Modules();
+    $header_data['module_name'] = lang('index_heading');
+    $user_id = $this->ion_auth->user()->row()->id;
+
+    // Se muestran los datos necesarios dependiendo del rol del usuario.
+    switch ($user_id) {
+      case $this->ion_auth->is_admin($user_id):
+      case $this->verification_roles->is_maint_req_manager($user_id):
+      case $this->verification_roles->is_maint_technician($user_id):
+        $view_name = 'work_orders_index';
+
+        add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+        add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');
+        add_js('themes/elaadmin/js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js');
+        add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+        add_js('dist/custom/js/mantenimiento/work_orders_index.js');
+        break;
+      default:
+        redirect('auth');
+        break;
+    }
+
+    $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+    $this->load->view('mantenimiento'. DS . $view_name);
+    $this->load->view('footers'. DS .'footer_main_dashboard');
+  }
+
+  /**
    * Obtiene la información de una orden de trabajo en específico.
    *
    * @param int $work_order_code Código de la orden de trabajo.
@@ -99,6 +131,28 @@ class Ordenes_trabajo extends MX_Controller {
       $data = new stdClass();
       $data->has_error = true;
       $data->message = $e->getMessage();
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    }
+  }
+
+  /**
+   * Petición AJAX para obtener todos los tipos de mantenimiento
+   * de una orden de trabajo.
+   *
+   * @return string JSON
+   */
+  public function xhr_get_all_work_orders() {
+    try {
+      $work_orders = $this->OrdenesT_mdl->get_all_work_orders();
+
+      header('Content-Type: application/json');
+      echo json_encode($work_orders);
+    } catch (Exception $e) {
+      $data = new stdClass();
+      $data->message = $e->getMessage();
+      $data->data = array();
 
       header('Content-Type: application/json');
       echo json_encode($data);

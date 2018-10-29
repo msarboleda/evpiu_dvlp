@@ -126,6 +126,11 @@ async function return_maintenance_types() {
 
     result.forEach(function(obj) {
       new_result[obj.idTipoMantenimiento] = obj.Descripcion;
+
+      // No se debe listar el tipo de mantenimiento preventivo
+      if (obj.idTipoMantenimiento === 1) {
+        delete new_result[obj.idTipoMantenimiento];
+      }
     });
 
     return new_result;

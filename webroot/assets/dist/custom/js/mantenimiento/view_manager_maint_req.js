@@ -84,7 +84,7 @@ $(document).ready(function() {
                   type: 'success',
                   html: 'En caso de que quieras ir directo a ver la orden de trabajo, ' +
                   'puedes hacer clic aquí. <br><a class="color-primary" href=" ' +
-                  app_url + 'mantenimiento/orden_trabajo/view_work_order/' + maint_request_code + '">' +
+                  app_url + 'mantenimiento/ordenes_trabajo/view_work_order/' + maint_request_code + '">' +
                   ' <i class="fa fa-external-link"></i> Ver orden de trabajo</a>',
                   confirmButtonText: 'No, seguir viendo la solicitud'
                 }).then(function() {

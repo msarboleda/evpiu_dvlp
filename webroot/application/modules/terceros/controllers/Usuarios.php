@@ -94,4 +94,26 @@ class Usuarios extends MX_Controller {
       throw $e;
     }
   }
+
+  /**
+   * Rellena un form_dropdown() del helper form de CodeIgniter
+   * con todos los técnicos de mantenimiento.
+   *
+   * @return array
+   */
+  public function ci_populate_all_maintenance_technicians() {
+    try {
+      $query = $this->Usuarios_mdl->get_all_maintenance_technicians();
+
+      foreach ($query as $maint_tech) {
+        $maint_techs[$maint_tech->usuario] = $maint_tech->nombre_usuario;
+      }
+
+      $maint_techs[''] = 'Selecciona un técnico de mantenimiento...';
+
+      return $maint_techs;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 }

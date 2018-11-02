@@ -10,11 +10,32 @@
  */
 
 class Ordenes_trabajo_model extends CI_Model {
-  // Tabla de encabezados de ordenes de trabajo
+  /**
+   * Tabla de encabezados de ordenes de trabajo
+   *
+   * @var string $_work_order_header_table
+   */
   public $_work_order_header_table = 'mant_EncabezadoOrdenesTrabajo';
-  // Vista que fusiona el encabezado y detalle de las ordenes de trabajo
-  public $_work_order_view_table = 'V_mant_OrdenesTrabajo';
-  // Tabla de tipos de mantenimiento de las ordenes de trabajo
+
+  /**
+   * Tabla de tareas asignadas a ordenes de trabajo
+   *
+   * @var string $_work_order_details_table
+   */
+  public $_work_order_details_table = 'mant_DetallesOrdenesTrabajo';
+
+  /**
+   * Tabla de histórico de ordenes de trabajo
+   *
+   * @var string $_timeline_wo_table
+   */
+  public $_timeline_wo_table = 'mant_HistoricoOrdenesTrabajo';
+
+  /**
+   * Tabla de tipos de mantenimiento de las ordenes de trabajo
+   *
+   * @var string $_maintenance_types_table
+   */
   public $_maintenance_types_table = 'mant_TiposMantenimiento';
 
   /**
@@ -23,6 +44,27 @@ class Ordenes_trabajo_model extends CI_Model {
    * @var string $_work_types_table
    */
   public $_work_types_table = 'mant_TiposTrabajos';
+
+  /**
+   * Vista de ordenes de trabajo
+   *
+   * @var string $_work_order_view_table
+   */
+  public $_work_order_view_table = 'V_mant_OrdenesTrabajo';
+
+  /**
+   * Vista de tareas asignadas a ordenes de trabajo
+   *
+   * @var string $_work_order_details_view_table
+   */
+  public $_work_order_details_view_table = 'V_mant_DetallesOrdenesTrabajo';
+
+  /**
+   * Vista de histórico de ordenes de trabajo
+   *
+   * @var string $_timeline_wo_view_table
+   */
+  public $_timeline_wo_view_table = 'V_mant_HistoricoOrdenesTrabajo';
   public function __construct() {
     parent::__construct();
 

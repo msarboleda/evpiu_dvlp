@@ -107,6 +107,34 @@ class Ordenes_trabajo_model extends CI_Model {
    * @var int $_conclusion_task_concept
    */
   public $_conclusion_task_concept = 7;
+
+  /**
+   * Estado de orden de trabajo en revisión
+   *
+   * @var int $_in_review_state
+   */
+  public $_in_review_state = 1;
+
+  /**
+   * Estado de orden de trabajo en asignación de tareas
+   *
+   * @var int $_in_assignment_state
+   */
+  public $_in_assignment_state = 2;
+
+  /**
+   * Estado de orden de trabajo iniciada
+   *
+   * @var int $_started_state
+   */
+  public $_started_state = 3;
+
+  /**
+   * Estado de orden de trabajo cerrada
+   *
+   * @var int $_completed_state
+   */
+  public $_completed_state = 4;
   public function __construct() {
     parent::__construct();
 

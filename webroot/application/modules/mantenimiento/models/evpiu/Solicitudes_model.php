@@ -276,7 +276,10 @@ class Solicitudes_model extends CI_Model {
         $message = sprintf(lang('com_added_maint_request_event'), $comments);
         break;
       case $this->_work_order_created_concept:
-        $message = sprintf(lang('wo_created_maint_request_event'), $comments);
+        $message = sprintf(lang('wo_created_work_order_event'), $comments);
+        break;
+      case $this->_work_order_finished_concept:
+        $message = sprintf(lang('wo_finished_work_order_event'), $comments);
         break;
       case $this->_started_concept:
         $message = lang('started_maint_request_event');
@@ -319,6 +322,7 @@ class Solicitudes_model extends CI_Model {
       switch ($concept_code) {
         case $this->_updated_concept:
         case $this->_work_order_created_concept:
+        case $this->_work_order_finished_concept:
           $event_message = $this->set_event_message($concept_code, $comments);
           break;
         default:

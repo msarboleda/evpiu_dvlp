@@ -28,6 +28,9 @@ class Solicitudes_model extends CI_Model {
   // Concepto de orden de trabajo creada para la solicitud
   public $_work_order_created_concept = 3;
 
+  // Concepto de orden de trabajo finalizada
+  public $_work_order_finished_concept = 8;
+
   // Concepto de solicitud iniciada
   public $_started_concept = 4;
 

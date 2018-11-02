@@ -17,6 +17,12 @@ class Ordenes_trabajo_model extends CI_Model {
   // Tabla de tipos de mantenimiento de las ordenes de trabajo
   public $_maintenance_types_table = 'mant_TiposMantenimiento';
 
+  /**
+   * Tabla de tipos de trabajos de las ordenes de trabajo
+   *
+   * @var string $_work_types_table
+   */
+  public $_work_types_table = 'mant_TiposTrabajos';
   public function __construct() {
     parent::__construct();
 
@@ -123,6 +129,23 @@ class Ordenes_trabajo_model extends CI_Model {
       return $query->result();
     } else {
       throw new Exception(lang('get_all_maintenance_types_no_results'));
+    }
+  }
+
+  /**
+   * Obtiene todos los tipos de trabajo de una orden de trabajo.
+   *
+   * @return object
+   */
+  public function get_all_work_types() {
+    $this->db_evpiu->select('CodTipoTrabajo, Descripcion');
+    $this->db_evpiu->order_by('Descripcion', 'asc');
+    $query = $this->db_evpiu->get($this->_work_types_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('get_all_work_types_no_results'));
     }
   }
 }

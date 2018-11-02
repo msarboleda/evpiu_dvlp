@@ -180,4 +180,26 @@ class Ordenes_trabajo extends MX_Controller {
       echo json_encode($data);
     }
   }
+
+  /**
+   * Rellena un form_dropdown() del helper form de CodeIgniter
+   * con todos los tipos de trabajos.
+   *
+   * @return array
+   */
+  public function ci_populate_all_work_types() {
+    try {
+      $query = $this->OrdenesT_mdl->get_all_work_types();
+
+      foreach ($query as $work_type) {
+        $work_types[$work_type->CodTipoTrabajo] = $work_type->Descripcion;
+      }
+
+      $work_types[''] = 'Selecciona un tipo de trabajo...';
+
+      return $work_types;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 }

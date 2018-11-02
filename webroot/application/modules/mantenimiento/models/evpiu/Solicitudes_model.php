@@ -248,6 +248,19 @@ class Solicitudes_model extends CI_Model {
   }
 
   /**
+   * Actualiza los datos de una solicitud de mantenimiento.
+   *
+   * @param int $mr_code Código de la solicitud de mantenimiento.
+   * @param array $mr_data Datos que actualizarán la solicitud de mantenimiento.
+   *
+   * @return boolean
+   */
+  public function update_maintenance_request(int $mr_code, array $mr_data) {
+    return $this->db_evpiu->where('idSolicitud', $mr_code)
+                          ->update($this->_table, $mr_data);
+  }
+
+  /**
    * Establece un mensaje para cada evento de una solicitud de mantenimiento.
    *
    * @param int $concept_code Código del concepto del evento.

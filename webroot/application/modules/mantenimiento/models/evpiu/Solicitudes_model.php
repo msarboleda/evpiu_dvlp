@@ -43,6 +43,21 @@ class Solicitudes_model extends CI_Model {
   // Concepto de solicitud aprobada
   public $_approved_concept = 7;
 
+  // Estado de solicitud en revisión
+  public $_in_review_state = 1;
+
+  // Estado de solicitud aprobada
+  public $_approved_state = 2;
+
+  // Estado de solicitud en proceso
+  public $_in_process_state = 3;
+
+  // Estado de solicitud anulada
+  public $_canceled_state = 4;
+
+  // Estado de solicitud finalizada
+  public $_completed_state = 5;
+
 	public function __construct() {
     parent::__construct();
 

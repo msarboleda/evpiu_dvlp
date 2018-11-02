@@ -65,6 +65,48 @@ class Ordenes_trabajo_model extends CI_Model {
    * @var string $_timeline_wo_view_table
    */
   public $_timeline_wo_view_table = 'V_mant_HistoricoOrdenesTrabajo';
+
+  /**
+   * Concepto de orden de trabajo creada
+   *
+   * @var int $_created_concept
+   */
+  public $_created_concept = 1;
+
+  /**
+   * Concepto de orden de trabajo actualizada
+   *
+   * @var int $_updated_concept
+   */
+  public $_updated_concept = 2;
+
+  /**
+   * Concepto de tarea de orden de trabajo asignada a técnico
+   *
+   * @var int $_assigned_task_concept
+   */
+  public $_assigned_task_concept = 3;
+
+  /**
+   * Concepto de orden de trabajo iniciada
+   *
+   * @var int $_started_concept
+   */
+  public $_started_concept = 4;
+
+  /**
+   * Concepto de orden de trabajo finalizada
+   *
+   * @var int $_completed_concept
+   */
+  public $_completed_concept = 5;
+
+  /**
+   * Concepto de tarea de orden de trabajo concluida
+   *
+   * @var int $_conclusion_task_concept
+   */
+  public $_conclusion_task_concept = 7;
   public function __construct() {
     parent::__construct();
 

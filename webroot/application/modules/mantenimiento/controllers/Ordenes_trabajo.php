@@ -215,6 +215,33 @@ class Ordenes_trabajo extends MX_Controller {
   }
 
   /**
+   * Petición AJAX para iniciar una orden de trabajo.
+   *
+   * @return string JSON
+   */
+  public function xhr_start_work_order() {
+    $wo_code = $this->input->post('wo_code');
+
+    try {
+      $start_work_order = $this->OrdenesT_mdl->start_work_order($wo_code);
+
+      $data = new stdClass();
+      $data->success = $start_work_order;
+      $data->message = lang('successfully_started_work_order');
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    } catch (Exception $e) {
+      $data = new stdClass();
+      $data->success = FALSE;
+      $data->message = sprintf(lang('_sql_transaction_error'), __CLASS__, __FUNCTION__, $e->getCode(), $e->getMessage());
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    }
+  }
+
+  /**
    * Rellena un form_dropdown() del helper form de CodeIgniter
    * con todos los tipos de trabajos.
    *

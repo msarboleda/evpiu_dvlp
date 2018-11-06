@@ -328,6 +328,77 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Asigna una tarea a un técnico de mantenimiento en específico.
+   *
+   * Además es una transacción que reporta los conceptos de asignación
+   * en el histórico de la orden de trabajo y datos de actualización de
+   * la orden de trabajo.
+   *
+   * @param array $task_data Datos de la tarea a asignar.
+   * @param array $event_data Datos del evento para reportar en el histórico
+   * de la orden de trabajo.
+   *
+   * @return int|boolean
+   */
+  public function add_task_to_maint_technician(array $task_data, array $event_data) {
+    $wo_code = $event_data['wo_code'];
+    // Datos de la presente orden de trabajo
+    $wo_data = $this->get_work_order($wo_code);
+
+    $this->db_evpiu->trans_begin();
+
+    // Se agrega una tarea con un técnico de mantenimiento asignado
+    $insert_task = $this->insert_task($task_data);
+
+    if (!$insert_task) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Se obtiene el id de la tarea que se acabó de agregar
+    $task_id = $this->db_evpiu->insert_id();
+
+    // Se reporta el concepto de asignación de tarea a técnico en el histórico
+    // de la orden de trabajo
+    $add_event_history = $this->add_event_to_history($this->_assigned_task_concept, $wo_code, $event_data['additional']);
+
+    if (!$add_event_history) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Quien y cuando se actualizó la orden de trabajo
+    $update_data = array(
+      'Actualizo' => $this->ion_auth->user()->row()->username,
+      'FechaActualizacion' => date('Y-m-d H:i:s')
+    );
+
+    // En la primera asignación de una tarea en la orden de trabajo, se cambia su estado.
+    if ($wo_data->CodEstado === $this->_in_review_state) {
+      $update_data['Estado'] = $this->_in_assignment_state;
+    }
+
+    // Actualización de datos de la orden de trabajo
+    $update_work_order = $this->update_work_order($wo_code, $update_data);
+
+    if (!$update_work_order) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    if ($this->db_evpiu->trans_status() === TRUE) {
+      $this->db_evpiu->trans_commit();
+      return $task_id;
+    } else {
+      $this->db_evpiu->trans_rollback();
+      return FALSE;
+    }
+  }
+
+  /**
    * Actualiza la descripción de una orden de trabajo.
    *
    * Es una transacción que actualiza la descripción de una orden de trabajo

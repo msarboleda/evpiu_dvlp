@@ -89,6 +89,10 @@ class Ordenes_trabajo extends MX_Controller {
       $created_concept = $this->Solicitudes_mdl->_work_order_created_concept;
       modules::run('mantenimiento/solicitudes/add_event_to_history', $created_concept, $maint_request_code, $generated_work_order_code);
 
+      // Se reporta el evento de creación de orden de trabajo al histórico de la orden de trabajo
+      $wo_created_concept = $this->OrdenesT_mdl->_created_concept;
+      $this->OrdenesT_mdl->add_event_to_history($wo_created_concept, $generated_work_order_code);
+
       $maint_request_data = modules::run('mantenimiento/solicitudes/get_maintenance_request', $maint_request_code);
 
       // Únicamente cuando una solicitud de mantenimiento se encuentre en estado de revisión

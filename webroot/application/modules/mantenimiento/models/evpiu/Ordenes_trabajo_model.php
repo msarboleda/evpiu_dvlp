@@ -552,6 +552,26 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Obtiene los costos de los trabajos asignados en una orden de trabajo.
+   *
+   * @param int $wo_code Código de la orden de trabajo.
+   *
+   * @return object
+   */
+  public function get_work_order_costs(int $wo_code) {
+    $this->db_evpiu->select('CostoMat')
+                   ->where('CodOt', $wo_code);
+
+    $query = $this->db_evpiu->get($this->_work_order_details_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('get_work_order_costs_no_results'));
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una orden de trabajo.
    *
    * @param int $concept_code Código del concepto del evento.

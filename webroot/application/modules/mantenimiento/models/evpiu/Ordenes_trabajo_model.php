@@ -491,6 +491,33 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Obtiene el histórico de una orden de trabajo en específico.
+   *
+   * @param int $wo_code Código de la orden de trabajo.
+   *
+   * @return object
+   */
+  public function get_work_order_history(int $wo_code) {
+    $this->load->library('Date_Utilities');
+
+    $this->db_evpiu->where('idOrdenTrabajo', $wo_code);
+    $this->db_evpiu->order_by('Fecha', 'desc');
+    $query = $this->db_evpiu->get($this->_timeline_wo_view_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->BeautyEventDate = ucfirst($this->date_utilities->format_date('%B %d, %Y %r', $result->Fecha));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('get_work_orders_history_no_results'));
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una orden de trabajo.
    *
    * @param int $concept_code Código del concepto del evento.

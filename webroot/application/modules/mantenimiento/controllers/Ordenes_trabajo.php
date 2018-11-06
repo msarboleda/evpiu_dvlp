@@ -182,6 +182,39 @@ class Ordenes_trabajo extends MX_Controller {
   }
 
   /**
+   * Petición AJAX para reportar la conclusión de una tarea
+   * de una orden de trabajo.
+   *
+   * @return string JSON
+   */
+  public function xhr_report_task_conclusion() {
+    $wo_code = $this->input->post('wo_code');
+    $task_data = array(
+      'task_id' => $this->input->post('task_id'),
+      'task_description' => $this->input->post('task_description'),
+      'task_cost' => $this->input->post('task_cost')
+    );
+
+    try {
+      $task_conclusion = $this->OrdenesT_mdl->report_task_conclusion($wo_code, $task_data);
+
+      $data = new stdClass();
+      $data->success = $task_conclusion;
+      $data->message = lang('successfully_conclusion_task');
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    } catch (Exception $e) {
+      $data = new stdClass();
+      $data->success = FALSE;
+      $data->message = $e->getMessage();
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    }
+  }
+
+  /**
    * Rellena un form_dropdown() del helper form de CodeIgniter
    * con todos los tipos de trabajos.
    *

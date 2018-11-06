@@ -29,6 +29,7 @@ $lang['started_work_order_concept'] = 'Se ha iniciado de la orden de trabajo.';
 $lang['completed_work_order_concept'] = 'Se ha completado satisfactoriamente la orden de trabajo.';
 $lang['conclusion_task_work_order_concept'] = 'Se ha completado satisfactoriamente una tarea de la orden de trabajo.';
 $lang['not_established_work_order_concept'] = 'No se ha establecido un concepto válido para esta orden de trabajo.';
+$lang['successfully_conclusion_task'] = 'Se ha concluido la tarea satisfactoriamente.';
 $lang['not_successfully_conclusion_task'] = 'Ocurrió un problema al concluir la tarea, comuniquese con el área de Sistemas.';
 $lang['not_successfully_start_work_order'] = 'Ocurrió un problema al iniciar la orden de trabajo, comuníquese con el área de Sistemas.';
 $lang['not_successfully_finish_work_order'] = 'Ocurrió un problema al finalizar la orden de trabajo, comuníquese con el área de Sistemas.';

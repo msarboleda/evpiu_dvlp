@@ -518,6 +518,40 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Comprueba si todas las tareas asignadas en una orden de
+   * trabajo ya se encuentran concluidas.
+   *
+   * @param int $wo_code Código de la orden de trabajo
+   *
+   * @return boolean
+   */
+  public function check_assigned_tasks_completion(int $wo_code) {
+    $this->db_evpiu->select('Finalizada')
+                   ->where('CodOt', $wo_code);
+
+    $query = $this->db_evpiu->get($this->_work_order_details_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      $completed_tasks = TRUE;
+
+      foreach ($results as $result) {
+        if ($result->Finalizada === 1) {
+          $completed_tasks = TRUE;
+        } else {
+          $completed_tasks = FALSE;
+          break;
+        }
+      }
+
+      return $completed_tasks;
+    } else {
+      throw new Exception(lang('get_assigned_tasks_no_results'));
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una orden de trabajo.
    *
    * @param int $concept_code Código del concepto del evento.

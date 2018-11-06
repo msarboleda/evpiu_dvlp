@@ -285,4 +285,17 @@ class Ordenes_trabajo_model extends CI_Model {
                           ->update($this->_work_order_details_table, $task_data);
   }
 
+  /**
+   * Actualiza la información de una orden de trabajo.
+   *
+   * @param int $work_order_code Código de la orden de trabajo.
+   * @param array $data Datos específicos para actualizar una orden de trabajo.
+   *
+   * @return boolean
+   */
+  public function update_work_order(int $work_order_code, array $wo_data) {
+    return $this->db_evpiu->where('CodOt', $work_order_code)
+                          ->update($this->_work_order_header_table, $wo_data);
+  }
+
 }

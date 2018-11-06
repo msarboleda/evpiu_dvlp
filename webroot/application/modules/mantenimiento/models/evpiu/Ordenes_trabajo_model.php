@@ -135,10 +135,12 @@ class Ordenes_trabajo_model extends CI_Model {
    * @var int $_completed_state
    */
   public $_completed_state = 4;
+
   public function __construct() {
     parent::__construct();
 
     $this->db_evpiu = $this->load->database('EVPIU', true);
+    $this->load->model('Mantenimiento/evpiu/Activos_model', 'Activos_mdl');
     $this->load->model('Mantenimiento/evpiu/Solicitudes_model', 'Solicitudes_mdl');
     $this->load->model('Mantenimiento/evpiu/Estados_ordenes_trabajo_model', 'EstOrdenesT_mdl');
     $this->load->helper('language');
@@ -568,6 +570,102 @@ class Ordenes_trabajo_model extends CI_Model {
       return $query->result();
     } else {
       throw new Exception(lang('get_work_order_costs_no_results'));
+    }
+  }
+
+  /**
+   * Inicia una orden de trabajo.
+   *
+   * @param int $wo_code Código de la orden de trabajo.
+   *
+   * @return boolean
+   */
+  public function start_work_order(int $wo_code) {
+    $this->db_evpiu->trans_begin();
+
+    // Datos de modificación de la orden de trabajo
+    $update_wo_data = array(
+      'Estado' => $this->_started_state,
+      'Actualizo' => $this->ion_auth->user()->row()->username,
+      'FechaActualizacion' => date('Y-m-d H:i:s'),
+      'FechaInicio' => date('Y-m-d H:i:s')
+    );
+
+    // Actualiza los datos de la orden de trabajo
+    $update_work_order = $this->update_work_order($wo_code, $update_wo_data);
+
+    if (!$update_work_order) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Datos de modificación de la solicitud de mantenimiento
+    $update_mr_data = array(
+      'Estado' => $this->Solicitudes_mdl->_in_process_state,
+      'Actualizo' => $this->ion_auth->user()->row()->username,
+      'FechaActualizacion' => date('Y-m-d H:i:s')
+    );
+
+    // Obtiene datos de la orden de trabajo actual
+    $get_work_order = $this->get_work_order($wo_code);
+
+    // Obtiene el código de la solicitud de mantenimiento de esta orden de trabajo
+    $maint_request_code = $get_work_order->CodSolicitud;
+
+    // Actualiza los datos de la solicitud de mantenimiento
+    $update_maint_request = $this->Solicitudes_mdl->update_maintenance_request($maint_request_code, $update_mr_data);
+
+    if (!$update_maint_request) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Obtiene datos de la solicitud de mantenimiento vinculada a la orden de trabajo
+    $get_maintenance_request = $this->Solicitudes_mdl->get_maintenance_request($maint_request_code);
+
+    // Obtiene el código del activo de la solicitud de mantenimiento
+    $asset_code = $get_maintenance_request->CodActivo;
+
+    // Nuevo estado del activo de la solicitud de mantenimiento
+    $update_asset_data = array(
+      'idEstado' => $this->Activos_mdl->_in_repair_state
+    );
+
+    // Actualiza el estado del activo
+    $update_asset = $this->Activos_mdl->update_asset_new_version($asset_code, $update_asset_data);
+
+    if (!$update_asset) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Reporta el comienzo de la orden de trabajo en su histórico
+    $add_wo_event_history = $this->add_event_to_history($this->_started_concept, $wo_code);
+
+    if (!$add_wo_event_history) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Reportar el comienzo de la solicitud de mantenimiento en su histórico
+    $add_mr_event_history = $this->Solicitudes_mdl->add_event_to_history($this->Solicitudes_mdl->_started_concept, $maint_request_code);
+
+    if (!$add_mr_event_history) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    if ($this->db_evpiu->trans_status() === TRUE) {
+      $this->db_evpiu->trans_commit();
+      return TRUE;
+    } else {
+      $this->db_evpiu->trans_rollback();
+      throw new Exception(lang('not_successfully_start_work_order'));
     }
   }
 

@@ -123,6 +123,22 @@ class Activos_model extends CI_Model {
   }
 
   /**
+   * Actualiza la información de un activo específico.
+   *
+   * Es una versión simple de la actualización del activo, ya que a partir
+   * de este momento se empieza a trabajar de una mejor manera POO.
+   *
+   * @param string $asset_code Código del activo.
+   * @param array $data Datos a actualizar del activo.
+   *
+   * @return boolean
+   */
+  public function update_asset_new_version(string $asset_code, array $data) {
+    return $this->db_evpiu->where('CodigoActivo', $asset_code)
+                          ->update($this->_table, $data);
+  }
+
+  /**
    * Verificar si un activo existe en la base de datos.
    *
    * @param string $asset_code Código del activo.

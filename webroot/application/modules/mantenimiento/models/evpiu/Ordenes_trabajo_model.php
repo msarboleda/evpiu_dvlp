@@ -299,6 +299,53 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Actualiza la descripción de una orden de trabajo.
+   *
+   * Es una transacción que actualiza la descripción de una orden de trabajo
+   * específica y a la vez reporta un concepto de actualización en su histórico.
+   *
+   * @param int $wo_code Código de la orden de trabajo.
+   * @param string $wo_description Nueva descripción de la orden de trabajo.
+   *
+   * @return boolean
+   */
+  public function update_description(int $wo_code, string $wo_description) {
+    $this->db_evpiu->trans_begin();
+
+    $update_data = array(
+      'Descripcion' => $wo_description,
+      'Actualizo' => $this->ion_auth->user()->row()->username,
+      'FechaActualizacion' => date('Y-m-d H:i:s')
+    );
+
+    // Actualización de descripcion de la orden de trabajo
+    $update_work_order = $this->update_work_order($wo_code, $update_data);
+
+    if (!$update_work_order) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Se reporta el concepto de actualización de orden de trabajo
+    $add_event_history = $this->add_event_to_history($this->_updated_concept, $wo_code, $wo_description);
+
+    if (!$add_event_history) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    if ($this->db_evpiu->trans_status() === TRUE) {
+      $this->db_evpiu->trans_commit();
+      return TRUE;
+    } else {
+      $this->db_evpiu->trans_rollback();
+      return FALSE;
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una orden de trabajo.
    *
    * @param int $concept_code Código del concepto del evento.

@@ -446,6 +446,51 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Reporta la conclusión y el costo de una tarea de orden de trabajo.
+   *
+   * @param int $wo_code Código de la orden de trabajo.
+   * @param array $task_data Datos de operación de la tarea para concluir.
+   *
+   * @return boolean
+   */
+  public function report_task_conclusion(int $wo_code, array $task_data) {
+    $this->db_evpiu->trans_begin();
+
+    $update_data = array(
+      'CostoMat' => $task_data['task_cost'],
+      'DetalleOperacion' => $task_data['task_description'],
+      'Finalizada' => 1,
+      'FechaFinalizacion' => date('Y-m-d H:i:s')
+    );
+
+    // Conclusión de tarea de la orden de trabajo
+    $update_task = $this->update_task($task_data['task_id'], $update_data);
+
+    if (!$update_task) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    // Se reporta el concepto de conclusión de tarea de la orden de trabajo
+    $add_event_history = $this->add_event_to_history($this->_conclusion_task_concept, $wo_code);
+
+    if (!$add_event_history) {
+      $error_message = $this->db_evpiu->error()['message'];
+      $error_code = $this->db_evpiu->error()['code'] + 0;
+      throw new Exception($error_message, $error_code);
+    }
+
+    if ($this->db_evpiu->trans_status() === TRUE) {
+      $this->db_evpiu->trans_commit();
+      return TRUE;
+    } else {
+      $this->db_evpiu->trans_rollback();
+      throw new Exception(lang('not_successfully_conclusion_task'));
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una orden de trabajo.
    *
    * @param int $concept_code Código del concepto del evento.

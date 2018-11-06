@@ -298,4 +298,87 @@ class Ordenes_trabajo_model extends CI_Model {
                           ->update($this->_work_order_header_table, $wo_data);
   }
 
+  /**
+   * Establece un mensaje para cada evento de una orden de trabajo.
+   *
+   * @param int $concept_code Código del concepto del evento.
+   * @param string $additional Información adicional para conceptos específicos.
+   *
+   * @return string
+   */
+  private function set_event_message(int $concept_code, string $additional = '') {
+    switch ($concept_code) {
+      case $this->_created_concept:
+        $message = lang('created_work_order_concept');
+        break;
+      case $this->_updated_concept:
+        $message = sprintf(lang('updated_work_order_concept'), $additional);
+        break;
+      case $this->_assigned_task_concept:
+        $message = sprintf(lang('assigned_task_work_order_concept'), $additional);
+        break;
+      case $this->_started_concept:
+        $message = lang('started_work_order_concept');
+        break;
+      case $this->_completed_concept:
+        $message = lang('completed_work_order_concept');
+        break;
+      case $this->_conclusion_task_concept:
+        $message = lang('conclusion_task_work_order_concept');
+        break;
+      default:
+        $message = NULL;
+        break;
+    }
+
+    if ($message === NULL) {
+      throw new Exception(lang('not_established_work_order_concept'));
+    }
+
+    return $message;
+  }
+
+  /**
+   * Añade un evento al histórico de una orden de trabajo.
+   *
+   * @param int $concept_code Código del concepto del evento.
+   * @param int $wo_code Código de la orden de trabajo.
+   * @param string $additional Información adicional para conceptos específicos.
+   *
+   * @return int|boolean
+   */
+  public function add_event_to_history(int $concept_code, int $wo_code, string $additional = '') {
+    try {
+      // Si se añade un evento con el concepto de actualización, se anexan comentarios
+      // a la descripción del evento.
+      switch ($concept_code) {
+        case $this->_updated_concept:
+        case $this->_assigned_task_concept:
+          $event_message = $this->set_event_message($concept_code, $additional);
+          break;
+        default:
+          $event_message = $this->set_event_message($concept_code);
+          break;
+      }
+
+      $event_data = array(
+        'idOrdenTrabajo' => $wo_code,
+        'idConcepto' => $concept_code,
+        'DescEvento' => $event_message,
+        'Usuario' => $this->ion_auth->user()->row()->username,
+        'Fecha' => date('Y-m-d H:i:s')
+      );
+
+      $this->db_evpiu->insert($this->_timeline_wo_table, $event_data);
+      $insert_id = $this->db_evpiu->insert_id();
+
+      if (!empty($insert_id)) {
+        return $insert_id;
+      } else {
+        return FALSE;
+      }
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 }

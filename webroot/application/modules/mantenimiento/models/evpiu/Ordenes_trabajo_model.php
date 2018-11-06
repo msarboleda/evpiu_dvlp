@@ -260,4 +260,16 @@ class Ordenes_trabajo_model extends CI_Model {
       throw new Exception(lang('get_all_work_types_no_results'));
     }
   }
+
+  /**
+   * Agrega una nueva tarea de orden de trabajo.
+   *
+   * @param array $task_data Datos requeridos para agregar una tarea.
+   *
+   * @return boolean
+   */
+  public function insert_task(array $task_data) {
+    return $this->db_evpiu->insert($this->_work_order_details_table, $task_data);
+  }
+
 }

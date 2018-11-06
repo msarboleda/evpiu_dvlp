@@ -272,4 +272,17 @@ class Ordenes_trabajo_model extends CI_Model {
     return $this->db_evpiu->insert($this->_work_order_details_table, $task_data);
   }
 
+  /**
+   * Actualiza la información de una tarea de orden de trabajo.
+   *
+   * @param int $task_id Código de la orden de trabajo.
+   * @param array $data Datos específicos para actualizar una tarea.
+   *
+   * @return boolean
+   */
+  public function update_task(int $task_id, array $task_data) {
+    return $this->db_evpiu->where('idItem', $task_id)
+                          ->update($this->_work_order_details_table, $task_data);
+  }
+
 }

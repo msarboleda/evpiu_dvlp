@@ -670,6 +670,84 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Finaliza una orden de trabajo.
+   *
+   * @param int $wo_code Código de la orden de trabajo.
+   *
+   * @return boolean
+   */
+  public function finish_work_order(int $wo_code) {
+    $completed_tasks = $this->check_assigned_tasks_completion($wo_code);
+
+    if ($completed_tasks) {
+      $this->db_evpiu->trans_begin();
+
+      // Obtiene todos los costos de las tareas asignadas en la orden de trabajo
+      $work_order_costs = $this->get_work_order_costs($wo_code);
+
+      // Acumulador de costo total de la orden de trabajo
+      $costs_total = 0;
+
+      // Calcula el costo total de la orden de trabajo
+      foreach ($work_order_costs as $cost) {
+        $costs_total += $cost->CostoMat;
+      }
+
+      // Datos para actualizar la orden de trabajo
+      $update_wo_data = array(
+        'Estado' => $this->_completed_state,
+        'Costo' => $costs_total,
+        'Actualizo' => $this->ion_auth->user()->row()->username,
+        'FechaActualizacion' => date('Y-m-d H:i:s'),
+        'FechaFin' => date('Y-m-d H:i:s')
+      );
+
+      // Actualiza los datos de la orden de trabajo
+      $update_work_order = $this->update_work_order($wo_code, $update_wo_data);
+
+      if (!$update_work_order) {
+        $error_message = $this->db_evpiu->error()['message'];
+        $error_code = $this->db_evpiu->error()['code'] + 0;
+        throw new Exception($error_message, $error_code);
+      }
+
+      // Reporta la finalización de la orden de trabajo en su histórico
+      $add_wo_event_history = $this->add_event_to_history($this->_completed_concept, $wo_code);
+
+      if (!$add_wo_event_history) {
+        $error_message = $this->db_evpiu->error()['message'];
+        $error_code = $this->db_evpiu->error()['code'] + 0;
+        throw new Exception($error_message, $error_code);
+      }
+
+      // Obtiene datos de la orden de trabajo actual
+      $get_work_order = $this->get_work_order($wo_code);
+
+      // Obtiene el código de la solicitud de mantenimiento de esta orden de trabajo
+      $maint_request_code = $get_work_order->CodSolicitud;
+
+      // Reporta la finalización de orden de trabajo en el histórico de la solicitud de mantenimiento
+      $add_mr_event_history = $this->Solicitudes_mdl->add_event_to_history($this->Solicitudes_mdl->_work_order_finished_concept, $maint_request_code, $wo_code);
+
+      if (!$add_mr_event_history) {
+        $error_message = $this->db_evpiu->error()['message'];
+        $error_code = $this->db_evpiu->error()['code'] + 0;
+        throw new Exception($error_message, $error_code);
+      }
+
+      if ($this->db_evpiu->trans_status() === TRUE) {
+        $this->db_evpiu->trans_commit();
+        return TRUE;
+      } else {
+        $this->db_evpiu->trans_rollback();
+        throw new Exception(lang('not_successfully_finish_work_order'));
+      }
+    } else {
+      return FALSE;
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una orden de trabajo.
    *
    * @param int $concept_code Código del concepto del evento.

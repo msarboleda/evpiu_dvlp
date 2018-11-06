@@ -197,6 +197,35 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Obtiene todas las tareas asignadas de una orden de trabajo
+   * en específico.
+   *
+   * @param int $work_order_code Código de la orden de trabajo.
+   *
+   * @return object
+   */
+  public function get_work_order_details(int $work_order_code) {
+    $this->load->library('Date_Utilities');
+
+    $this->db_evpiu->where('CodOt', $work_order_code);
+    $this->db_evpiu->order_by('idItem', 'asc');
+    $query = $this->db_evpiu->get($this->_work_order_details_view_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->BeautyCreationDate = ucfirst($this->date_utilities->format_date('%B %d, %Y %r', $result->FechaCreacion));
+        $result->BeautyEndDate = ucfirst($this->date_utilities->format_date('%B %d, %Y %r', $result->FechaFinalizacion));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('get_work_orders_details_no_results'));
+    }
+  }
+
+  /**
    * Genera una orden de trabajo a partir de una solicitud de mantenimiento.
    *
    * @param int $maint_request_code Código de la solicitud de mantenimiento.

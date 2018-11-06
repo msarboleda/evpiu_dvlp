@@ -17,6 +17,7 @@ $lang['generate_work_order_from_mr_error'] = 'No se pudo crear la orden de traba
 $lang['get_work_order_no_results'] = 'La consulta de la orden de trabajo no obtuvo resultados.';
 $lang['get_all_maintenance_types_no_results'] = 'La consulta de los tipos de mantenimiento no obtuvo resultados.';
 $lang['get_all_work_orders_no_results'] = 'La consulta de las ordenes de trabajo no obtuvo resultados.';
+$lang['get_work_orders_details_no_results'] = 'La consulta de las tareas de los técnicos de mantenimiento no obtuvo resultados.';
 $lang['get_all_work_types_no_results'] = 'La consulta de los tipos de trabajos no obtuvo resultados.';
 $lang['created_work_order_concept'] = 'Se ha creado la orden de trabajo.';
 $lang['updated_work_order_concept'] = 'Se ha actualizado la descripción de la orden de trabajo. "<b>%s</b>"';

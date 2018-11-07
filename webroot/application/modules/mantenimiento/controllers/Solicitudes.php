@@ -92,6 +92,16 @@ class Solicitudes extends MX_Controller {
             $view_data['maint_request_history_error_message'] = $e->getMessage();
           }
 
+          // Muestra las ordenes de trabajo vinculadas a la solicitud
+          try {
+            $this->load->model('Mantenimiento/evpiu/Ordenes_trabajo_model', 'OrdenesT_mdl');
+            $view_data['show_linked_orders'] = TRUE;
+            $view_data['linked_work_orders'] = $this->OrdenesT_mdl->get_work_orders_from_maintenance_request($maint_request_code);
+          } catch (Exception $e) {
+            $view_data['show_linked_orders'] = FALSE;
+            $this->messages->add($e->getMessage(), 'danger');
+          }
+
           if ($this->input->post('comments')) {
             if (trim($this->input->post('comments')) !== '') {
               $concept_code = $this->Solicitudes_mdl->_updated_concept;

@@ -50,6 +50,35 @@ if (isset($maint_request)) { ?>
     </div>
   </div>
   <?php
+  if ($show_linked_orders === TRUE) { ?>
+  <div class="card">
+    <div class="card-body">
+      <h2><?php echo lang('assigned_work_orders_title'); ?></h2>
+      <div class="table-responsive m-t-20">
+        <table class="table" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            foreach ($linked_work_orders as $work_order): ?>
+            <tr>
+              <td><a href="<?php echo site_url('mantenimiento/ordenes_trabajo/view_work_order/').$work_order->CodOt; ?>" class="color-primary">Visualizar orden de trabajo (<?php echo $work_order->CodOt; ?>)</a></td>
+              <td><span class="badge badge-secondary"><?php echo $work_order->NomEstado; ?></span></td>
+            </tr>
+            <?php
+            endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <?php
+  } ?>
+  <?php
     if ($gen_wo_button_enabled === TRUE) { ?>
       <div class="card">
         <div class="card-body">

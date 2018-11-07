@@ -574,6 +574,28 @@ class Ordenes_trabajo_model extends CI_Model {
   }
 
   /**
+   * Obtiene las ordenes de trabajo anexadas a una solicitud
+   * de mantenimiento.
+   *
+   * @param int $mr_code Código de la solicitud de mantenimiento.
+   *
+   * @return object
+   */
+  public function get_work_orders_from_maintenance_request(int $mr_code) {
+    $this->db_evpiu->select('CodOt, CodEstado, NomEstado')
+                   ->where('CodSolicitud', $mr_code)
+                   ->order_by('CodOt', 'asc');
+
+    $query = $this->db_evpiu->get($this->_work_order_view_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('get_linked_work_orders_error'));
+    }
+  }
+
+  /**
    * Inicia una orden de trabajo.
    *
    * @param int $wo_code Código de la orden de trabajo.

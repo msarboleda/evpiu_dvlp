@@ -30,6 +30,7 @@ $lang['view_mr_card_first_title'] = 'Información básica';
 $lang['view_mr_card_second_title'] = 'Comentarios de la solicitud';
 $lang['view_mr_card_third_title'] = 'Acciones';
 $lang['view_mr_card_fourth_title'] = 'Últimos eventos';
+$lang['assigned_work_orders_title'] = 'Ordenes de trabajo asignadas';
 $lang['view_mr_comments_placeholder'] = 'Si necesitas adjuntar algún comentario a la solicitud de mantenimiento, aquí lo puedes hacer...';
 $lang['view_mr_update_submit_button'] = 'Enviar comentario';
 

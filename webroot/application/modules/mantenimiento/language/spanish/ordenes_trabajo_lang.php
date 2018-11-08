@@ -10,6 +10,21 @@
 // Index
 $lang['index_heading']                          = 'Listar ordenes de trabajo';
 
+// View work order
+$lang['vwo_heading']                            = 'Visualizar orden de trabajo';
+$lang['vwo_wo_description_label']               = 'Descripción de la orden de trabajo';
+$lang['vwo_work_type_label']                    = 'Tipo de trabajo';
+$lang['vwo_task_label']                         = 'Tarea a realizar';
+$lang['vwo_maintenance_technician_label']       = 'Técnico de la tarea';
+$lang['vwo_basic_info_title']                   = 'Información básica';
+$lang['vwo_detailed_info_title']                = 'Información detallada';
+$lang['vwo_tasks_assigment_title']              = 'Asignación de tareas';
+$lang['vwo_assigned_tasks_title']               = 'Tareas asignadas';
+$lang['vwo_actions_title']                      = 'Acciones';
+$lang['vwo_historical_title']                   = 'Histórico';
+$lang['successfully_assigned_task']             = 'Se ha asignado la tarea al técnico de mantenimiento satisfactoriamente.';
+$lang['successfully_wo_info_updated']           = 'Se ha actualizado la información de la orden de trabajo satisfactoriamente.';
+
 // Generate work order from maintenance request (xhr)
 $lang['generate_work_order_from_mr_success']    = 'Se generó la orden de trabajo con el código <b>%s</b> correctamente.';
 

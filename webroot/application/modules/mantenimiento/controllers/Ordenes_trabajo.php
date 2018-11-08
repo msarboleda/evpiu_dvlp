@@ -20,6 +20,7 @@ class Ordenes_trabajo extends MX_Controller {
     $this->load->library(array('header', 'verification_roles', 'messages'));
     $this->load->helper(array('language', 'load'));
     $this->lang->load('ordenes_trabajo');
+    $this->form_validation->set_error_delimiters('', '<br>');
   }
 
   /**
@@ -51,6 +52,321 @@ class Ordenes_trabajo extends MX_Controller {
 
     $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
     $this->load->view('mantenimiento'. DS . $view_name);
+    $this->load->view('footers'. DS .'footer_main_dashboard');
+  }
+
+  /**
+   * Visualizar una orden de trabajo.
+   *
+   * @param int $wo_code Código de la orden de trabajo.
+   *
+   */
+  public function view_work_order($wo_code) {
+    $header_data = $this->header->show_Categories_and_Modules();
+    $header_data['module_name'] = lang('vwo_heading');
+    $user_id = $this->ion_auth->user()->row()->id;
+
+    try {
+      // Se obtiene la información del encabezado de la orden de trabajo
+      $wo_data = $this->get_work_order($wo_code);
+
+      // Nombre de usuario del encargado de la orden de trabajo
+      $wo_manager_username = $wo_data->CodEncargado;
+
+      try {
+        // Id de usuario del encargado de la orden de trabajo
+        $wo_manager_user_id = modules::run('terceros/usuarios/get_user_id_from_username', $wo_manager_username);
+      } catch (Exception $e) {
+        $this->messages->add($e->getMessage(), 'danger');
+      }
+
+      // Indica que se puede mostrar la información del encabezado de
+      // la orden de trabajo en la vista
+      $view_data['show_work_order'] = TRUE;
+    } catch (Exception $e) {
+      // Indica que no se puede mostrar la orden de trabajo
+      $view_data['show_work_order'] = FALSE;
+      $this->messages->add(lang('get_work_order_no_results'), 'danger');
+    }
+
+    // Se muestran diferentes datos dependiendo del rol del usuario.
+    switch ($user_id) {
+      // Es administrador o gestor de mantenimiento de la plataforma
+      case $this->ion_auth->is_admin($user_id):
+      case $this->verification_roles->is_maint_req_manager($user_id):
+        $view_name = 'requests_manager_view_work_order';
+
+        // En caso de diligenciar el formulario de asignación de tareas
+        if ($this->input->post('work_type')) {
+          // Regla de 'form_validation' para el formulario de asignar tareas.
+          $task_rule = 'ordenes_trabajo/assign_tasks';
+
+          // Asignación de tareas
+          if ($this->form_validation->run($task_rule) === TRUE) {
+            $new_task = array(
+              'CodOt' => $wo_code,
+              'TipoTrabajo' => $this->input->post('work_type'),
+              'Tecnico' => $this->input->post('maint_tech'),
+              'Creo' => $this->ion_auth->user()->row()->username,
+              'FechaCreacion' => date('Y-m-d H:i:s'),
+              'Descripcion' => $this->input->post('task')
+            );
+
+            // Datos del evento a registrar
+            $work_order_event = array(
+              'wo_code' => $wo_code,
+              'additional' => $this->input->post('task')
+            );
+
+            // Verificación al añadir tarea a técnico
+            try {
+              $this->OrdenesT_mdl->add_task_to_maint_technician($new_task, $work_order_event);
+              $this->messages->add(lang('successfully_assigned_task'), 'success');
+              redirect('mantenimiento/ordenes_trabajo/view_work_order/' . $wo_code);
+            } catch (Exception $e) {
+              $err_message = sprintf(lang('_sql_transaction_error'), __CLASS__, __FUNCTION__, $e->getCode(), $e->getMessage());
+              $this->messages->add($err_message, 'danger');
+            }
+          }
+        }
+
+        // En caso de diligenciar el formulario de actualización de descripción
+        if ($this->input->post('wo_description')) {
+          // Regla de form_validation para el formulario de actualizar descripción.
+          $update_desc_rule = 'ordenes_trabajo/update_description';
+
+          if ($this->form_validation->run($update_desc_rule) === TRUE) {
+            $wo_description = $this->input->post('wo_description');
+
+            try {
+              $this->OrdenesT_mdl->update_description($wo_code, $wo_description);
+              $this->messages->add(lang('successfully_wo_info_updated'), 'success');
+              redirect('mantenimiento/ordenes_trabajo/view_work_order/' . $wo_code);
+            } catch (Exception $e) {
+              $err_message = sprintf(lang('_sql_transaction_error'), __CLASS__, __FUNCTION__, $e->getCode(), $e->getMessage());
+              $this->messages->add($err_message, 'danger');
+            }
+          }
+        }
+
+        // Se obtiene la información detallada de la orden de trabajo
+        try {
+          $wo_details_data = $this->OrdenesT_mdl->get_work_order_details($wo_code);
+
+          // Indica que se puede mostrar la información detallada de la orden de trabajo
+          $view_data['show_work_order_details'] = TRUE;
+          $view_data['work_order_details'] = $wo_details_data;
+        } catch (Exception $e) {
+          // Indica que no se puede mostrar la información detallada de la orden de trabajo
+          $view_data['show_work_order_details'] = FALSE;
+          $this->messages->add($e->getMessage(), 'danger');
+        }
+
+        // Se pobla el selector de tipos de trabajo para la asignación de tareas
+        try {
+          $work_types = $this->ci_populate_all_work_types();
+          $view_data['work_types'] = $work_types;
+        } catch (Exception $e) {
+          $view_data['work_types'] = array('' => $e->getMessage());
+        }
+
+        // Se pobla el selector de técnicos de mantenimiento para la asignación de tareas
+        try {
+          $maint_techs = modules::run('terceros/usuarios/ci_populate_all_maintenance_technicians');
+          $view_data['maint_techs'] = $maint_techs;
+        } catch (Exception $e) {
+          $view_data['maint_techs'] = array('' => $e->getMessage());
+        }
+
+        // Se obtienen los datos del histórico de la orden de trabajo
+        try {
+          $wo_history_data = $this->OrdenesT_mdl->get_work_order_history($wo_code);
+
+          // Indica que se puede mostrar el histórico de la orden de trabajo
+          $view_data['show_work_order_historical'] = TRUE;
+          $view_data['work_order_historical'] = $wo_history_data;
+        } catch (Exception $e) {
+          // Indica que no se puede mostrar el histórico de la orden de trabajo
+          $view_data['show_work_order_historical'] = FALSE;
+          $this->messages->add($e->getMessage(), 'danger');
+        }
+
+        // Estados de la orden de trabajo en los que se puede actualizar la descripción
+        // de la orden de trabajo
+        $view_data['update_desc_allowed_states'] = array(
+          $this->OrdenesT_mdl->_in_review_state,
+          $this->OrdenesT_mdl->_in_assignment_state
+        );
+
+        // Estados de la orden de trabajo en los que se puede asignar tareas a los
+        // técnicos de mantenimiento
+        $view_data['assign_tasks_allowed_states'] = array(
+          $this->OrdenesT_mdl->_in_review_state,
+          $this->OrdenesT_mdl->_in_assignment_state,
+          $this->OrdenesT_mdl->_started_state,
+        );
+
+        // Estados de la orden de trabajo en los que se pueden mostrar las acciones
+        // sobre la orden de trabajo
+        $view_data['show_actions_allowed_states'] = array(
+          $this->OrdenesT_mdl->_in_assignment_state,
+          $this->OrdenesT_mdl->_started_state
+        );
+
+        // Estado de la orden de trabajo en el que se puede mostrar el botón de reporte
+        // de conclusión de tarea
+        $view_data['rep_conclusion_allowed_state'] = $this->OrdenesT_mdl->_started_state;
+
+        // Estado de la orden de trabajo en el que se puede mostrar el botón de iniciar
+        // la orden de trabajo
+        $view_data['start_wo_allowed_state'] = $this->OrdenesT_mdl->_in_assignment_state;
+
+        // Estado de la orden de trabajo en el que se puede mostrar el botón de finalizar
+        // la orden de trabajo
+        $view_data['complete_wo_allowed_state'] = $this->OrdenesT_mdl->_started_state;
+
+        // Envia los datos de la orden de trabajo a la vista
+        $view_data['work_order'] = $wo_data;
+
+        // Datos de errores de validación de: form_validation
+        $view_data['valid_errors'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+
+        add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+        add_css('dist/custom/css/mantenimiento/view_work_order.css');
+        add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+        add_js('dist/custom/js/mantenimiento/view_manager_work_order.js');
+
+        // Obtiene todos los mensajes de notificación de la aplicación
+        $view_data['app_messages'] = $this->messages->get();
+        break;
+      // Es el encargado de la orden de trabajo
+      case $user_id == $wo_manager_user_id:
+        $view_name = 'manager_view_work_order';
+
+        // En caso de diligenciar el formulario de asignación de tareas
+        if ($this->input->post('work_type')) {
+          // Regla de 'form_validation' para el formulario de asignar tareas.
+          $task_rule = 'ordenes_trabajo/assign_tasks';
+
+          // Asignación de tareas
+          if ($this->form_validation->run($task_rule) === TRUE) {
+            $new_task = array(
+              'CodOt' => $wo_code,
+              'TipoTrabajo' => $this->input->post('work_type'),
+              'Tecnico' => $this->input->post('maint_tech'),
+              'Creo' => $this->ion_auth->user()->row()->username,
+              'FechaCreacion' => date('Y-m-d H:i:s'),
+              'Descripcion' => $this->input->post('task')
+            );
+
+            // Datos del evento a registrar
+            $work_order_event = array(
+              'wo_code' => $wo_code,
+              'additional' => $this->input->post('task')
+            );
+
+            // Verificación al añadir tarea a técnico
+            try {
+              $this->OrdenesT_mdl->add_task_to_maint_technician($new_task, $work_order_event);
+              $this->messages->add(lang('successfully_assigned_task'), 'success');
+              redirect('mantenimiento/ordenes_trabajo/view_work_order/' . $wo_code);
+            } catch (Exception $e) {
+              $err_message = sprintf(lang('_sql_transaction_error'), __CLASS__, __FUNCTION__, $e->getCode(), $e->getMessage());
+              $this->messages->add($err_message, 'danger');
+            }
+          }
+        }
+
+        // Se obtiene la información detallada de la orden de trabajo
+        try {
+          $wo_details_data = $this->OrdenesT_mdl->get_work_order_details($wo_code);
+
+          // Indica que se puede mostrar la información detallada de la orden de trabajo
+          $view_data['show_work_order_details'] = TRUE;
+          $view_data['work_order_details'] = $wo_details_data;
+        } catch (Exception $e) {
+          // Indica que no se puede mostrar la información detallada de la orden de trabajo
+          $view_data['show_work_order_details'] = FALSE;
+          $this->messages->add($e->getMessage(), 'danger');
+        }
+
+        // Se pobla el selector de tipos de trabajo para la asignación de tareas
+        try {
+          $work_types = $this->ci_populate_all_work_types();
+          $view_data['work_types'] = $work_types;
+        } catch (Exception $e) {
+          $view_data['work_types'] = array('' => $e->getMessage());
+        }
+
+        // Se pobla el selector de técnicos de mantenimiento para la asignación de tareas
+        try {
+          $maint_techs = modules::run('terceros/usuarios/ci_populate_all_maintenance_technicians');
+          $view_data['maint_techs'] = $maint_techs;
+        } catch (Exception $e) {
+          $view_data['maint_techs'] = array('' => $e->getMessage());
+        }
+
+        // Se obtienen los datos del histórico de la orden de trabajo
+        try {
+          $wo_history_data = $this->OrdenesT_mdl->get_work_order_history($wo_code);
+
+          // Indica que se puede mostrar el histórico de la orden de trabajo
+          $view_data['show_work_order_historical'] = TRUE;
+          $view_data['work_order_historical'] = $wo_history_data;
+        } catch (Exception $e) {
+          // Indica que no se puede mostrar el histórico de la orden de trabajo
+          $view_data['show_work_order_historical'] = FALSE;
+          $this->messages->add($e->getMessage(), 'danger');
+        }
+
+        // Estados de la orden de trabajo en los que se puede asignar tareas a los
+        // técnicos de mantenimiento
+        $view_data['assign_tasks_allowed_states'] = array(
+          $this->OrdenesT_mdl->_in_review_state,
+          $this->OrdenesT_mdl->_in_assignment_state,
+          $this->OrdenesT_mdl->_started_state,
+        );
+
+        // Estados de la orden de trabajo en los que se pueden mostrar las acciones
+        // sobre la orden de trabajo
+        $view_data['show_actions_allowed_states'] = array(
+          $this->OrdenesT_mdl->_in_assignment_state,
+          $this->OrdenesT_mdl->_started_state
+        );
+
+        // Estado de la orden de trabajo en el que se puede mostrar el botón de reporte
+        // de conclusión de tarea
+        $view_data['rep_conclusion_allowed_state'] = $this->OrdenesT_mdl->_started_state;
+
+        // Estado de la orden de trabajo en el que se puede mostrar el botón de iniciar
+        // la orden de trabajo
+        $view_data['start_wo_allowed_state'] = $this->OrdenesT_mdl->_in_assignment_state;
+
+        // Estado de la orden de trabajo en el que se puede mostrar el botón de finalizar
+        // la orden de trabajo
+        $view_data['complete_wo_allowed_state'] = $this->OrdenesT_mdl->_started_state;
+
+        // Envia los datos de la orden de trabajo a la vista
+        $view_data['work_order'] = $wo_data;
+
+        // Datos de errores de validación de: form_validation
+        $view_data['valid_errors'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+
+        add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+        add_css('dist/custom/css/mantenimiento/view_work_order.css');
+        add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+        add_js('dist/custom/js/mantenimiento/view_manager_work_order.js');
+
+        // Obtiene todos los mensajes de notificación de la aplicación
+        $view_data['app_messages'] = $this->messages->get();
+        break;
+      default:
+        redirect('auth');
+        break;
+    }
+
+    $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+    $this->load->view('mantenimiento'. DS . $view_name, $view_data);
     $this->load->view('footers'. DS .'footer_main_dashboard');
   }
 

@@ -101,5 +101,29 @@ $config = array(
       'label' => 'lang:new_rm_damage_description_label',
       'rules' => 'trim|required'
     )
+  ),
+  'ordenes_trabajo/assign_tasks' => array(
+    array(
+      'field' => 'work_type',
+      'label' => 'lang:vwo_work_type_label',
+      'rules' => 'trim|required'
+    ),
+    array(
+      'field' => 'task',
+      'label' => 'lang:vwo_task_label',
+      'rules' => 'trim|required'
+    ),
+    array(
+      'field' => 'maint_tech',
+      'label' => 'lang:vwo_maintenance_technician_label',
+      'rules' => 'trim|required'
+    )
+  ),
+  'ordenes_trabajo/update_description' => array(
+    array(
+      'field' => 'wo_description',
+      'label' => 'lang:vwo_wo_description_label',
+      'rules' => 'trim|required'
+    )
   )
 );

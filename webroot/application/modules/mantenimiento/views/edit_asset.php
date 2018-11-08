@@ -23,10 +23,10 @@
               <select class="form-control" id="clasif_sel" name="clasif_sel">
               <?php
                 if (!empty($classifications)) {
-                  foreach ($classifications as $classification): 
+                  foreach ($classifications as $classification):
                     if ($classification->idClasificacion === $asset->idClasificacion) { ?>
                       <option value="<?php echo $classification->idClasificacion; ?>" selected><?php echo $classification->Nombre; ?></option>
-              <?php 
+              <?php
                     } else { ?>
                       <option value="<?php echo $classification->idClasificacion; ?>"><?php echo $classification->Nombre; ?></option>
               <?php
@@ -41,10 +41,10 @@
               <select class="form-control" id="resp_sel" name="resp_sel">
               <?php
                 if (!empty($responsibles)) {
-                  foreach ($responsibles as $responsible): 
+                  foreach ($responsibles as $responsible):
                     if ($responsible->username == $asset->Responsable) { ?>
                       <option value="<?php echo $responsible->username; ?>" selected><?php echo $responsible->Nombre; ?></option>
-              <?php 
+              <?php
                     } else { ?>
                       <option value="<?php echo $responsible->username; ?>"><?php echo $responsible->Nombre; ?></option>
               <?php
@@ -77,10 +77,10 @@
               <select class="form-control" id="plant_sel" name="plant_sel">
               <?php
                 if (!empty($plants)) {
-                  foreach ($plants as $plant): 
+                  foreach ($plants as $plant):
                     if ($plant->idPlanta === $asset->idPlanta) { ?>
                       <option value="<?php echo $plant->idPlanta; ?>" selected><?php echo $plant->NombrePlanta; ?></option>
-              <?php 
+              <?php
                     } else { ?>
                       <option value="<?php echo $plant->idPlanta; ?>"><?php echo $plant->NombrePlanta; ?></option>
               <?php
@@ -95,10 +95,10 @@
               <select class="form-control" id="prior_sel" name="prior_sel">
               <?php
                 if (!empty($priorities)) {
-                  foreach ($priorities as $priority): 
+                  foreach ($priorities as $priority):
                     if ($priority->idPrioridad === $asset->idPrioridad) { ?>
                       <option value="<?php echo $priority->idPrioridad; ?>" selected><?php echo $priority->NombrePrioridad; ?></option>
-              <?php 
+              <?php
                     } else { ?>
                       <option value="<?php echo $priority->idPrioridad; ?>"><?php echo $priority->NombrePrioridad; ?></option>
               <?php
@@ -150,29 +150,29 @@
               </div>
             </div>
             <?php echo lang('edit_asset_attached_documents_label'); ?>
-            <?php 
+            <?php
               if (is_string($files)) { ?>
               <div class="alert alert-primary" role="alert"><?php echo $files; ?></div>
-            <?php 
+            <?php
               } ?>
             <div class="row">
             <?php
               if (is_array($files)) {
-              $fq = 1; 
+              $fq = 1;
               foreach ($files as $file): ?>
               <div class="col-md-4">
                 <div class="card mb-4 box-shadow">
-            <?php      
+            <?php
                   if ($file->Extension === '.pdf') { ?>
                   <a target="_blank" href="<?php echo site_url('assets/uploads/Mantenimiento/Anexos/'. $file->CodActivo .'/' . $file->NomArchivo); ?>">
                     <img src="<?php echo site_url('assets/dist/custom/icons/pdf.svg'); ?>" alt="">
                   </a>
-            <?php 
+            <?php
                   } else { ?>
                   <a href="<?php echo site_url('assets/uploads/Mantenimiento/Anexos/'. $file->CodActivo .'/' . $file->NomArchivo); ?>" data-lightbox="attached">
                     <img src="<?php echo site_url('assets/dist/custom/icons/image.svg'); ?>" alt="">
                   </a>
-            <?php 
+            <?php
                   } ?>
                   <div class="card-body">
                     <div class="list-group">
@@ -187,15 +187,15 @@
               </div>
             <?php
               $fq++;
-              endforeach; 
+              endforeach;
               } ?>
             </div>
           </div>
           <div class="text-right">
-          <?php echo form_submit('submit', lang('edit_asset_submit_button'), 'id="submit" class="btn btn-primary"');?> 
+          <?php echo form_submit('submit', lang('edit_asset_submit_button'), 'id="submit" class="btn btn-primary"');?>
           </div>
         </div>
       </div>
     </div>
-  <?php echo form_close();?>   
+  <?php echo form_close();?>
 </div>

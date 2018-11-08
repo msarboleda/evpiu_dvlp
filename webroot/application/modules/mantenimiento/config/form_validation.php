@@ -23,11 +23,6 @@ $config = array(
       'rules' => 'trim|required'
     ),
     array(
-      'field' => 'est_sel',
-      'label' => 'lang:edit_asset_state_label',
-      'rules' => 'trim|required'
-    ),
-    array(
       'field' => 'plant_sel',
       'label' => 'lang:edit_asset_plant_label',
       'rules' => 'trim|required'

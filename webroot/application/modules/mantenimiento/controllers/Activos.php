@@ -140,7 +140,6 @@ class Activos extends MX_Controller {
           $view_data['files'] = $asset_files;
           $view_data['classifications'] = modules::run('mantenimiento/clasificaciones/populate_classifications');
           $view_data['responsibles'] = modules::run('terceros/usuarios/populate_users');
-          $view_data['states'] = modules::run('mantenimiento/estados_activos/populate_assets_states');
           $view_data['plants'] = modules::run('mantenimiento/plantas/populate_plants');
           $view_data['priorities'] = modules::run('mantenimiento/prioridades/populate_priorities');
           $view_data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');

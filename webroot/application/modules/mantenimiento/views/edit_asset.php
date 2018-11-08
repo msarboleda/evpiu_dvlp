@@ -55,22 +55,8 @@
               </select>
             </div>
             <div class="form-group">
-              <?php echo lang('edit_asset_state_label', 'est_sel'); ?>
-              <select class="form-control" id="est_sel" name="est_sel">
-              <?php
-                if (!empty($states)) {
-                  foreach ($states as $state): 
-                    if ($state->idEstado === $asset->idEstado) { ?>
-                      <option value="<?php echo $state->idEstado; ?>" selected><?php echo $state->NombreEstado; ?></option>
-              <?php 
-                    } else { ?>
-                      <option value="<?php echo $state->idEstado; ?>"><?php echo $state->NombreEstado; ?></option>
-              <?php
-                    } ?>
-              <?php
-                  endforeach;
-                } ?>
-              </select>
+              <?php echo lang('edit_asset_state_label', 'state'); ?>
+              <input type="text" class="form-control" id="state" value="<?php echo $asset->NomEstado; ?>" readonly>
             </div>
             <div class="form-group">
               <?php echo lang('edit_asset_plant_label', 'plant_sel'); ?>

@@ -109,7 +109,6 @@ class Activos_model extends CI_Model {
       'NombreActivo' => $data['nom_activo'],
       'idClasificacion' => $data['clasif_sel'],
       'Responsable' => $data['resp_sel'],
-      'idEstado' => $data['est_sel'],
       'idPlanta' => $data['plant_sel'],
       'idPrioridad' => $data['prior_sel'],
       'UltimaRevision' => $data['ult_revis'],

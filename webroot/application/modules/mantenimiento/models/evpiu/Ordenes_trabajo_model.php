@@ -582,8 +582,7 @@ class Ordenes_trabajo_model extends CI_Model {
    * @return object
    */
   public function get_work_orders_from_maintenance_request(int $mr_code) {
-    $this->db_evpiu->select('CodOt, CodEstado, NomEstado')
-                   ->where('CodSolicitud', $mr_code)
+    $this->db_evpiu->where('CodSolicitud', $mr_code)
                    ->order_by('CodOt', 'asc');
 
     $query = $this->db_evpiu->get($this->_work_order_view_table);

@@ -84,7 +84,7 @@ if (isset($maint_request)) { ?>
         <div class="card-body">
           <h2><?php echo lang('view_mr_card_third_title'); ?></h2>
           <hr>
-          <button type="button" class="btn btn-primary" id="generate_work_order_btn">Generar Orden de Trabajo</button>
+          <button type="button" class="btn btn-primary" id="generate_work_order_btn"><i class="fa fa-play-circle"></i> Generar Orden de Trabajo</button>
         </div>
       </div>
   <?php

@@ -881,6 +881,39 @@ class Ordenes_trabajo_model extends CI_Model {
       throw new Exception(lang('tech_work_orders_no_results'));
     }
   }
+
+  /**
+   * Comprueba si todas las ordenes de trabajo asignadas en
+   * una solicitud ya se encuentran concluidas.
+   *
+   * @param int $request_code Código de la solicitud
+   *
+   * @return boolean
+   */
+  public function check_completed_work_orders(int $request_code) {
+    $this->db_evpiu->select('Estado')
+                   ->where('CodSolicitud', $request_code);
+
+    $query = $this->db_evpiu->get($this->_work_order_header_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      $is_completed = TRUE;
+
+      foreach ($results as $result) {
+        if ($result->Estado !== $this->_completed_state) {
+          $is_completed = FALSE;
+          break;
+        }
+      }
+
+      return $is_completed;
+    } else {
+      throw new Exception(lang('completed_work_orders_no_results'));
+    }
+  }
+
   /**
    * Obtiene los costos de las ordenes de trabajo asignadas en una solicitud.
    *

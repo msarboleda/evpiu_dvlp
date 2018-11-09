@@ -881,4 +881,23 @@ class Ordenes_trabajo_model extends CI_Model {
       throw new Exception(lang('tech_work_orders_no_results'));
     }
   }
+  /**
+   * Obtiene los costos de las ordenes de trabajo asignadas en una solicitud.
+   *
+   * @param int $request_code Código de la solicitud.
+   *
+   * @return object
+   */
+  public function get_request_costs(int $request_code) {
+    $this->db_evpiu->select('Costo')
+                   ->where('CodSolicitud', $request_code);
+
+    $query = $this->db_evpiu->get($this->_work_order_view_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->result();
+    } else {
+      throw new Exception(lang('request_costs_not_results'));
+    }
+  }
 }

@@ -40,6 +40,7 @@ $lang['get_work_orders_history_no_results']     = 'Aún no hay eventos en el his
 $lang['get_assigned_tasks_no_results']          = 'No se pudieron obtener las tareas finalizadas de la orden de trabajo.';
 $lang['get_work_order_costs_no_results']        = 'La consulta de costos de la orden de trabajo no obtuvo resultados';
 $lang['get_linked_work_orders_error']           = 'No hay de ordenes de trabajos vinculadas para la solicitud de mantenimiento.';
+$lang['request_costs_not_results']              = 'No hay costos registrados para la solicitud de mantenimiento';
 $lang['created_work_order_concept']             = 'Se ha creado la orden de trabajo.';
 $lang['updated_work_order_concept']             = 'Se ha actualizado la descripción de la orden de trabajo. "<b>%s</b>"';
 $lang['assigned_task_work_order_concept']       = 'Se ha asignado la tarea "<b>%s</b>" a un técnico de mantenimiento.';

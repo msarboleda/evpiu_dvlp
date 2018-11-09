@@ -33,6 +33,7 @@ $lang['generate_work_order_from_mr_error']      = 'No se pudo crear la orden de 
 $lang['get_work_order_no_results']              = 'La orden de trabajo no existe.';
 $lang['get_all_maintenance_types_no_results']   = 'La consulta de los tipos de mantenimiento no obtuvo resultados.';
 $lang['get_all_work_orders_no_results']         = 'La consulta de las ordenes de trabajo no obtuvo resultados.';
+$lang['tech_work_orders_no_results']            = 'No hay órdenes de trabajo asignadas.';
 $lang['get_work_orders_details_no_results']     = 'Aún no hay tareas asignadas para la orden de trabajo.';
 $lang['get_all_work_types_no_results']          = 'La consulta de los tipos de trabajos no obtuvo resultados.';
 $lang['get_work_orders_history_no_results']     = 'Aún no hay eventos en el histórico para las ordenes de trabajo.';

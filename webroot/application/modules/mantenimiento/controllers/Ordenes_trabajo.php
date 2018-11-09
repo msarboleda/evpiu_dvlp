@@ -32,18 +32,22 @@ class Ordenes_trabajo extends MX_Controller {
     $header_data['module_name'] = lang('index_heading');
     $user_id = $this->ion_auth->user()->row()->id;
 
+    add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+    add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');
+    add_js('themes/elaadmin/js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js');
+    add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+
     // Se muestran los datos necesarios dependiendo del rol del usuario.
     switch ($user_id) {
       case $this->ion_auth->is_admin($user_id):
       case $this->verification_roles->is_maint_req_manager($user_id):
+        $view_name = 'work_orders_index';
+        add_js('dist/custom/js/mantenimiento/manager_work_orders_index.js');
+        break;
       case $this->verification_roles->is_maint_technician($user_id):
         $view_name = 'work_orders_index';
-
-        add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
-        add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');
-        add_js('themes/elaadmin/js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js');
-        add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
-        add_js('dist/custom/js/mantenimiento/work_orders_index.js');
+        add_js('dist/custom/js/terceros/get_user_info.js');
+        add_js('dist/custom/js/mantenimiento/technician_work_orders_index.js');
         break;
       default:
         redirect('auth');

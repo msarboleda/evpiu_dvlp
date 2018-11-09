@@ -852,4 +852,34 @@ class Ordenes_trabajo_model extends CI_Model {
       throw $e;
     }
   }
+
+  /**
+   * Obtiene todas las ordenes de trabajo asignadas a un técnico de mantenimiento.
+   *
+   * @param string $technician_user Código de usuario del técnico de mantenimiento.
+   *
+   * @return object
+   */
+  public function get_work_orders_by_technician(string $technician_user) {
+    $this->load->library('Date_Utilities');
+
+    $this->db_evpiu->where('CodEncargado', $technician_user);
+
+    $query = $this->db_evpiu->get($this->_work_order_view_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->BeautyCreationDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaCreacion));
+        $result->BeautyStartDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaInicio));
+        $result->BeautyUpdateDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaActualizacion));
+        $result->BeautyEndDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaFin));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('tech_work_orders_no_results'));
+    }
+  }
 }

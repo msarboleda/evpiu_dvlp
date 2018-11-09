@@ -617,4 +617,26 @@ class Ordenes_trabajo extends MX_Controller {
       throw $e;
     }
   }
+
+  /**
+   * Petición AJAX para obtener las ordenes de trabajo asignadas a un técnico de mantenimiento.
+   *
+   */
+  public function xhr_get_work_orders_by_technician() {
+    $technician_user = $this->input->get('u');
+
+    try {
+      $work_orders = $this->OrdenesT_mdl->get_work_orders_by_technician($technician_user);
+
+      header('Content-Type: application/json');
+      echo json_encode($work_orders);
+    } catch (Exception $e) {
+      $data = new stdClass();
+      $data->message = $e->getMessage();
+      $data->data = array();
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    }
+  }
 }

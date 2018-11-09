@@ -213,6 +213,41 @@ class Solicitudes extends MX_Controller {
 
         $view_data['app_errors'] = $this->messages->get();
         break;
+      case $this->verification_roles->is_maint_technician($user_id):
+        $view_name = 'tech_view_maint_req';
+
+        try {
+          // Consulta los datos de una solicitud de mantenimiento
+          $mr_data = $this->get_maintenance_request($maint_request_code);
+
+          // Indica que se puede mostrar la solicitud de mantenimiento
+          $view_data['show_maint_request'] = TRUE;
+
+          // Envía los datos de la solicitud a la vista
+          $view_data['maint_request'] = $mr_data;
+
+          try {
+            // Consulta el histórico de una solicitud de mantenimiento
+            $mr_historical = $this->get_maintenance_request_history($maint_request_code);
+
+            // Indica que se puede mostrar el histórico de la solicitud
+            $view_data['show_maint_request_historical'] = TRUE;
+
+            // Envía los datos del histórico a la vista
+            $view_data['maint_request_historical'] = $mr_historical;
+          } catch (Exception $e) {
+            // Indica que no se puede mostrar el histórico de la solicitud
+            $view_data['show_maint_request_historical'] = FALSE;
+            $this->messages->add($e->getMessage(), 'danger');
+          }
+        } catch (Exception $e) {
+          // Indica que no se puede mostrar la solicitud de mantenimiento porque no existe
+          $view_data['show_maint_request'] = FALSE;
+          $this->messages->add($e->getMessage(), 'danger');
+        }
+
+        $view_data['app_messages'] = $this->messages->get();
+        break;
       default:
         redirect('auth');
         break;

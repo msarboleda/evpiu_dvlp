@@ -59,3 +59,4 @@ $lang['approved_maint_request_event'] = 'Se ha aprobado la solicitud de mantenim
 $lang['canceled_maint_request_event'] = 'Se ha anulado la solicitud de mantenimiento.';
 $lang['concept_not_established_maint_request'] = 'No se ha establecido un concepto válido para esta solicitud de mantenimiento.';
 $lang['add_event_to_history_error'] = 'No se pudo añadir el evento al histórico de la solicitud de mantenimiento.';
+$lang['unfinished_work_orders']                    = 'Aún tienes órdenes de trabajo pendientes por realizar, por favor realízalas y luego puedes finalizar la solicitud de mantenimiento.';

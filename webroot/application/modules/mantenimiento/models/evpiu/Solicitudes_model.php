@@ -261,6 +261,117 @@ class Solicitudes_model extends CI_Model {
   }
 
   /**
+   * Finaliza una solicitud.
+   *
+   * @param int $request_code Código de la solicitud
+   *
+   * @return type
+   */
+  public function finish_request(int $request_code) {
+    $this->load->model('Mantenimiento/evpiu/Activos_model', 'Activos_mdl');
+    $this->load->model('Mantenimiento/evpiu/Ordenes_trabajo_model', 'OrdenesT_mdl');
+
+    try {
+      $completed_work_orders = $this->OrdenesT_mdl->check_completed_work_orders($request_code);
+
+      if ($completed_work_orders) {
+        $this->db_evpiu->trans_begin();
+
+        try {
+          // Obtiene datos de la solicitud
+          $get_request = $this->get_maintenance_request($request_code);
+
+          // Obtiene el código del activo de la solicitud
+          $asset_code = $get_request->CodActivo;
+
+          try {
+            // Obtiene datos del activo
+            $get_asset = $this->Activos_mdl->get_asset($asset_code);
+
+            // Obtiene el costo de mantenimiento del activo
+            $asset_cost = $get_asset->CostoMantenimiento;
+
+            try {
+              // Obtiene los costos de las ordenes de trabajo vinculadas a la solicitud
+              $request_costs = $this->OrdenesT_mdl->get_request_costs($request_code);
+
+              // Acumulador para calcular el total de la solicitud
+              $request_total_cost = 0;
+
+              foreach ($request_costs as $cost) {
+                $request_total_cost += $cost->Costo;
+              }
+
+              // Nuevo costo acumulado del activo
+              $maintenance_cost = $asset_cost + $request_total_cost;
+
+              // Datos para actualizar la solicitud
+              $update_request_data = array(
+                'Estado' => $this->_completed_state,
+                'Actualizo' => $this->ion_auth->user()->row()->username,
+                'FechaActualizacion' => date('Y-m-d H:i:s'),
+                'FechaCierre' => date('Y-m-d H:i:s')
+              );
+
+              // Actualiza los datos de la solicitud
+              $update_request = $this->update_maintenance_request($request_code, $update_request_data);
+
+              if (!$update_request) {
+                $error_message = $this->db_evpiu->error()['message'];
+                $error_code = $this->db_evpiu->error()['code'] + 0;
+                throw new BDException($error_message, $error_code);
+              }
+
+              // Reporta la finalización de la solicitud en su histórico
+              $report_completed_request = $this->add_event_to_history($this->_completed_concept, $request_code);
+
+              if (!$report_completed_request) {
+                $error_message = $this->db_evpiu->error()['message'];
+                $error_code = $this->db_evpiu->error()['code'] + 0;
+                throw new Exception($error_message, $error_code);
+              }
+
+              // Datos para actualizar el activo
+              $update_asset_data = array(
+                'idEstado' => $this->Activos_mdl->_good_state,
+                'UltimaRevision' => date('Y-m-d'),
+                'CostoMantenimiento' => $maintenance_cost
+              );
+
+              // Actualiza los datos del activo
+              $update_asset = $this->Activos_mdl->update_asset_new_version($asset_code, $update_asset_data);
+
+              if (!$update_asset) {
+                $error_message = $this->db_evpiu->error()['message'];
+                $error_code = $this->db_evpiu->error()['code'] + 0;
+                throw new BDException($error_message, $error_code);
+              }
+
+              if ($this->db_evpiu->trans_status() === TRUE) {
+                $this->db_evpiu->trans_commit();
+                return TRUE;
+              } else {
+                $this->db_evpiu->trans_rollback();
+                throw new Exception('Error al ejecutar la transacción de finalización de solicitud.');
+              }
+            } catch (Exception $e) {
+              throw $e;
+            }
+          } catch (Exception $e) {
+            throw $e;
+          }
+        } catch (Exception $e) {
+          throw $e;
+        }
+      } else {
+        throw new Exception(lang('unfinished_work_orders'));
+      }
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  /**
    * Establece un mensaje para cada evento de una solicitud de mantenimiento.
    *
    * @param int $concept_code Código del concepto del evento.

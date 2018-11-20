@@ -9,6 +9,10 @@
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
  */
 
+ // Se crea una excepción propia para separar los errores de SQL de las
+ // excepciones corrientes
+class BDException extends Exception {}
+
 class Solicitudes extends MX_Controller {
   public function __construct() {
     parent::__construct();
@@ -539,6 +543,66 @@ class Solicitudes extends MX_Controller {
       return $result;
     } else {
       throw new Exception(lang('comment_email_notification_not_sended'));
+    }
+  }
+
+  /**
+   * Petición AJAX para finalizar una solicitud de mantenimiento.
+   *
+   * @return string JSON
+   */
+  public function xhr_finish_request() {
+    $request_code = $this->input->post('request_code');
+
+    try {
+      $finish_request = $this->Solicitudes_mdl->finish_request($request_code);
+
+      $data = new stdClass();
+      $data->success = $finish_request;
+      $data->message = lang('successfully_finished_request');
+
+      // Obtiene información de la solicitud
+      $get_request = $this->get_maintenance_request($request_code);
+
+      // Obtiene el código del activo de la solicitud de mantenimiento
+      $asset_code = $get_request->CodActivo;
+
+      // Obtiene información del activo de la solicitud
+      $get_asset = $this->Activos_mdl->get_asset($asset_code);
+
+      // Se obtiene el id del usuario que realizó la solicitud de mantenimiento, de esta forma se averigua
+      // el email al cuál enviar la notificación de la finalización de la solicitud.
+      $applicant_user_id = modules::run('terceros/usuarios/get_user_id_from_username', $get_request->CodSolicitante);
+      $applicant_user_email = $this->ion_auth->user($applicant_user_id)->row()->email;
+
+      // Parámetros incluidos en la notificación de correo electrónico.
+      $params = array(
+        'finished_date' => $get_request->BeautyEndDate,
+        'request_code' => $request_code,
+        'asset' => $get_asset->NomActivo,
+        'maintenance_cost' => $get_asset->CostoMantenimiento
+      );
+
+      // Envía una notificación de solicitud finalizada al solicitante del mantenimiento.
+      $this->send_finished_request_email_notification($applicant_user_email, $params);
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    } catch (BDException $e) {
+      $data = new stdClass();
+      $data->success = FALSE;
+      // Emite un SQL Error en la transacción de la finalización de la solicitud
+      $data->message = sprintf(lang('_sql_transaction_error'), __CLASS__, __FUNCTION__, $e->getCode(), $e->getMessage());
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+    } catch (Exception $e) {
+      $data = new stdClass();
+      $data->success = FALSE;
+      $data->message = $e->getMessage();
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
     }
   }
 

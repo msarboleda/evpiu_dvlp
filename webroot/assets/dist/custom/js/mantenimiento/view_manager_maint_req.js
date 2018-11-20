@@ -2,6 +2,7 @@ $(document).ready(function() {
   var app_url = document.location.origin + '/';
   var complete_app_url = window.location.href;
   var $btn_generate_work_order = $('#generate_work_order_btn');
+  var $btn_finish_maintenance_request = $('#finish_maintenance_request');
   var maint_request_code = complete_app_url.substr(complete_app_url.lastIndexOf('/') + 1);
 
   $btn_generate_work_order.on('click', function() {
@@ -108,6 +109,50 @@ $(document).ready(function() {
         });
       }
     })
+  });
+
+  $btn_finish_maintenance_request.on('click', function(e) {
+    e.preventDefault();
+
+    var btn = $(this);
+
+    btn.attr('disabled', true)
+       .text('Finalizando solicitud de mantenimiento...');
+
+    $.ajax({
+      url: app_url+'mantenimiento/solicitudes/xhr_finish_request',
+      type: 'post',
+      dataType: 'json',
+      data: {
+        request_code: maint_request_code,
+      }
+    }).done(function(response) {
+      if (response.success === true) {
+        swal({
+          title: 'Solicitud finalizada',
+          text: response.message,
+          type: 'success'
+        }).then(function() {
+          location.reload();
+        });
+      } else {
+        swal({
+          title: 'Error!',
+          html: response.message,
+          type: 'error'
+        }).then(function() {
+          location.reload();
+        });
+      }
+    }).fail(function() {
+      swal({
+        title: 'Error',
+        text: 'No se ha podido localizar el recurso para finalizar la solicitud de mantenimiento.',
+        type: 'error'
+      }).then(function() {
+        location.reload();
+      });
+    });
   });
 });
 

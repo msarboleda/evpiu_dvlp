@@ -85,6 +85,7 @@ if (isset($maint_request)) { ?>
           <h2><?php echo lang('view_mr_card_third_title'); ?></h2>
           <hr>
           <button type="button" class="btn btn-primary" id="generate_work_order_btn"><i class="fa fa-play-circle"></i> Generar Orden de Trabajo</button>
+          <button type="button" class="btn btn-danger" id="finish_maintenance_request"><i class="fa fa-stop-circle"></i> Finalizar solicitud de mantenimiento</button>
         </div>
       </div>
   <?php

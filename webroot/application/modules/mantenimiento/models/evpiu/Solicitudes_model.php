@@ -134,6 +134,7 @@ class Solicitudes_model extends CI_Model {
       $row = $query->row();
       $row->BeautyDamageDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $row->FechaIncidente));
       $row->BeautyRequestDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $row->FechaSolicitud));
+      $row->BeautyEndDate = ucfirst($this->date_utilities->format_date('%B %d, %Y %r', $row->FechaCierre));
 
       return $row;
     } else {

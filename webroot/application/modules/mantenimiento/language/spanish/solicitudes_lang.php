@@ -40,6 +40,9 @@ $lang['wo_email_notification_not_sended'] = 'Ocurrió un error al enviar la noti
 // Send new comment email notification
 $lang['comment_email_notification_not_sended'] = 'Ocurrió un error al enviar la notificación de comentario para una solicitud de mantenimiento.';
 
+// Send finished request email notification
+$lang['finished_request_notification_not_sended']   = 'Ocurrió un error al enviar la notificación de finalización de la solicitud de mantenimiento.';
+
 // Solicitudes_model
 $lang['add_rm_success'] = 'La solicitud de mantenimiento con el código <b>%s</b> se ha creado correctamente.';
 $lang['add_rm_error'] = 'No se pudo crear la solicitud de mantenimiento.';

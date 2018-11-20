@@ -541,4 +541,42 @@ class Solicitudes extends MX_Controller {
       throw new Exception(lang('comment_email_notification_not_sended'));
     }
   }
+
+  /**
+   * Envía una notificación de correo electrónico para informar que se
+   * finalizó solicitud de mantenimiento.
+   *
+   * @param string $to Destinatario de la notificación de correo electrónico.
+   * @param array $email_data Datos de la notificación de correo electrónico.
+   *
+   * @return boolean
+   */
+  public function send_finished_request_email_notification($to, $email_data) {
+    $this->load->library('email');
+
+    $subject = '¡Se ha finalizado correctamente tu solicitud de mantenimiento!';
+
+    $params = array(
+      'charset' => strtolower(config_item('charset')),
+      'subject' => $subject,
+      'finished_date' => $email_data['finished_date'],
+      'request_code' => $email_data['request_code'],
+      'asset' => $email_data['asset'],
+      'maintenance_cost' => $email_data['maintenance_cost']
+    );
+
+    $body = $this->load->view('mantenimiento/notify_finished_request', $params, TRUE);
+
+    $result = $this->email->from('info@estradavelasquez.com', 'Notificaciones EVPIU')
+        ->to($to)
+        ->subject($subject)
+        ->message($body)
+        ->send();
+
+    if ($result) {
+      return $result;
+    } else {
+      throw new Exception(lang('finished_request_notification_not_sended'));
+    }
+  }
 }

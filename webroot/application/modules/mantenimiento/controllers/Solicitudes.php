@@ -88,11 +88,18 @@ class Solicitudes extends MX_Controller {
 
         try {
           $mr_data = $this->get_maintenance_request($maint_request_code);
+
+          // Indica que se puede mostrar información de la solicitud
+          $view_data['show_request'] = TRUE;
           $view_data['maint_request'] = $mr_data;
 
           try {
             $view_data['maint_request_history'] = $this->get_maintenance_request_history($maint_request_code);
+            // Indica que se puede mostrar el histórico de la solicitud
+            $view_data['show_request_historical'] = TRUE;
           } catch (Exception $e) {
+            // Indica que no se puede mostrar el histórico de la solicitud
+            $view_data['show_request_historical'] = FALSE;
             $view_data['maint_request_history_error_message'] = $e->getMessage();
           }
 
@@ -137,27 +144,64 @@ class Solicitudes extends MX_Controller {
             }
           }
 
-          // Estados en los que se debe habilitar la generación de orden de trabajo.
-          $avalaible_states_for_gen_work_orders = array(
+          // Estados principales para realizar acciones sobre una solicitud.
+          $principal_request_states = array(
             $this->EstSolicitudes_mdl->_in_revision_state,
             $this->EstSolicitudes_mdl->_approved_state,
             $this->EstSolicitudes_mdl->_in_process_state
           );
 
-          // En caso de que el estado de la solicitud de mantenimiento coincida con alguno
-          // de los estados habilitados para generar una orden de trabajo, se muestra el
-          // botón, de lo contrario se oculta toda la sección de acciones.
-          if (in_array($mr_data->CodEstado, $avalaible_states_for_gen_work_orders)) {
-            $view_data['gen_wo_button_enabled'] = TRUE;
+          // Estados en los que se debe habilitar la sección de acciones.
+          $actions_states = $principal_request_states;
 
-            add_js('dist/custom/js/mantenimiento/work_orders.js');
-            add_js('dist/custom/js/terceros/maintenance_technicians.js');
-            add_js('dist/custom/js/mantenimiento/view_manager_maint_req.js');
+          // Estados en los que se debe habilitar la generación de orden de trabajo.
+          $gen_work_orders_states = $principal_request_states;
+
+          // Estados en los que se deben habilitar los comentarios.
+          $make_comments_states = $principal_request_states;
+
+          // Estado en el que se debe habilitar la finalización de la solicitud.
+          $finish_requests_state = $this->EstSolicitudes_mdl->_in_process_state;
+
+          // En caso de que el estado de la solicitud coincida con alguno de los
+          // estados habilitados, se podrá mostrar el menú de acciones.
+          if (in_array($mr_data->CodEstado, $actions_states)) {
+            $view_data['show_actions'] = TRUE;
           } else {
-            $view_data['gen_wo_button_enabled'] = FALSE;
+            $view_data['show_actions'] = FALSE;
           }
+
+          // En caso de que el estado de la solicitud coincida con alguno de los
+          // estados habilitados, se podrá mostrar el botón para generar una orden de trabajo.
+          if (in_array($mr_data->CodEstado, $gen_work_orders_states)) {
+            $view_data['show_gen_work_order'] = TRUE;
+          } else {
+            $view_data['show_gen_work_order'] = FALSE;
+          }
+
+          // En caso de que el estado de la solicitud coincida con alguno de los
+          // estados habilitados, se podrá mostrar la caja de comentarios.
+          if (in_array($mr_data->CodEstado, $make_comments_states)) {
+            $view_data['show_comments'] = TRUE;
+          } else {
+            $view_data['show_comments'] = FALSE;
+          }
+
+          // En caso de que el estado de la solicitud coincida con el estado habilitado,
+          // se podrá mostrar el botón para finalizar la solicitud.
+          if ($mr_data->CodEstado === $finish_requests_state) {
+            $view_data['show_finish_request'] = TRUE;
+          } else{
+            $view_data['show_finish_request'] = FALSE;
+          }
+
+          add_js('dist/custom/js/mantenimiento/work_orders.js');
+          add_js('dist/custom/js/terceros/maintenance_technicians.js');
+          add_js('dist/custom/js/mantenimiento/view_manager_maint_req.js');
         } catch (Exception $e) {
-          $view_data['maint_request_not_exist_error'] = $e->getMessage();
+          // Indica que no se puede mostrar la solicitud porque no existe
+          $view_data['show_request'] = FALSE;
+          $view_data['request_not_exist_error'] = $e->getMessage();
         }
 
         $view_data['app_errors'] = $this->messages->get();
@@ -167,11 +211,17 @@ class Solicitudes extends MX_Controller {
 
         try {
           $mr_data = $this->get_maintenance_request($maint_request_code);
+          // Indica que se puede mostrar información de la solicitud
+          $view_data['show_request'] = TRUE;
           $view_data['maint_request'] = $mr_data;
 
           try {
+            // Indica que se puede mostrar el histórico de la solicitud
+            $view_data['show_request_historical'] = TRUE;
             $view_data['maint_request_history'] = $this->get_maintenance_request_history($maint_request_code);
           } catch (Exception $e) {
+            // Indica que no se puede mostrar el histórico de la solicitud
+            $view_data['show_request_historical'] = FALSE;
             $view_data['maint_request_history_error_message'] = $e->getMessage();
           }
 
@@ -211,7 +261,27 @@ class Solicitudes extends MX_Controller {
               redirect('mantenimiento/solicitudes/view_maint_request/'.$maint_request_code);
             }
           }
+
+          // Estados principales para realizar acciones sobre una solicitud.
+          $principal_request_states = array(
+            $this->EstSolicitudes_mdl->_in_revision_state,
+            $this->EstSolicitudes_mdl->_approved_state,
+            $this->EstSolicitudes_mdl->_in_process_state
+          );
+
+          $make_comments_states = $principal_request_states;
+
+          // En caso de que el estado de la solicitud coincida con alguno de los
+          // estados habilitados y el solicitante sea igual al usuario actual,
+          // se podrá mostrar la caja de comentarios.
+          if (in_array($mr_data->CodEstado, $make_comments_states) && $mr_data->CodSolicitante === $this->ion_auth->user()->row()->username) {
+            $view_data['show_comments'] = TRUE;
+          } else {
+            $view_data['show_comments'] = FALSE;
+          }
         } catch (Exception $e) {
+          // Indica que no se puede mostrar información de la solicitud
+          $view_data['show_request'] = FALSE;
           $view_data['maint_request_not_exist_error'] = $e->getMessage();
         }
 

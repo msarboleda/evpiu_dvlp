@@ -13,7 +13,7 @@
 ?>
 
 <?php
-if (isset($maint_request)) { ?>
+if ($show_request) { ?>
 <div class="col-12">
   <div class="card">
     <div class="card-body">
@@ -49,6 +49,8 @@ if (isset($maint_request)) { ?>
       </div>
     </div>
   </div>
+  <?php
+  if ($show_comments) { ?>
   <div class="card">
     <div class="card-body">
       <h2><?php echo lang('view_mr_card_second_title'); ?></h2>
@@ -61,36 +63,36 @@ if (isset($maint_request)) { ?>
       <?php echo form_close();?>
     </div>
   </div>
+  <?php
+  } ?>
   <div class="card">
     <div class="card-body">
       <h2><?php echo lang('view_mr_card_fourth_title'); ?></h2>
       <hr>
       <?php
-        if (isset($maint_request_history)) {
-          if (is_array($maint_request_history)) { ?>
-            <div class="profiletimeline">
+        if ($show_request_historical) { ?>
+          <div class="profiletimeline">
       <?php
-            foreach ($maint_request_history as $event): ?>
-              <div class="sl-item">
-                <div class="sl-left">
-                  <img src="<?php echo $this->config->item('assets_path').'themes/elaadmin/images/users/user.png'; ?>" alt="user" class="img-circle">
-                </div>
-                <div class="sl-right">
-                  <div>
-                    <a href="javascript:void(0);" class="color-primary"><?php echo $event->NomUsuario; ?></a> <span class="sl-date"><?php echo $event->BeautyEventDate; ?></span>
-                    <p>ha realizado un nuevo evento: <b><?php echo $event->NomConcepto; ?></b></p>
-                    <blockquote class="m-t-10">
-                      <?php echo $event->Descripcion; ?>
-                    </blockquote>
-                  </div>
+          foreach ($maint_request_history as $event): ?>
+            <div class="sl-item">
+              <div class="sl-left">
+                <img src="<?php echo $this->config->item('assets_path').'themes/elaadmin/images/users/user.png'; ?>" alt="user" class="img-circle">
+              </div>
+              <div class="sl-right">
+                <div>
+                  <a href="javascript:void(0);" class="color-primary"><?php echo $event->NomUsuario; ?></a> <span class="sl-date"><?php echo $event->BeautyEventDate; ?></span>
+                  <p>ha realizado un nuevo evento: <b><?php echo $event->NomConcepto; ?></b></p>
+                  <blockquote class="m-t-10">
+                    <?php echo $event->Descripcion; ?>
+                  </blockquote>
                 </div>
               </div>
-              <hr>
-      <?php
-            endforeach; ?>
             </div>
+            <hr>
       <?php
-          }
+          endforeach; ?>
+          </div>
+      <?php
         }
 
         if (isset($maint_request_history_error_message)) { ?>
@@ -104,10 +106,7 @@ if (isset($maint_request)) { ?>
   </div>
 </div>
 <?php
-} ?>
-
-<?php
-if (isset($maint_request_not_exist_error)) { ?>
+} else { ?>
   <div class="alert alert-danger" role="alert">
 <?php
     echo $maint_request_not_exist_error; ?>

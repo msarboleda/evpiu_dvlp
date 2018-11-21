@@ -31,7 +31,7 @@ $(document).ready(function() {
       },
       {
         title: 'Costo',
-        input: 'text',
+        input: 'number',
         inputPlaceholder: 'Ingresa el costo de la tarea realizada',
         inputValidator: (value) => {
           return !value && 'Debes proporcionar un costo para la tarea.';

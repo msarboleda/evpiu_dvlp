@@ -382,60 +382,68 @@ class Solicitudes extends MX_Controller {
    *
    */
   public function new_request_maintenance() {
-    if ($this->verification_roles->is_member() || $this->ion_auth->is_admin()) {
-      $header_data = $this->header->show_Categories_and_Modules();
-      $header_data['module_name'] = lang('new_rm_heading');
+    $header_data = $this->header->show_Categories_and_Modules();
+    $header_data['module_name'] = lang('new_rm_heading');
+    $user_id = $this->ion_auth->user()->row()->id;
 
-      if ($this->form_validation->run('solicitudes/req_maintenance') === TRUE) {
-        try {
-          $maint_request_code = $this->save_request_maintenance($this->input->post());
-          $success_message = sprintf($this->lang->line('add_rm_success'), $maint_request_code);
-          $this->messages->add($success_message, 'success');
+    add_css('themes/elaadmin/css/lib/select2/select2.min.css');
+    add_css('dist/vendor/pickadate.js/themes/classic.css');
+    add_css('dist/vendor/pickadate.js/themes/classic.date.css');
+    add_css('dist/vendor/pickadate.js/themes/classic.time.css');
+    add_js('themes/elaadmin/js/lib/select2/select2.full.min.js');
+    add_js('themes/elaadmin/js/lib/select2/i18n/es.js');
+    add_js('dist/vendor/pickadate.js/picker.js');
+    add_js('dist/vendor/pickadate.js/picker.date.js');
+    add_js('dist/vendor/pickadate.js/picker.time.js');
+    add_js('dist/vendor/pickadate.js/translations/date_es_ES.js');
+    add_js('dist/vendor/pickadate.js/translations/time_es_ES.js');
 
+    switch ($user_id) {
+      // Es un solicitante de mantenimiento
+      case $this->verification_roles->is_maint_applicant($user_id):
+        $view_name = 'applicant_request_maintenance';
+
+        if ($this->form_validation->run('solicitudes/req_maintenance') === TRUE) {
           try {
-            $concept_code = $this->Solicitudes_mdl->_created_concept;
-            $this->add_event_to_history($concept_code, $maint_request_code);
+            $maint_request_code = $this->save_request_maintenance($this->input->post());
+            $success_message = sprintf($this->lang->line('add_rm_success'), $maint_request_code);
+            $this->messages->add($success_message, 'success');
 
-            redirect('mantenimiento/solicitudes/new_request_maintenance/');
+            try {
+              $concept_code = $this->Solicitudes_mdl->_created_concept;
+              $this->add_event_to_history($concept_code, $maint_request_code);
+
+              redirect('mantenimiento/solicitudes/new_request_maintenance/');
+            } catch (Exception $e) {
+              $this->messages->add($e->getMessage(), 'danger');
+            }
           } catch (Exception $e) {
             $this->messages->add($e->getMessage(), 'danger');
           }
-        } catch (Exception $e) {
-          $this->messages->add($e->getMessage(), 'danger');
         }
-      }
 
-      // Se filtran solo los activos de un responsable que se encuentren en buen estado.
-      try {
-        $asset_good_state = $this->Activos_mdl->_good_state;
-        $view_data['assets'] = modules::run('mantenimiento/activos/populate_assets_by_responsible_and_state', $asset_good_state, $this->ion_auth->user()->row()->username);
-      } catch (Exception $e) {
-        $this->messages->add($e->getMessage() . ' No tienes activos asignados.', 'danger');
-        $view_data['assets_not_loaded'] = TRUE;
-      }
+        // Se filtran solo los activos de un responsable que se encuentren en buen estado.
+        try {
+          $asset_good_state = $this->Activos_mdl->_good_state;
+          $view_data['assets'] = modules::run('mantenimiento/activos/populate_assets_by_responsible_and_state', $asset_good_state, $this->ion_auth->user()->row()->username);
+        } catch (Exception $e) {
+          $this->messages->add($e->getMessage() . ' No tienes activos asignados.', 'danger');
+          $view_data['assets_not_loaded'] = TRUE;
+        }
 
-      $view_data['valid_errors'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-      $view_data['app_msgs'] = $this->messages->get();
-
-      add_css('themes/elaadmin/css/lib/select2/select2.min.css');
-      add_css('dist/vendor/pickadate.js/themes/classic.css');
-      add_css('dist/vendor/pickadate.js/themes/classic.date.css');
-      add_css('dist/vendor/pickadate.js/themes/classic.time.css');
-      add_js('themes/elaadmin/js/lib/select2/select2.full.min.js');
-      add_js('themes/elaadmin/js/lib/select2/i18n/es.js');
-      add_js('dist/vendor/pickadate.js/picker.js');
-      add_js('dist/vendor/pickadate.js/picker.date.js');
-      add_js('dist/vendor/pickadate.js/picker.time.js');
-      add_js('dist/vendor/pickadate.js/translations/date_es_ES.js');
-      add_js('dist/vendor/pickadate.js/translations/time_es_ES.js');
-      add_js('dist/custom/js/mantenimiento/request_maintenance.js');
-
-      $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
-      $this->load->view('mantenimiento'. DS .'request_maintenance', $view_data);
-      $this->load->view('footers'. DS .'footer_main_dashboard');
-    } else {
-      redirect('auth');
+        add_js('dist/custom/js/mantenimiento/request_maintenance.js');
+        break;
+      default:
+        redirect('auth');
+        break;
     }
+
+    $view_data['valid_errors'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+    $view_data['app_msgs'] = $this->messages->get();
+
+    $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+    $this->load->view('mantenimiento'. DS . $view_name, $view_data);
+    $this->load->view('footers'. DS .'footer_main_dashboard');
   }
 
   /**

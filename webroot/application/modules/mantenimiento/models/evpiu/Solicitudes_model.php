@@ -150,18 +150,7 @@ class Solicitudes_model extends CI_Model {
    * @return int|boolean
    */
   public function add_request_maintenance($data) {
-    $real_damage_date = $data['damage_date'] . ' ' . $data['damage_time'];
-
-    $formatted_data = array(
-      'CodActivo' => strtoupper($data['damaged_asset']),
-      'Solicitante' => $this->ion_auth->user()->row()->username,
-      'FechaIncidente' => $real_damage_date,
-      'Fecha' => date('Y-m-d H:i:s'),
-      'Estado' => 1,
-      'Descripcion' => $data['damage_description']
-    );
-
-    $this->db_evpiu->insert($this->_table, $formatted_data);
+    $this->db_evpiu->insert($this->_table, $data);
     $insert_id = $this->db_evpiu->insert_id();
 
     if (!empty($insert_id)) {

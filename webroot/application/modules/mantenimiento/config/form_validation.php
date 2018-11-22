@@ -97,6 +97,23 @@ $config = array(
       'rules' => 'trim|required'
     )
   ),
+  'solicitudes/planned_maintenance' => array(
+    array(
+      'field' => 'planned_date',
+      'label' => 'lang:planned_date_label',
+      'rules' => 'trim|required'
+    ),
+    array(
+      'field' => 'planned_time',
+      'label' => 'lang:planned_time_label',
+      'rules' => 'trim|required'
+    ),
+    array(
+      'field' => 'planned_asset',
+      'label' => 'lang:planned_asset_label',
+      'rules' => 'trim|required'
+    )
+  ),
   'ordenes_trabajo/assign_tasks' => array(
     array(
       'field' => 'work_type',

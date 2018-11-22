@@ -12,6 +12,11 @@ $lang['index_heading'] = 'Listar solicitudes de mantenimiento';
 
 // New request maintenance
 $lang['new_rm_heading'] = 'Solicitar mantenimiento';
+$lang['planned_heading'] = 'Planear mantenimiento';
+$lang['planned_date_label'] = 'Fecha de planeación';
+$lang['planned_time_label'] = 'Hora de planeación';
+$lang['planned_asset_label'] = 'Activo planeado';
+$lang['plan_submit_button'] = 'Planear mantenimiento';
 $lang['new_rm_damage_date_label'] = 'Fecha del daño';
 $lang['new_rm_damage_time_label'] = 'Hora del daño';
 $lang['new_rm_damaged_asset_label'] = 'Activo afectado';
@@ -23,6 +28,9 @@ $lang['new_rm_damage_date_help'] = 'Debe seleccionar la fecha en la que se produ
 $lang['new_rm_damage_time_help'] = 'Debe seleccionar la hora en la que se produjo el daño del equipo.';
 $lang['new_rm_damaged_asset_help'] = 'Debe seleccionar el equipo al que se produjo el incidente.';
 $lang['new_rm_damage_description_help'] = 'Escriba una breve descripción del incidente ocurrido al equipo seleccionado.';
+$lang['planned_date_help'] = 'Debe seleccionar una fecha de planeación de mantenimiento para el activo.';
+$lang['planned_time_help'] = 'Debe seleccionar una hora de planeación de mantenimiento para el activo.';
+$lang['planned_asset_help'] = 'Debe seleccionar el equipo al que se planea el mantenimiento.';
 
 // View maintenance request
 $lang['view_mr_heading'] = 'Visualizar solicitud de mantenimiento';

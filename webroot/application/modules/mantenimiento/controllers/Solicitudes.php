@@ -398,6 +398,52 @@ class Solicitudes extends MX_Controller {
     add_js('dist/vendor/pickadate.js/translations/time_es_ES.js');
 
     switch ($user_id) {
+      // Es un planeador de ordenes preventivas
+      case $this->ion_auth->is_admin($user_id):
+      case $this->verification_roles->is_maint_req_manager($user_id):
+        $header_data['module_name'] = lang('planned_heading');
+        $view_name = 'manager_maintenance_request';
+
+        if ($this->form_validation->run('solicitudes/planned_maintenance') === TRUE) {
+          try {
+            $planned_date = $this->input->post('planned_date').' '.$this->input->post('planned_time');
+
+            $mr_data = array(
+              'CodActivo' => strtoupper($this->input->post('planned_asset')),
+              'Solicitante' => $this->ion_auth->user()->row()->username,
+              'FechaIncidente' => $planned_date,
+              'Fecha' => date('Y-m-d H:i:s'),
+              'Estado' => 6,
+              'Descripcion' => 'Mantenimiento preventivo'
+            );
+
+            $maint_request_code = $this->save_request_maintenance($mr_data);
+            $success_message = sprintf($this->lang->line('add_rm_success'), $maint_request_code);
+            $this->messages->add($success_message, 'success');
+
+            try {
+              $concept_code = $this->Solicitudes_mdl->_created_concept;
+              $this->add_event_to_history($concept_code, $maint_request_code);
+
+              redirect('mantenimiento/solicitudes/new_request_maintenance');
+            } catch (Exception $e) {
+              $this->messages->add($e->getMessage(), 'danger');
+            }
+          } catch (Exception $e) {
+            $this->messages->add($e->getMessage(), 'danger');
+          }
+        }
+
+        try {
+          $view_data['assets'] = modules::run('mantenimiento/activos/populate_assets');
+          $view_data['assets_loaded'] = TRUE;
+        } catch (Exception $e) {
+          $view_data['assets_loaded'] = FALSE;
+          $this->messages->add($e->getMessage() , 'danger');
+        }
+
+        add_js('dist/custom/js/mantenimiento/manager_maintenance_request.js');
+        break;
       // Es un solicitante de mantenimiento
       case $this->verification_roles->is_maint_applicant($user_id):
         $header_data['module_name'] = lang('new_rm_heading');

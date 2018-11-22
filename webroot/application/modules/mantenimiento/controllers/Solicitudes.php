@@ -383,7 +383,6 @@ class Solicitudes extends MX_Controller {
    */
   public function new_request_maintenance() {
     $header_data = $this->header->show_Categories_and_Modules();
-    $header_data['module_name'] = lang('new_rm_heading');
     $user_id = $this->ion_auth->user()->row()->id;
 
     add_css('themes/elaadmin/css/lib/select2/select2.min.css');
@@ -401,11 +400,23 @@ class Solicitudes extends MX_Controller {
     switch ($user_id) {
       // Es un solicitante de mantenimiento
       case $this->verification_roles->is_maint_applicant($user_id):
+        $header_data['module_name'] = lang('new_rm_heading');
         $view_name = 'applicant_request_maintenance';
 
         if ($this->form_validation->run('solicitudes/req_maintenance') === TRUE) {
           try {
-            $maint_request_code = $this->save_request_maintenance($this->input->post());
+            $damage_date = $this->input->post('damage_date').' '.$this->input->post('damage_time');
+
+            $mr_data = array(
+              'CodActivo' => strtoupper($this->input->post('damaged_asset')),
+              'Solicitante' => $this->ion_auth->user()->row()->username,
+              'FechaIncidente' => $damage_date,
+              'Fecha' => date('Y-m-d H:i:s'),
+              'Estado' => 1,
+              'Descripcion' => $this->input->post('damage_description')
+            );
+
+            $maint_request_code = $this->save_request_maintenance($mr_data);
             $success_message = sprintf($this->lang->line('add_rm_success'), $maint_request_code);
             $this->messages->add($success_message, 'success');
 

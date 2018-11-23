@@ -27,6 +27,9 @@ class Estados_solicitudes_model extends CI_Model {
   // Estado de solicitud completada
   public $_completed_state = 5;
 
+  // Estado de solicitud planeada
+  public $_planned_state = 6;
+
   public function __construct() {
     parent::__construct();
   }

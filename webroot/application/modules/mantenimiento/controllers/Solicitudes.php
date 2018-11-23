@@ -148,7 +148,8 @@ class Solicitudes extends MX_Controller {
           $principal_request_states = array(
             $this->EstSolicitudes_mdl->_in_revision_state,
             $this->EstSolicitudes_mdl->_approved_state,
-            $this->EstSolicitudes_mdl->_in_process_state
+            $this->EstSolicitudes_mdl->_in_process_state,
+            $this->EstSolicitudes_mdl->_planned_state
           );
 
           // Estados en los que se debe habilitar la sección de acciones.

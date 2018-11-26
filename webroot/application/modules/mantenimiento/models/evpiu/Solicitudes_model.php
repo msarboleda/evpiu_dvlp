@@ -43,6 +43,9 @@ class Solicitudes_model extends CI_Model {
   // Concepto de solicitud aprobada
   public $_approved_concept = 7;
 
+  // Concepto de solicitud planeada
+  public $_planned_concept = 9;
+
   // Estado de solicitud en revisión
   public $_in_review_state = 1;
 
@@ -393,6 +396,9 @@ class Solicitudes_model extends CI_Model {
         break;
       case $this->_approved_concept:
         $message = lang('approved_maint_request_event');
+        break;
+      case $this->_planned_concept:
+        $message = lang('planned_maint_request_event');
         break;
       default:
         $message = NULL;

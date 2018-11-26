@@ -423,7 +423,7 @@ class Solicitudes extends MX_Controller {
             $this->messages->add($success_message, 'success');
 
             try {
-              $concept_code = $this->Solicitudes_mdl->_created_concept;
+              $concept_code = $this->Solicitudes_mdl->_planned_concept;
               $this->add_event_to_history($concept_code, $maint_request_code);
 
               redirect('mantenimiento/solicitudes/new_request_maintenance');

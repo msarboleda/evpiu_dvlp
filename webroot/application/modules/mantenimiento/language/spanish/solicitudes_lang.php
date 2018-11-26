@@ -67,6 +67,7 @@ $lang['wo_finished_work_order_event'] = 'Se ha finalizado la orden de trabajo co
 $lang['started_maint_request_event'] = 'Se ha comenzado a trabajar con el activo de la solicitud de mantenimiento.';
 $lang['completed_maint_request_event'] = 'Se ha completado satisfactoriamente la solicitud de mantenimiento.';
 $lang['approved_maint_request_event'] = 'Se ha aprobado la solicitud de mantenimiento.';
+$lang['planned_maint_request_event'] = 'Se ha planeado un mantenimiento.';
 $lang['canceled_maint_request_event'] = 'Se ha anulado la solicitud de mantenimiento.';
 $lang['concept_not_established_maint_request'] = 'No se ha establecido un concepto válido para esta solicitud de mantenimiento.';
 $lang['add_event_to_history_error'] = 'No se pudo añadir el evento al histórico de la solicitud de mantenimiento.';

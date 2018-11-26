@@ -415,10 +415,9 @@ class Ordenes_trabajo extends MX_Controller {
 
       $maint_request_data = modules::run('mantenimiento/solicitudes/get_maintenance_request', $maint_request_code);
 
-      // Únicamente cuando una solicitud de mantenimiento se encuentre en estado de revisión
-      // se debe reportar el evento de aprobación de la solicitud y el cambio de estado
-      // de la solicitud.
-      if ($maint_request_data->CodEstado === $this->EstSolicitudes_mdl->_in_revision_state) {
+      // Únicamente cuando una solicitud de mantenimiento se encuentre en estado de revisión o planeada
+      // se debe reportar el evento de aprobación de la solicitud y el cambio de estado de la solicitud.
+      if ($maint_request_data->CodEstado === $this->EstSolicitudes_mdl->_in_revision_state || $maint_request_data->CodEstado === $this->EstSolicitudes_mdl->_planned_state) {
         // Se reporta el evento de aprobación al histórico de la solicitud
         $approved_concept = $this->Solicitudes_mdl->_approved_concept;
         modules::run('mantenimiento/solicitudes/add_event_to_history', $approved_concept, $maint_request_code);

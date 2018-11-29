@@ -1,6 +1,6 @@
 # Plataforma de Información Unificada
 
-Vagrant Box junto a la Plataforma de Información Unificada para CI Estrada Velasquez.
+Vagrant Box junto a la Plataforma de Información Unificada para CIEV
 
 ## Prerequisitos
 

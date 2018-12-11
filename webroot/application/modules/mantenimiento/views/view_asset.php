@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-body">    
+    <div class="card-body">
       <h2><?php echo lang('view_asset_card_second_title'); ?></h2>
       <hr>
       <div class="form-group">
@@ -47,29 +47,29 @@
         <textarea class="form-control" rows="4" readonly><?php echo $asset->Funcionalidad; ?></textarea>
       </div>
       <h4><?php echo lang('view_asset_card_third_title'); ?></h4>
-      <?php 
+      <?php
         if (is_string($files)) { ?>
         <div class="alert alert-primary" role="alert"><?php echo $files; ?></div>
-      <?php 
+      <?php
         } ?>
       <div class="row">
       <?php
         if (is_array($files)) {
-        $fq = 1; 
+        $fq = 1;
         foreach ($files as $file): ?>
         <div class="col-md-2">
           <div class="card mb-4 box-shadow">
-      <?php      
+      <?php
             if ($file->Extension === '.pdf') { ?>
             <a target="_blank" href="<?php echo site_url('assets/uploads/Mantenimiento/Anexos/'. $file->CodActivo .'/' . $file->NomArchivo); ?>">
               <img src="<?php echo site_url('assets/dist/custom/icons/pdf.svg'); ?>" alt="">
             </a>
-      <?php 
+      <?php
             } else { ?>
             <a href="<?php echo site_url('assets/uploads/Mantenimiento/Anexos/'. $file->CodActivo .'/' . $file->NomArchivo); ?>" data-lightbox="attached">
               <img src="<?php echo site_url('assets/dist/custom/icons/image.svg'); ?>" alt="">
             </a>
-      <?php 
+      <?php
             } ?>
             <div class="card-body">
               <div class="list-group">
@@ -84,7 +84,7 @@
         </div>
       <?php
         $fq++;
-        endforeach; 
+        endforeach;
         } ?>
       </div>
     </div>

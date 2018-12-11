@@ -251,4 +251,38 @@ class Activos_model extends CI_Model {
       throw new Exception(lang('populate_assets_no_results'));
     }
   }
+
+  /**
+   * Obtiene las órdenes de trabajo finalizadas de un activo.
+   *
+   * @param string $asset_code Código del activo.
+   *
+   * @return object
+   */
+  public function get_work_orders_by_asset(string $asset_code) {
+    $this->load->library('Date_Utilities');
+    $this->load->model('Mantenimiento/evpiu/Estados_ordenes_trabajo_model', 'EstOrdenesT_mdl');
+    $this->load->model('Mantenimiento/evpiu/Ordenes_trabajo_model', 'OrdenesT_mdl');
+
+    $this->db_evpiu->where('CodActivo', $asset_code);
+    $this->db_evpiu->where('CodEstado', $this->EstOrdenesT_mdl->_closed_state);
+    $this->db_evpiu->order_by('CodOt', 'desc');
+
+    $query = $this->db_evpiu->get($this->OrdenesT_mdl->_work_order_view_table);
+
+    if ($query->num_rows() > 0) {
+      $results = $query->result();
+
+      foreach ($results as $result) {
+        $result->BeautyCreationDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaCreacion));
+        $result->BeautyStartDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaInicio));
+        $result->BeautyUpdateDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaActualizacion));
+        $result->BeautyEndDate = ucfirst($this->date_utilities->format_date('%B %d, %Y', $result->FechaFin));
+      }
+
+      return $results;
+    } else {
+      throw new Exception(lang('asset_work_orders_no_results'));
+    }
+  }
 }

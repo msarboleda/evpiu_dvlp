@@ -89,4 +89,44 @@
       </div>
     </div>
   </div>
+  <div class="card">
+    <div class="card-body">
+      <?php if ($show_work_orders): ?>
+      <h2>Histórico de órdenes de trabajo (<?php echo $work_orders_qty; ?>)</h2>
+      <hr>
+      <div class="table-responsive m-t-40">
+        <table id="ordenest" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th scope="row">#</th>
+              <th>Encargado</th>
+              <th>Tipo Mantenimiento</th>
+              <th>Costo</th>
+              <th>Creada en</th>
+              <th>Finalizada en</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($work_orders as $work_order): ?>
+            <tr>
+              <td><a href="<?php echo site_url('mantenimiento/ordenes_trabajo/view_work_order/' . $work_order->CodOt); ?>" class="color-primary"><?php echo $work_order->CodOt; ?></a></td>
+              <td><?php echo $work_order->NomEncargado; ?></td>
+              <td><?php echo $work_order->NomTipoMantenimiento; ?></td>
+              <td>$ <?php echo number_format($work_order->Costo); ?></td>
+              <td><?php echo $work_order->BeautyStartDate; ?></td>
+              <td><?php echo $work_order->BeautyEndDate; ?></td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <?php else: ?>
+      <h2>Histórico de órdenes de trabajo</h2>
+      <hr>
+      <div class="alert alert-danger" role="alert">
+        <?php echo $no_assets_work_orders; ?>
+      </div>
+      <?php endif; ?>
+    </div>
+  </div>
 </div>

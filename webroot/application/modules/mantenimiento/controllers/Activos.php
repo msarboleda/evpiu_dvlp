@@ -83,6 +83,16 @@ class Activos extends MX_Controller {
           $asset_files = $e->getMessage();
         }
 
+        try {
+          $this->load->model('Mantenimiento/evpiu/Ordenes_trabajo_model', 'OrdenesT_mdl');
+          $view_data['work_orders'] = $this->Activos_mdl->get_work_orders_by_asset($asset_code);
+          $view_data['work_orders_qty'] = count($view_data['work_orders']);
+          $view_data['show_work_orders'] = TRUE;
+        } catch (Exception $e) {
+          $view_data['no_assets_work_orders'] = $e->getMessage();
+          $view_data['show_work_orders'] = FALSE;
+        }
+
         $view_data['asset'] = $asset_data;
         $view_data['files'] = $asset_files;
 

@@ -480,10 +480,10 @@ class Solicitudes extends MX_Controller {
           }
         }
 
-        // Se filtran solo los activos de un responsable que se encuentren en buen estado.
+        // Se filtran solo los activos que se encuentren en buen estado.
         try {
           $asset_good_state = $this->Activos_mdl->_good_state;
-          $view_data['assets'] = modules::run('mantenimiento/activos/populate_assets_by_responsible_and_state', $asset_good_state, $this->ion_auth->user()->row()->username);
+          $view_data['assets'] = modules::run('mantenimiento/activos/populate_assets_by_state', $asset_good_state);
         } catch (Exception $e) {
           $this->messages->add($e->getMessage() . ' No tienes activos asignados.', 'danger');
           $view_data['assets_not_loaded'] = TRUE;

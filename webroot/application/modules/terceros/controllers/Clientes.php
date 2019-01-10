@@ -4,7 +4,7 @@
  * Clase de Clientes
  *
  * Descripción del controlador.
- * 
+ *
  * @author Santiago Arboleda Londoño <msarboleda@estradavelasquez.com>
  * @author Martin Arboleda Montoya <maarboleda@estradavelasquez.com>
  * @copyright 2018 CI Estrada Velasquez y Cia S.A.S
@@ -19,9 +19,9 @@ class Clientes extends MX_Controller {
 
   /**
    * Busca el vendedor asignado de un cliente de DMS.
-   * 
+   *
    * @param int $nit NIT del Cliente.
-   * 
+   *
    * @return object
    */
   public function find_vendor_assigned_to_dms_customer($nit) {
@@ -36,9 +36,9 @@ class Clientes extends MX_Controller {
 
   /**
    * Verifica que un cliente está creado en DMS.
-   * 
+   *
    * @param int $nit NIT del Cliente.
-   * 
+   *
    * @return boolean
    */
   public function check_created_dms_client($nit) {
@@ -53,9 +53,9 @@ class Clientes extends MX_Controller {
 
   /**
    * Busca el tipo de un cliente de DMS.
-   * 
+   *
    * @param int $nit NIT del Cliente.
-   * 
+   *
    * @return object
    */
   public function find_dms_customer_type($nit) {

@@ -103,4 +103,37 @@ class Clientes extends MX_Controller {
       return 'Error: ' . $e->getMessage();
     }
   }
+
+  /**
+   * Interpreta el código de tipo de cliente y devuelve
+   * su valor correspondiente.
+   *
+   * @param string $type Código del tipo de cliente.
+   *
+   * @return string|null
+   */
+  public function get_readable_customer_type(string $type) {
+    switch($type) {
+      case 'CI':
+        $readable_type = 'COMERCIALIZADORA INTERNACIONAL';
+        break;
+      case 'EX':
+        $readable_type = 'EXTERIOR';
+        break;
+      case 'PN':
+        $readable_type = 'PERSONA NATURAL';
+        break;
+      case 'RC':
+        $readable_type = 'RÉGIMEN COMÚN';
+        break;
+      case 'ZF':
+        $readable_type = 'ZONA FRANCA';
+        break;
+      default:
+        $readable_type = null;
+        break;
+    }
+
+    return $readable_type;
+  }
 }

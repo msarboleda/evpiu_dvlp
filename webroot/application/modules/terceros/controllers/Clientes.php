@@ -136,4 +136,24 @@ class Clientes extends MX_Controller {
 
     return $readable_type;
   }
+
+  /**
+   * Interpreta el código del estado del cliente y devuelve
+   * su valor correspondiente.
+   *
+   * @param string $status Código de estado del cliente.
+   *
+   * @return string|null
+   */
+  public function get_readable_customer_status(string $status) {
+    if ($status === 'R') {
+      $readable_status = 'LIBERADO';
+    } else if ($status === 'H') {
+      $readable_status = 'RETENIDO';
+    } else {
+      $readable_status = null;
+    }
+
+    return $readable_status;
+  }
 }

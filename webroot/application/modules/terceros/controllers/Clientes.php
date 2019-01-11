@@ -14,7 +14,43 @@ class Clientes extends MX_Controller {
   public function __construct() {
     parent::__construct();
 
+    $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
     $this->load->model('Terceros/estradav/Clientes_dms_model', 'Clientes_dms_mdl');
+    $this->load->library(array('header', 'verification_roles'));
+    $this->load->helper(array('language', 'load'));
+    $this->lang->load('clientes');
+  }
+
+  /**
+   * Muestra todos los clientes según el vendedor actual.
+   *
+   * @return void
+   */
+  public function index() {
+    $header_data = $this->header->show_Categories_and_Modules();
+    $header_data['module_name'] = lang('index_heading');
+    $user_id = $this->ion_auth->user()->row()->id;
+
+    add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+    add_js('themes/elaadmin/js/lib/datatables/datatables.min.js');
+    add_js('themes/elaadmin/js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js');
+    add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+
+    // Se muestran los datos necesarios dependiendo del rol del usuario.
+    switch ($user_id) {
+      case $this->ion_auth->is_admin($user_id):
+      case $this->verification_roles->is_vendor($user_id):
+        $view_name = 'clientes/index';
+        add_js('dist/custom/js/terceros/customers_index.js');
+        break;
+      default:
+        redirect('auth');
+        break;
+    }
+
+    $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+    $this->load->view('terceros'. DS . $view_name);
+    $this->load->view('footers'. DS .'footer_main_dashboard');
   }
 
   /**

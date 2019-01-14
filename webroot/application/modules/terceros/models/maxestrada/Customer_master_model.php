@@ -36,4 +36,24 @@ class Customer_master_model extends CI_Model {
       throw new Exception('No se obtuvieron resultados del cliente solicitado.');
     }
   }
+
+  /**
+   * Busca el código del vendedor de un cliente.
+   *
+   * @param string $customer_id Código del cliente.
+   *
+   * @return object
+   */
+  public function get_customer_vendor(string $customer_id) {
+    $this->db_maxestrada->select('SLSREP_23');
+    $this->db_maxestrada->where('CUSTID_23', $customer_id);
+
+    $query = $this->db_maxestrada->get($this->_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->row();
+    } else {
+      throw new Exception('No se identificó el vendedor del cliente solicitado.');
+    }
+  }
 }

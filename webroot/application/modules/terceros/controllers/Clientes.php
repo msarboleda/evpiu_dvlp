@@ -157,4 +157,27 @@ class Clientes extends MX_Controller {
 
     return $readable_status;
   }
+
+  /**
+   * Verifica sí el cliente le pertenece a un vendedor.
+   *
+   * @param string $customer_id Código del cliente.
+   * @param string $vendor_id Código del vendedor.
+   *
+   * @return boolean
+   */
+  public function is_my_customer(string $customer_id, string $vendor_id) {
+    try {
+      $customer_vendor = $this->Clientes_max_mdl->get_customer_vendor($customer_id);
+      $real_customer_vendor_id = trim($customer_vendor->SLSREP_23);
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+    if ($vendor_id == $real_customer_vendor_id) {
+      return true;
+    }
+
+    return false;
+  }
 }

@@ -15,9 +15,10 @@ class Clientes extends MX_Controller {
     parent::__construct();
 
     $this->load->model('Auth/evpiu/Modulosxcategoriasxgrupos_model');
+    $this->load->model('Terceros/maxestrada/Customer_master_model', 'Clientes_max_mdl');
     $this->load->model('Terceros/estradav/Clientes_dms_model', 'Clientes_dms_mdl');
-    $this->load->library(array('header', 'verification_roles'));
-    $this->load->helper(array('language', 'load'));
+    $this->load->library(array('header', 'verification_roles', 'messages'));
+    $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('clientes');
   }
 

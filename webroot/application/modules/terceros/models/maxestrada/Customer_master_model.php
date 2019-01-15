@@ -56,4 +56,17 @@ class Customer_master_model extends CI_Model {
       throw new Exception('No se identificó el vendedor del cliente solicitado.');
     }
   }
+
+  /**
+   * Actualiza la información de un cliente.
+   *
+   * @param string $customer_id Código del cliente.
+   * @param array $data Datos que se van a actualizar.
+   *
+   * @return boolean
+   */
+  public function update_customer(string $customer_id, array $data) {
+    $this->db_maxestrada->where('CUSTID_23', $customer_id);
+    return $this->db_maxestrada->update($this->_table, $data);
+  }
 }

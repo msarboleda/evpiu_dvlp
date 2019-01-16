@@ -20,6 +20,7 @@ class Clientes extends MX_Controller {
     $this->load->library(array('header', 'verification_roles', 'messages'));
     $this->load->helper(array('language', 'load', 'form'));
     $this->lang->load('clientes');
+    $this->form_validation->set_error_delimiters('<small class="color-danger">', '</small>');
   }
 
   /**

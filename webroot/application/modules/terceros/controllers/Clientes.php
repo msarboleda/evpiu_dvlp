@@ -145,7 +145,7 @@ class Clientes extends MX_Controller {
    */
   public function find_customer(string $customer_id) {
     try {
-      $this->load->library('object_utilities');
+      $this->load->library('Object_Utilities');
 
       $db_customer = $this->Clientes_max_mdl->get_customer($customer_id);
       $customer = $this->object_utilities->trim_object_data($db_customer);

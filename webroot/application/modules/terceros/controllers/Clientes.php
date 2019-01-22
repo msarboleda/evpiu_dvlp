@@ -55,6 +55,29 @@ class Clientes extends MX_Controller {
     $this->load->view('footers'. DS .'footer_main_dashboard');
   }
 
+
+  /**
+   * Obtiene toda la información de un cliente y elimina
+   * los espacios en blanco del inicio y final de cada
+   * valor del objeto de cliente.
+   *
+   * @param string $customer_id Código del cliente.
+   *
+   * @return object
+   */
+  public function find_customer(string $customer_id) {
+    try {
+      $this->load->library('object_utilities');
+
+      $db_customer = $this->Clientes_max_mdl->get_customer($customer_id);
+      $customer = $this->object_utilities->trim_object_data($db_customer);
+
+      return $customer;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
   /**
    * Busca el vendedor asignado de un cliente de DMS.
    *

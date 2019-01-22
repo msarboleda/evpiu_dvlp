@@ -55,6 +55,84 @@ class Clientes extends MX_Controller {
     $this->load->view('footers'. DS .'footer_main_dashboard');
   }
 
+  /**
+   * Actualiza la información de un cliente
+   *
+   * @param string $customer_id Código del cliente.
+   *
+   * @return void
+   */
+  public function update_customer(string $customer_id) {
+    $header_data = $this->header->show_Categories_and_Modules();
+    $header_data['module_name'] = lang('update_heading');
+    $user_id = $this->ion_auth->user()->row()->id;
+
+    add_css('themes/elaadmin/css/lib/sweetalert2/sweetalert2.min.css');
+    add_js('themes/elaadmin/js/lib/sweetalert2/sweetalert2.min.js');
+
+    // Se muestran los datos necesarios dependiendo del rol del usuario.
+    switch ($user_id) {
+      case $this->ion_auth->is_admin($user_id):
+      case $this->verification_roles->is_vendor($user_id):
+        try {
+          $is_my_customer = $this->is_my_customer($customer_id, $this->ion_auth->user()->row()->Vendedor);
+
+          if ($is_my_customer) {
+            if ($this->input->post('update_action')) {
+              if ($this->form_validation->run('clientes/update_customer')) {
+                $customer_data = [
+                  'EMAIL1_23' => $this->input->post('customer_email'),
+                  'CNTCT_23' => $this->input->post('customer_contact'),
+                  'PHONE_23' => $this->input->post('customer_phone'),
+                  'TELEX_23' => $this->input->post('customer_mobile'),
+                ];
+
+                $updated = $this->Clientes_max_mdl->update_customer($customer_id, $customer_data);
+
+                if ($updated) {
+                  $this->messages->add('Los datos del cliente han sido actualizados satisfactoriamente.', 'success');
+                } else {
+                  $this->messages->add('Ocurrió un error al actualizar los datos del cliente.', 'danger');
+                }
+              }
+            }
+
+            try {
+              $customer = $this->find_customer($customer_id);
+
+              // Almacena el valor textual del código de tipo de cliente
+              $customer->CUSTYP_23 = $this->get_readable_customer_type($customer->CUSTYP_23);
+
+              // Almacena el valor textual del código del estado del cliente
+              $customer->R_STATUS_23 = $this->get_readable_customer_status($customer->STATUS_23);
+
+              $view_data['customer'] = $customer;
+              $view_data['customer_data_empty'] = false;
+            } catch (Exception $e) {
+              $this->messages->add($e->getMessage(), 'danger');
+              $view_data['customer_data_empty'] = true;
+            }
+          } else {
+            $this->messages->add('Este cliente no está asociado a tu código de vendedor, por lo tanto no puedes modificar su información.', 'danger');
+            $view_data['customer_data_empty'] = true;
+          }
+        } catch (Exception $e) {
+          $this->messages->add($e->getMessage(), 'danger');
+          $view_data['customer_data_empty'] = true;
+        }
+
+        $view_data['messages'] = $this->messages->get();
+        $view_name = 'clientes/update';
+        break;
+      default:
+        redirect('auth');
+        break;
+    }
+
+    $this->load->view('headers'. DS .'header_main_dashboard', $header_data);
+    $this->load->view('terceros'. DS . $view_name, $view_data);
+    $this->load->view('footers'. DS .'footer_main_dashboard');
+  }
 
   /**
    * Obtiene toda la información de un cliente y elimina

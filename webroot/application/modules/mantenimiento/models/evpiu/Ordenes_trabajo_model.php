@@ -136,6 +136,13 @@ class Ordenes_trabajo_model extends CI_Model {
    */
   public $_completed_state = 4;
 
+  /**
+   * Estado de orden de trabajo anulada
+   *
+   * @var int $_cancelled_state
+   */
+  public $_cancelled_state = 5;
+
   public function __construct() {
     parent::__construct();
 
@@ -902,6 +909,10 @@ class Ordenes_trabajo_model extends CI_Model {
       $is_completed = TRUE;
 
       foreach ($results as $result) {
+        if ($result->Estado === $this->_cancelled_state) {
+          continue;
+        }
+
         if ($result->Estado !== $this->_completed_state) {
           $is_completed = FALSE;
           break;

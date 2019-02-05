@@ -22,12 +22,17 @@ $lang['customer_email_label']           = 'Correo electrónico';
 $lang['customer_contact_label']         = 'Nombre de contacto';
 $lang['customer_phone_label']           = 'Teléfono fijo';
 $lang['customer_mobile_label']          = 'Teléfono celular';
+$lang['customer_address_one_label']     = 'Dirección principal';
+$lang['customer_address_two_label']     = 'Dirección 2';
 
 // Form validation labels area
 $lang['fv_customer_email_label']        = 'correo electrónico';
 $lang['fv_customer_contact_label']      = 'nombre de contacto';
 $lang['fv_customer_phone_label']        = 'teléfono fijo';
 $lang['fv_customer_mobile_label']       = 'teléfono celular';
+$lang['fv_customer_address_one_label']  = 'dirección principal';
+$lang['fv_customer_address_two_label']  = 'dirección 2';
 
 // Help area
 $lang['customer_contact_help']          = 'En caso de que el cliente sea una organización, puedes guardar el nombre del representante de relaciones comerciales.';
+$lang['customer_address_two_help']      = 'Este campo también se puede utilizar como un complemento de la dirección principal.';

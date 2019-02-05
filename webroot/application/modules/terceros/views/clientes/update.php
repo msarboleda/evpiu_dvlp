@@ -183,6 +183,21 @@
                 <?php echo form_input( 'customer_mobile', $customer->TELEX_23 , 'class="form-control"' ); ?>
                 <?php echo form_error( 'customer_mobile' ); ?>
               </div>
+              <div class="form-group">
+                <?php echo form_label( lang('customer_address_one_label'), 'customer_address_one' ); ?> <small class="color-danger">*</small><br>
+                <?php echo form_input( 'customer_address_one', $customer->ADDR1_23 , 'class="form-control"' ); ?>
+                <?php echo form_error( 'customer_address_one' ); ?>
+              </div>
+              <div class="form-group">
+                <?php echo form_label( lang('customer_address_two_label'), 'customer_address_two' ); ?> <small class="text-muted">(opcional)</small><br>
+                <?php if (empty($customer->ADDR2_23)): ?>
+                <?php echo form_input( 'customer_address_two', '', 'class="form-control" placeholder="Sin proporcionar"' ); ?>
+                <?php else: ?>
+                <?php echo form_input( 'customer_address_two', $customer->ADDR2_23 , 'class="form-control"' ); ?>
+                <?php endif; ?>
+                <?php echo form_error( 'customer_address_two' ); ?>
+                <small class="text-muted"><?php echo lang('customer_address_two_help'); ?></small>
+              </div>
               <?php echo form_submit( 'update_action', 'Actualizar', 'class="btn btn-primary"' ); ?>
             </div>
           </div>

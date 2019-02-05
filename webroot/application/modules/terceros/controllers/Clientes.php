@@ -85,6 +85,9 @@ class Clientes extends MX_Controller {
                   'CNTCT_23' => $this->input->post('customer_contact'),
                   'PHONE_23' => $this->input->post('customer_phone'),
                   'TELEX_23' => $this->input->post('customer_mobile'),
+                  'ADDR1_23' => $this->input->post('customer_address_one'),
+                  'ADDR2_23' => $this->input->post('customer_address_two'),
+                  'ModifiedBy' => $this->ion_auth->user()->row()->username,
                 ];
 
                 $updated = $this->Clientes_max_mdl->update_customer($customer_id, $customer_data);

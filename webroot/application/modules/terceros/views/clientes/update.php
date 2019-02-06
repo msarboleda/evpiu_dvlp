@@ -158,7 +158,7 @@
         <?php echo form_open(uri_string(), 'id="update_customer-form"');?>
         <div class="card">
           <div class="card-title">
-            <h2>Actualización de datos</h2>
+            <h2>Información básica</h2>
           </div>
           <div class="card-body">
             <div class="basic-form">
@@ -168,20 +168,29 @@
                 <?php echo form_error( 'customer_email' ); ?>
               </div>
               <div class="form-group">
-                <?php echo form_label( lang('customer_contact_label'), 'customer_contact' ); ?> <small class="text-muted">(opcional)</small><br>
-                <?php echo form_input( 'customer_contact', $customer->CNTCT_23 , 'class="form-control"' ); ?>
-                <?php echo form_error( 'customer_contact' ); ?>
-                <small class="text-muted"><?php echo lang('customer_contact_help'); ?></small>
+                <?php echo form_label( lang('customer_mobile_label'), 'customer_mobile' ); ?> <small class="color-danger">*</small><br>
+                <?php echo form_input( 'customer_mobile', $customer->TELEX_23 , 'class="form-control"' ); ?>
+                <?php echo form_error( 'customer_mobile' ); ?>
               </div>
               <div class="form-group">
                 <?php echo form_label( lang('customer_phone_label'), 'customer_phone' ); ?> <small class="text-muted">(opcional)</small><br>
                 <?php echo form_input( 'customer_phone', $customer->PHONE_23 , 'class="form-control"' ); ?>
                 <?php echo form_error( 'customer_phone' ); ?>
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <h2>Información locativa</h2>
+          </div>
+          <div class="card-body">
+            <div class="basic-form">
               <div class="form-group">
-                <?php echo form_label( lang('customer_mobile_label'), 'customer_mobile' ); ?> <small class="color-danger">*</small><br>
-                <?php echo form_input( 'customer_mobile', $customer->TELEX_23 , 'class="form-control"' ); ?>
-                <?php echo form_error( 'customer_mobile' ); ?>
+                <?php echo form_label( lang('customer_contact_label'), 'customer_contact' ); ?> <small class="text-muted">(opcional)</small><br>
+                <?php echo form_input( 'customer_contact', $customer->CNTCT_23 , 'class="form-control"' ); ?>
+                <?php echo form_error( 'customer_contact' ); ?>
+                <small class="text-muted"><?php echo lang('customer_contact_help'); ?></small>
               </div>
               <div class="form-group">
                 <?php echo form_label( lang('customer_address_one_label'), 'customer_address_one' ); ?> <small class="color-danger">*</small><br>

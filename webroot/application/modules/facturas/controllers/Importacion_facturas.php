@@ -494,6 +494,9 @@ class Importacion_facturas extends MX_Controller {
       case 650: // Punto de venta Bogotá
         $vendor = 8;
         break;
+      case 660: // Punto de venta Dosquebradas
+        $vendor = 55;
+        break;
     }
 
     return $vendor;

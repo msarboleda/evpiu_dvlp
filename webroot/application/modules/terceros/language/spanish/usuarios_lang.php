@@ -11,4 +11,5 @@
 $lang['populate_users_no_results'] = 'La consulta de usuarios no obtuvo resultados.';
 $lang['get_maintenance_technicians_no_results'] = 'La consulta de técnicos de mantenimiento no obtuvo resultados.';
 $lang['get_user_id_from_username_no_results'] = 'La consulta del id del usuario proporcionado no obtuvo resultados.';
+$lang['get_name_from_username_no_results'] = 'La consulta del nombre completo del usuario proporcionado no obtuvo resultados.';
 $lang['get_emails_from_users_group_no_results'] = 'La consulta de los correos electrónicos de los usuarios no obtuvo resultados.';

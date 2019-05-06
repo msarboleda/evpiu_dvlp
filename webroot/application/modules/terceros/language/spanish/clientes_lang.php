@@ -36,3 +36,6 @@ $lang['fv_customer_address_two_label']  = 'dirección 2';
 // Help area
 $lang['customer_contact_help']          = 'En caso de que el cliente sea una organización, puedes guardar el nombre del representante de relaciones comerciales.';
 $lang['customer_address_two_help']      = 'Este campo también se puede utilizar como un complemento de la dirección principal.';
+
+// Alerts
+$lang['cus_update_notif_not_sended']    = 'Ocurrió un error al enviar la notificación de actualización  de información de un cliente de la compañía.';

@@ -41,6 +41,25 @@ class Usuarios_model extends CI_Model {
   }
 
   /**
+   * Obtiene el nombre completo de un usuario con base al nombre de usuario.
+   *
+   * @param string $username Nombre del usuario.
+   *
+   * @return object
+   */
+  public function get_name_from_username($username) {
+    $this->db_evpiu->select('first_name, last_name');
+    $this->db_evpiu->where('username', $username);
+    $query = $this->db_evpiu->get($this->_table);
+
+    if ($query->num_rows() > 0) {
+      return $query->row();
+    } else {
+      throw new Exception(lang('get_name_from_username_no_results'));
+    }
+  }
+
+  /**
    * Obtiene los valores necesarios para poblar un control
    * <select> de todos los usuarios existentes de la plataforma.
    *

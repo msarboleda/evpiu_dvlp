@@ -93,6 +93,17 @@ class Clientes extends MX_Controller {
                 $updated = $this->Clientes_max_mdl->update_customer($customer_id, $customer_data);
 
                 if ($updated) {
+                  $customer = $this->Clientes_max_mdl->get_customer($customer_id);
+                  $customer_state = trim($customer->STATE_23);
+                  $customer_city = trim($customer->CITY_23);
+                  // Ciudades excluidas de notificación de actualización de datos en Coordinadora
+                  $excluded_cities = array('BELLO', 'MEDELLIN', 'ENVIGADO', 'ITAGUI', 'SABANETA', 'CALDAS', 'LA ESTRELLA');
+
+                  // Envía notificación para actualizar información en Coordinadora, sí el cliente no pertenece a las ciudades excluidas o no es de Antioquia
+                  if (($customer_state == 'ANTIOQUIA' && !in_array($customer_city, $excluded_cities)) || ($customer_state != 'ANTIOQUIA')) {
+                    $this->send_customer_update_notification($customer);
+                  }
+
                   $this->messages->add('Los datos del cliente han sido actualizados satisfactoriamente.', 'success');
                 } else {
                   $this->messages->add('Ocurrió un error al actualizar los datos del cliente.', 'danger');
@@ -284,5 +295,42 @@ class Clientes extends MX_Controller {
     }
 
     return false;
+  }
+
+  /**
+   * Envía una notificación de correo electrónico para informar que se
+   * actualizó la información de un cliente a los usuarios de Facturación.
+   *
+   * @param array $customer Código del usuario que creó la orden de trabajo.
+   *
+   * @return boolean
+   */
+  public function send_customer_update_notification($customer) {
+    $this->load->library('email');
+    $this->load->model('Terceros/users/Usuarios_model', 'Usuarios_evpiu_mdl');
+
+    $subject = '¡Se ha actualizado la información de un cliente!';
+    $user_modifier = $this->Usuarios_evpiu_mdl->get_name_from_username($customer->ModifiedBy);
+    $customer->MODIFIER_NAME = $user_modifier->first_name . ' ' . $user_modifier->last_name;
+
+    $params = array(
+      'charset' => strtolower(config_item('charset')),
+      'subject' => $subject,
+      'customer' => $customer
+    );
+
+    $body = $this->load->view('terceros/clientes/notify_customer_update', $params, TRUE);
+
+    $result = $this->email->from('info@estradavelasquez.com', 'Notificaciones EVPIU')
+        ->to('aealvarez@estradavelasquez.com, smsanchez@estradavelasquez.com')
+        ->subject($subject)
+        ->message($body)
+        ->send();
+
+    if ($result) {
+      return $result;
+    } else {
+      throw new Exception(lang('cus_update_notif_not_sended'));
+    }
   }
 }

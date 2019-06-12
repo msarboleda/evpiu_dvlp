@@ -116,29 +116,29 @@ class Importacion_facturas extends MX_Controller {
                   // simplemente se ignora y continua con la próxima iteración.
                   if ($orig_invoice->numero === $orig_invoices[$curr_key-1]->numero) {
                     continue 2;
-                  } else {
-                    // Se genera la estructura para mostrar el error de factura manual,
-                    // se añade a las facturas procesadas para mostrarse en la vista
-                    // y se continua con la próxima iteración.
-                    $processed_invoice = $this->generate_manual_invoice_structure($orig_invoice->numero, $orig_invoice->Anulado);
-                    $processed_invoices[] = $processed_invoice;
-                    continue 2;
                   }
                 }
+
+                // Se genera la estructura para mostrar el error de factura manual,
+                // se añade a las facturas procesadas para mostrarse en la vista
+                // y se continua con la próxima iteración.
+                $processed_invoice = $this->generate_manual_invoice_structure($orig_invoice->numero, $orig_invoice->Anulado);
+                $processed_invoices[] = $processed_invoice;
+                continue 2;
                 break;
               // Procesando las facturas con dos medios de pago
               case $repeated_times === 2:
                 if ($curr_key > 0) {
                   if ($orig_invoice->numero === $orig_invoices[$curr_key-1]->numero) {
                     continue 2;
-                  } else {
-                    // Se envía la información de la factura actual y la próxima, ya que su
-                    // número de factura es igual. Luego se genera una fusión para formar la
-                    // factura en un solo objeto.
-                    $orig_invoice = $this->process_invoice_with_double_payment_method($orig_invoice, $orig_invoices[$curr_key+1]);
-                    $inv_structure = $this->generate_invoice_structure($orig_invoice, TRUE);
                   }
                 }
+
+                // Se envía la información de la factura actual y la próxima, ya que su
+                // número de factura es igual. Luego se genera una fusión para formar la
+                // factura en un solo objeto.
+                $orig_invoice = $this->process_invoice_with_double_payment_method($orig_invoice, $orig_invoices[$curr_key+1]);
+                $inv_structure = $this->generate_invoice_structure($orig_invoice, TRUE);
                 break;
               // Procesando las facturas correctas
               default:

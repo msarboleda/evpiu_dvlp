@@ -311,7 +311,7 @@ class Importacion_facturas extends MX_Controller {
     $invoice_structure->concepto = $invoice->concepto;
     $invoice_structure->valor_mercancia = $invoice->valor_mercancia;
     $invoice_structure->valor_bruto = $invoice->ValorBruto;
-    $invoice_structure->valor_aplicado = $invoice->valor_aplicado;
+    $invoice_structure->valor_aplicado = 0;
     $invoice_structure->valor_mp = $invoice->ValorMP;
     $invoice_structure->iva = $invoice->iva;
     $invoice_structure->descuento = $invoice->TotalDescuento;
@@ -383,7 +383,7 @@ class Importacion_facturas extends MX_Controller {
 
     if ($first_pay_method->idMedioPago === 6) {
       $first_pay_method->valor_total -= $first_pay_method->ValorMP;
-      $first_pay_method->valor_aplicado -= $first_pay_method->ValorMP;
+      $first_pay_method->valor_aplicado = 0;
       $first_pay_method->rete_fuente = $first_pay_method->ValorMP;
     }
 
